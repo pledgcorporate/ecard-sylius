@@ -20,37 +20,40 @@ const { argv } = yargs
 
 const config = [
   '--rootPath',
-  argv.rootPath || '../../../../../../../tests/Application/public/assets',
+  argv.rootPath || '../../../../../../../public/assets',
   '--nodeModulesPath',
-  argv.nodeModulesPath || '../../../../../../../tests/Application/node_modules',
+  argv.nodeModulesPath || '../../../../../../../node_modules',
 ];
 
 export const buildAdmin = function buildAdmin() {
-  return gulp.src('../../vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/gulpfile.babel.js', { read: false })
+  return gulp.src('vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/gulpfile.babel.js', { read: false })
     .pipe(chug({ args: config, tasks: 'build' }));
 };
 buildAdmin.description = 'Build admin assets.';
 
 export const watchAdmin = function watchAdmin() {
-  return gulp.src('../../vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/gulpfile.babel.js', { read: false })
+  return gulp.src('vendor/sylius/sylius/src/Sylius/Bundle/AdminBundle/gulpfile.babel.js', { read: false })
     .pipe(chug({ args: config, tasks: 'watch' }));
 };
 watchAdmin.description = 'Watch admin asset sources and rebuild on changes.';
 
 export const buildShop = function buildShop() {
-  return gulp.src('../../vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle/gulpfile.babel.js', { read: false })
+  return gulp.src('vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle/gulpfile.babel.js', { read: false })
     .pipe(chug({ args: config, tasks: 'build' }));
 };
 buildShop.description = 'Build shop assets.';
 
 export const watchShop = function watchShop() {
-  return gulp.src('../../vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle/gulpfile.babel.js', { read: false })
+  return gulp.src('vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle/gulpfile.babel.js', { read: false })
     .pipe(chug({ args: config, tasks: 'watch' }));
 };
 watchShop.description = 'Watch shop asset sources and rebuild on changes.';
 
 export const build = gulp.parallel(buildAdmin, buildShop);
 build.description = 'Build assets.';
+
+export const watch = gulp.parallel(watchAdmin, watchShop);
+watch.description = 'Watch asset sources and rebuild on changes.';
 
 gulp.task('admin', buildAdmin);
 gulp.task('admin-watch', watchAdmin);

@@ -40,12 +40,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "Acme\\SyliusExamplePlugin\\": "src/"
+
         }
     },
     "autoload-dev": {
-        "classmap": ["tests/Application/Kernel.php"]
+        "psr-4": {
+            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+        }
     },
     "extra": {
         "branch-alias": {
@@ -53,17 +55,7 @@
         }
     },
     "config": {
-        "sort-packages": true
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "post-update-cmd": [
-            "php bin/create_node_symlink.php"
-        ],
-        "post-create-project-cmd": [
-            "php bin/create_node_symlink.php"
-        ]
+        "sort-packages": true,
+        "vendor-dir": "tests/Application/vendor"
     }
 }
