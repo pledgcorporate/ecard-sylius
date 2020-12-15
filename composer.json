@@ -1,8 +1,8 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "pledg/sylius-payment-plugin",
     "type": "sylius-plugin",
     "keywords": ["sylius", "sylius-plugin"],
-    "description": "Acme example plugin for Sylius.",
+    "description": "Payment Gateway Plugin using Pledg",
     "license": "MIT",
     "require": {
         "php": "^7.3",
@@ -40,13 +40,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/"
+            "Pledg\\SyliusPaymentPlugin\\": "src/"
 
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "Tests\\Pledg\\SyliusPaymentPlugin\\": "tests/"
         }
     },
     "extra": {

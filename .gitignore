@@ -2,6 +2,7 @@
 /vendor/
 /node_modules/
 /composer.lock
+/composer.phar
 
 /etc/build/*
 !/etc/build/.gitignore
