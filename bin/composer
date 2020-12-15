@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# In CI, we must pass the -T flag because there is no TTY
+TTY_OPTION=$(tty -s && echo "" || echo "-T" )
+
+CONTAINER_NAME="php"
+CONTAINER_ID="$(docker-compose ps -q ${CONTAINER_NAME})"
+CONTAINER_INSTANCE="$(docker ps --filter="id=${CONTAINER_ID}" -q)"
+if [[ -z ${CONTAINER_INSTANCE} ]]; then
+    docker-compose run -e COMPOSER_MEMORY_LIMIT=-1 ${TTY_OPTION} --rm --entrypoint composer ${CONTAINER_NAME} "$@"
+else
+    docker-compose exec -e COMPOSER_MEMORY_LIMIT=-1 ${TTY_OPTION} ${CONTAINER_NAME} composer "$@"
+fi

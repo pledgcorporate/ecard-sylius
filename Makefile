@@ -18,10 +18,10 @@ stop: ## Stops running containers
 	docker-compose stop
 
 composer-validate:
-	$(DC_EXEC_TEST_PHP) composer validate --ansi --strict
+	./bin/composer validate --ansi --strict
 
 doctrine-validate:
-	$(DC_EXEC_TEST_PHP) tests/Application/bin/console doctrine:schema:validate
+	./bin/console doctrine:schema:validate
 
 phpstan: ## launch phpstan
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpstan analyse -c phpstan.neon -l max src/
