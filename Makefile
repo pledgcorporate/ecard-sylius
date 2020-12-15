@@ -35,9 +35,9 @@ phpspec: ## Launch phpspec tests
 phpunit: ## launch phpunit tests
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit
 
-behat: ## Launch behat tests
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"
+#behat: ## Launch behat tests
+#	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"
 
-ci: composer-validate doctrine-validate phpstan psalm phpspec phpunit behat
+ci: composer-validate doctrine-validate phpstan psalm phpspec phpunit #behat
 
 
