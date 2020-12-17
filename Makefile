@@ -33,7 +33,7 @@ phpspec: ## Launch phpspec tests
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpspec run
 
 phpunit: ## launch phpunit tests
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit --testdox
 
 #behat: ## Launch behat tests
 #	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"

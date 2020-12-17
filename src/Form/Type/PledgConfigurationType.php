@@ -12,7 +12,7 @@ class PledgConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('merchant_id', TextType::class)
-            ->add('signature', TextType::class);
+            ->add('identifier', TextType::class)
+            ->add('secret', TextType::class);
     }
 }

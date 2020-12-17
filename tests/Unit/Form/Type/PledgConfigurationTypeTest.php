@@ -13,8 +13,8 @@ class PledgConfigurationTypeTest extends TypeTestCase
     public function it_submit_valid_data(): void
     {
         $formData = [
-            'merchant_id' => 'mer_aee4846c-ac62-4835-8adf-bea9f8737144',
-            'signature' => 'aIDZLuoAdK8NAqoFIFPBao72WEQ6jrWMvYwaXaiO',
+            'identifier' => 'mer_aee4846c-ac62-4835-8adf-bea9f8737144',
+            'secret' => 'aIDZLuoAdK8NAqoFIFPBao72WEQ6jrWMvYwaXaiO',
         ];
 
         $form = $this->factory->create(PledgConfigurationType::class);
@@ -23,7 +23,7 @@ class PledgConfigurationTypeTest extends TypeTestCase
 
         // This check ensures there are no transformation failures
         self::assertTrue($form->isSynchronized());
-        self::assertEquals($formData, $form->getData());
+        self::assertSame($formData, $form->getData());
 
     }
 }

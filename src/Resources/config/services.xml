@@ -10,5 +10,15 @@
             <tag name="sylius.gateway_configuration_type" type="pledg" label="Pledg" />
             <tag name="form.type" />
         </service>
+        <service id="Pledg\SyliusPaymentPlugin\Payum\Action\CaptureAction" public="true">
+            <tag name="payum.action" factory="pledg" alias="payum.action.capture" />
+        </service>
+        <service id="Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction" public="true">
+            <tag name="payum.action" factory="pledg" alias="payum.action.redirect_url" />
+        </service>
+        <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">
+            <argument type="service" id="request_stack" />
+            <tag name="payum.action" factory="pledg" alias="payum.action.status"/>
+        </service>
     </services>
 </container>
