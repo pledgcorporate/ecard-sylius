@@ -12,6 +12,9 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentBuilder
 {
+    /** @var integer */
+    private $id;
+
     /** @var PaymentMethodInterface */
     private $method;
 
@@ -31,6 +34,14 @@ class PaymentBuilder
         $this->order = (new OrderBuilder())->build();
         $this->currencyCode = 'EUR';
         $this->amount = 10000;
+        $this->id = 1234;
+    }
+
+    public function withOrder(OrderInterface $order): self
+    {
+        $this->order = $order;
+
+        return $this;
     }
 
     public function build(): PaymentInterface
@@ -40,6 +51,10 @@ class PaymentBuilder
         $payment->setOrder($this->order);
         $payment->setAmount($this->amount);
         $payment->setCurrencyCode($this->currencyCode);
+        $reflectionClass = new \ReflectionClass(Payment::class);
+        $id =  $reflectionClass->getProperty('id');
+        $id->setAccessible(true);
+        $id->setValue($id, $this->id);
 
         return $payment;
     }

@@ -2,6 +2,7 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+
         <service id="pledg_sylius_payment_plugin.factory.pledg_gateway_factory" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory</argument>
             <tag name="payum.gateway_factory_builder" factory="pledg" />
@@ -10,10 +11,15 @@
             <tag name="sylius.gateway_configuration_type" type="pledg" label="Pledg" />
             <tag name="form.type" />
         </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory" />
+        <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface" alias="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory"/>
+
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\CaptureAction" public="true">
             <tag name="payum.action" factory="pledg" alias="payum.action.capture" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction" public="true">
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface" />
             <tag name="payum.action" factory="pledg" alias="payum.action.redirect_url" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">

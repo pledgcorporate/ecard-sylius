@@ -20,6 +20,13 @@ class CaptureBuilder extends RequestBuilder
         parent::__construct();
     }
 
+    public function withPayment(PaymentInterface $payment): self
+    {
+        $this->payment = $payment;
+
+        return $this;
+    }
+
     public function build(): Capture
     {
         $request = new Capture($this->token);
