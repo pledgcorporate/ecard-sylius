@@ -15,11 +15,15 @@
         <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory" />
         <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface" alias="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory"/>
 
+        <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\Encoder" />
+        <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface" alias="Pledg\SyliusPaymentPlugin\RedirectUrl\Encoder"/>
+
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\CaptureAction" public="true">
             <tag name="payum.action" factory="pledg" alias="payum.action.capture" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction" public="true">
             <argument type="service" id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface" />
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface" />
             <tag name="payum.action" factory="pledg" alias="payum.action.redirect_url" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">

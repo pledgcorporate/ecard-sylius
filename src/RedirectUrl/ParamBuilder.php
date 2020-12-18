@@ -5,9 +5,8 @@ namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
 
 use Payum\Core\Security\TokenInterface;
-use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrl;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
-use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
+use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -15,7 +14,7 @@ use Sylius\Component\Customer\Model\CustomerInterface;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    /** @var Merchant */
+    /** @var MerchantInterface */
     protected $merchant;
 
     /** @var OrderInterface */
@@ -45,6 +44,11 @@ class ParamBuilder implements ParamBuilderInterface
         $builder->billingAddress = $builder->order->getBillingAddress();
         $builder->shippingAddress = $builder->order->getShippingAddress();
         $builder->merchant = $request->getMerchant();
+
+        if (null === $request->getToken()) {
+            throw new \RuntimeException('You should have a token');
+        }
+
         $builder->token = $request->getToken();
 
         return $builder;
@@ -66,7 +70,7 @@ class ParamBuilder implements ParamBuilderInterface
             'address' => $this->buildAddress($this->billingAddress),
             'shippingAddress' => $this->buildAddress($this->shippingAddress),
             'redirectUrl' => $this->token->getAfterUrl(),
-            'cancelUrl' => 'http://www.google.com',
+            'cancelUrl' => $this->token->getAfterUrl(),
             'paymentNotificationUrl' => 'http://www.google.com',
         ];
     }
