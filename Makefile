@@ -18,10 +18,10 @@ stop: ## Stops running containers
 	docker-compose stop
 
 composer-validate:
-	$(DC_EXEC_TEST_PHP) composer validate --ansi --strict
+	./bin/composer validate --ansi --strict
 
 doctrine-validate:
-	$(DC_EXEC_TEST_PHP) tests/Application/bin/console doctrine:schema:validate
+	./bin/console doctrine:schema:validate
 
 phpstan: ## launch phpstan
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpstan analyse -c phpstan.neon -l max src/
@@ -33,11 +33,14 @@ phpspec: ## Launch phpspec tests
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpspec run
 
 phpunit: ## launch phpunit tests
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit --testdox
 
-behat: ## Launch behat tests
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"
+ecs-check:
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check
 
-ci: composer-validate doctrine-validate phpstan psalm phpspec phpunit behat
+#behat: ## Launch behat tests
+#	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"
+
+ci: composer-validate doctrine-validate ecs-check phpstan psalm phpspec phpunit #behat
 
 

@@ -1,12 +1,13 @@
 {
-    "name": "sylius/plugin-skeleton",
+    "name": "pledg/sylius-payment-plugin",
     "type": "sylius-plugin",
     "keywords": ["sylius", "sylius-plugin"],
-    "description": "Acme example plugin for Sylius.",
+    "description": "Payment Gateway Plugin using Pledg",
     "license": "MIT",
     "require": {
         "php": "^7.3",
-        "sylius/sylius": "^1.8"
+        "sylius/sylius": "^1.8",
+        "ext-json": "*"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -22,6 +23,7 @@
         "friends-of-behat/variadic-extension": "^1.3",
         "lakion/mink-debug-extension": "^1.2.3",
         "phpspec/phpspec": "^6.1",
+        "phpspec/prophecy": "^1.12",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "0.12.25",
         "phpstan/phpstan-doctrine": "0.12.13",
@@ -40,13 +42,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/"
+            "Pledg\\SyliusPaymentPlugin\\": "src/"
 
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "Tests\\Pledg\\SyliusPaymentPlugin\\": "tests/"
         }
     },
     "extra": {

@@ -5,6 +5,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    reportMixedIssues="false"
 >
     <projectFiles>
         <directory name="src" />
@@ -12,4 +13,27 @@
             <directory name="tests/Application/vendor" />
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <file name="src/Payum/Action/CaptureAction.php" />
+                <file name="src/Payum/Request/RedirectUrl.php" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <PossiblyNullPropertyAssignmentValue>
+            <errorLevel type="suppress">
+                <file name="src/Payum/Request/RedirectUrl.php" />
+            </errorLevel>
+        </PossiblyNullPropertyAssignmentValue>
+        <PossiblyNullPropertyFetch>
+            <errorLevel type="suppress">
+                <file name="src/Payum/Action/StatusAction.php" />
+            </errorLevel>
+        </PossiblyNullPropertyFetch>
+        <PossiblyNullReference>
+            <errorLevel type="suppress">
+                <file name="src/Payum/Action/StatusAction.php" />
+            </errorLevel>
+        </PossiblyNullReference>
+    </issueHandlers>
 </psalm>
