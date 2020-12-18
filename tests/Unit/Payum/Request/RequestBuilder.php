@@ -11,9 +11,18 @@ class RequestBuilder
 {
     protected $token;
 
+    protected $model;
+
     public function __construct()
     {
         $this->buildToken();
+    }
+
+    public function withModel($model): self
+    {
+        $this->model = $model;
+
+        return $this;
     }
 
     public function buildToken()
