@@ -8,6 +8,7 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetStatusInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Status;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StatusAction implements ActionInterface
@@ -21,14 +22,15 @@ class StatusAction implements ActionInterface
     }
 
     /**
-     * @param GetStatusInterface $request
+     * @param GetStatusInterface|mixed $request
      * @throws \JsonException
      */
-    public function execute($request)
+    public function execute($request): void
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-        $pledgResult = $this->requestStack->getCurrentRequest()->query->get('pledg_result');
+        $pledgResult = $this->requestStack->getCurrentRequest() instanceof Request
+            ? $this->requestStack->getCurrentRequest()->query->get('pledg_result') : null;
 
         if (null !== $pledgResult) {
             $status = json_decode(

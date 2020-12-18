@@ -35,15 +35,11 @@ class Status
 
     public function __toString(): string
     {
-        return (string) $this->value;
+        return $this->value;
     }
 
     public function __construct(string $value)
     {
-        if ($value instanceof static) {
-            $value = (string) $value;
-        }
-
         if (!self::isValid($value)) {
             throw new \UnexpectedValueException("Value '$value' is not part of the enum " . static::class);
         }

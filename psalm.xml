@@ -25,5 +25,15 @@
                 <file name="src/Payum/Request/RedirectUrl.php" />
             </errorLevel>
         </PossiblyNullPropertyAssignmentValue>
+        <PossiblyNullPropertyFetch>
+            <errorLevel type="suppress">
+                <file name="src/Payum/Action/StatusAction.php" />
+            </errorLevel>
+        </PossiblyNullPropertyFetch>
+        <PossiblyNullReference>
+            <errorLevel type="suppress">
+                <file name="src/Payum/Action/StatusAction.php" />
+            </errorLevel>
+        </PossiblyNullReference>
     </issueHandlers>
 </psalm>
