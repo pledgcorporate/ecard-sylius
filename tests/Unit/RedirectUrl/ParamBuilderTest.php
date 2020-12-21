@@ -19,7 +19,6 @@ class ParamBuilderTest extends TestCase
 
         self::assertArrayHasKey('merchantUid', $parameters);
         self::assertArrayHasKey('title', $parameters);
-        self::assertArrayHasKey('subtitle', $parameters);
         self::assertArrayHasKey('reference', $parameters);
         self::assertArrayHasKey('amountCents', $parameters);
         self::assertArrayHasKey('currency', $parameters);
