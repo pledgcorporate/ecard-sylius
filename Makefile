@@ -26,21 +26,18 @@ doctrine-validate:
 phpstan: ## launch phpstan
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpstan analyse -c phpstan.neon -l max src/
 
-psalm:
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/psalm
-
-phpspec: ## Launch phpspec tests
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpspec run
-
 phpunit: ## launch phpunit tests
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit --testdox
 
 ecs-check:
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src
+
+ecs-fix:
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src --fix
 
 #behat: ## Launch behat tests
 #	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"
 
-ci: composer-validate doctrine-validate ecs-check phpstan psalm phpspec phpunit #behat
+ci: composer-validate doctrine-validate ecs-check phpstan phpunit #behat
 
 

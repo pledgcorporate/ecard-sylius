@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Payum\Action;
 
@@ -12,6 +13,7 @@ use Payum\Core\GatewayAwareTrait;
 use Payum\Core\Request\Capture;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrl;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
+use Sylius\Bundle\PayumBundle\Request\GetStatus;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 class CaptureAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
@@ -31,6 +33,7 @@ class CaptureAction implements ActionInterface, GatewayAwareInterface, ApiAwareI
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
+        $this->gateway->execute(new GetStatus($request->getModel()));
         $this->gateway->execute(RedirectUrl::fromCaptureAndMerchant($request, $this->api));
     }
 

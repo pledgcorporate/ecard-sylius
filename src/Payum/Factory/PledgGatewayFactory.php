@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Payum\Factory;
 
@@ -16,7 +17,7 @@ class PledgGatewayFactory extends GatewayFactory
             'payum.factory_title' => 'Pledg',
             'payum.api' => function (ArrayObject $config): Merchant {
                 return new Merchant($config['identifier'], $config['secret']);
-            }
+            },
         ]);
     }
 }

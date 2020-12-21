@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\ValueObject;
 
-
-class Merchant
+class Merchant implements MerchantInterface
 {
     /** @var string */
     private $identifier;

@@ -15,6 +15,8 @@ class OrderBuilder
     /** @var int */
     private $total;
 
+    private $number;
+
     /** @var AddressInterface */
     private $shippingAddress;
 
@@ -28,9 +30,31 @@ class OrderBuilder
     {
         $prophet = new Prophet();
         $this->total = 10000;
+        $this->number = 123421234;
         $this->shippingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->billingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->customer = $prophet->prophesize(CustomerInterface::class)->reveal();
+    }
+
+    public function withShippingAddress(AddressInterface $address): self
+    {
+        $this->shippingAddress = $address;
+
+        return $this;
+    }
+
+    public function withBillingAddress(AddressInterface $address): self
+    {
+        $this->billingAddress = $address;
+
+        return $this;
+    }
+
+    public function withCustomer(CustomerInterface $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
     }
 
     public function build(): OrderInterface
@@ -39,6 +63,7 @@ class OrderBuilder
         $order->setBillingAddress($this->billingAddress);
         $order->setShippingAddress($this->shippingAddress);
         $order->setCustomer($this->customer);
+        $order->setNumber($this->number);
         $reflectionClass = new \ReflectionClass(Order::class);
         $total =  $reflectionClass->getProperty('total');
         $total->setAccessible(true);
