@@ -59,10 +59,9 @@ class ParamBuilder implements ParamBuilderInterface
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
             'title' => $this->order->getNumber(),
-            'subtitle' => 'test',
             'reference' => 'pledg_' . $this->payment->getId(),
             'amountCents' => $this->order->getTotal(),
-            'currency' => 'EUR', //$this->payment->getCurrencyCode(),
+            'currency' => $this->payment->getCurrencyCode(),
             'firstName' => $this->billingAddress->getFirstName(),
             'lastName' => $this->billingAddress->getLastName(),
             'email' => $this->customer->getEmail(),
