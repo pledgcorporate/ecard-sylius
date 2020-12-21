@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\ValueObject;
 
@@ -12,25 +13,39 @@ use Payum\Core\Request\GetStatusInterface;
 class Status
 {
     public const WAITING = 'waiting';
+
     public const PENDING = 'pending';
+
     public const AUTHORIZED = 'authorized';
+
     public const PENDING_CAPTURE = 'pending-capture';
+
     public const COMPLETED = 'completed';
+
     public const FAILED = 'failed';
+
     public const VOIDED = 'voided';
+
     public const REFUNDED = 'refunded';
+
     public const IN_REVIEW = 'in-review';
+
     public const BLOCKED = 'blocked';
+
     public const RETRIEVAL_REQUEST = 'retrieval-request';
+
     public const FRAUD_NOTIFICATION = 'fraud-notification';
+
     public const CHARGEBACK_INITIATED = 'chargeback-initiated';
+
     public const SOLVED = 'solved';
+
     public const RESERVED = 'reversed';
 
-    /** @var string  */
+    /** @var string */
     protected $value;
 
-    /** @var array  */
+    /** @var array */
     protected static $cache = [];
 
     public function __toString(): string
@@ -53,21 +68,26 @@ class Status
             case static::PENDING:
             case static::PENDING_CAPTURE:
                 $getStatus->markPending();
+
                 break;
             case static::AUTHORIZED:
                 $getStatus->markAuthorized();
+
                 break;
             case static::COMPLETED:
                 $getStatus->markCaptured();
+
                 break;
             case static::FAILED:
             case static::BLOCKED:
                 $getStatus->markFailed();
+
                 break;
             case static::REFUNDED:
                 $getStatus->markRefunded();
+
                 break;
-            default: // WAITING, PENDING_CAPTURE, VOIDED, RETRIEVAL_REQUEST, FRAUD_NOTIFICATION, CHARGEBACK_INITIATED, SOLVED, RESERVED
+            default: // WAITING, VOIDED, RETRIEVAL_REQUEST, FRAUD_NOTIFICATION, CHARGEBACK_INITIATED, SOLVED, RESERVED
                 $getStatus->markUnknown();
         }
     }

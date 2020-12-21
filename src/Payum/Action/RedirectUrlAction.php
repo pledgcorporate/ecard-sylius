@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Payum\Action;
-
 
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
@@ -32,15 +32,12 @@ class RedirectUrlAction implements ActionInterface
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-
         $parameters = $this->paramBuilderFactory->fromRedirectUrlRequest($request)->build();
         $token = $this->encoder->encode($parameters, $request->getMerchant()->getSecret());
 
-        //throw new HttpRedirect('https://staging.front.ecard.pledg.co/purchase?' . http_build_query($parameters));
-
         $this->setPaymentDetails($request, $parameters, $token);
 
-        throw new HttpRedirect('https://staging.front.ecard.pledg.co/purchase?' . http_build_query($parameters));
+        throw new HttpRedirect('https://staging.front.ecard.pledg.co/purchase?signature=' . $token);
     }
 
     private function setPaymentDetails(RedirectUrlInterface $request, array $parameters, string $token): void
@@ -49,20 +46,13 @@ class RedirectUrlAction implements ActionInterface
             'redirect_parameters' => $parameters,
             'redirect_urls' => [
                 'plain_url' => 'https://staging.front.ecard.pledg.co/purchase?' . http_build_query($parameters),
-                'signed_url' => 'https://staging.front.ecard.pledg.co/purchase?signature=' . $token
-            ]
+                'signed_url' => 'https://staging.front.ecard.pledg.co/purchase?signature=' . $token,
+            ],
         ]);
-    }
-
-    public function encodeURIComponent(string $str): string
-    {
-        $revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
-        return strtr(rawurlencode($str), $revert);
     }
 
     public function supports($request)
     {
         return $request instanceof RedirectUrlInterface;
     }
-
 }

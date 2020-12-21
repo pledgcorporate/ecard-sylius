@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
-
 
 use Payum\Core\Security\TokenInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
@@ -60,13 +60,13 @@ class ParamBuilder implements ParamBuilderInterface
             'merchantUid' => $this->merchant->getIdentifier(),
             'title' => $this->order->getNumber(),
             'subtitle' => 'test',
-            'reference' => $this->payment->getId(),
+            'reference' => 'pledg_' . $this->payment->getId(),
             'amountCents' => $this->order->getTotal(),
             'currency' => 'EUR', //$this->payment->getCurrencyCode(),
             'firstName' => $this->billingAddress->getFirstName(),
             'lastName' => $this->billingAddress->getLastName(),
-            'email' => 'contact@fabiensalles.com', // $this->customer->getEmail(),
-            'phoneNumber' => $this->customer->getPhoneNumber(),
+            'email' => $this->customer->getEmail(),
+            'phoneNumber' => $this->billingAddress->getPhoneNumber(),
             'address' => $this->buildAddress($this->billingAddress),
             'shippingAddress' => $this->buildAddress($this->shippingAddress),
             'redirectUrl' => $this->token->getAfterUrl(),
@@ -80,7 +80,7 @@ class ParamBuilder implements ParamBuilderInterface
         return [
             'street' => $address->getStreet(),
             'city' => $address->getCity(),
-            'zipcode' => $address->getCity(),
+            'zipcode' => $address->getPostcode(),
             'country' => $address->getCountryCode(),
         ];
     }

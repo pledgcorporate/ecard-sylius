@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Payum\Action;
-
 
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Bridge\Spl\ArrayObject;
@@ -18,6 +18,7 @@ class StatusAction implements ActionInterface
     private $requestStack;
 
     private const PLEDG_RESULT = 'pledg_result';
+
     private const PLEDG_ERROR = 'pledg_error';
 
     public function __construct(RequestStack $requestStack)
@@ -27,6 +28,7 @@ class StatusAction implements ActionInterface
 
     /**
      * @param GetStatusInterface|mixed $request
+     *
      * @throws \JsonException
      */
     public function execute($request): void
@@ -38,11 +40,13 @@ class StatusAction implements ActionInterface
 
         if (null !== $jsonResult) {
             $this->handlePledgResult($request, $jsonResult);
+
             return;
         }
 
         if (null !== $jsonError) {
             $this->handlePledgError($request, $jsonError);
+
             return;
         }
 
@@ -75,7 +79,6 @@ class StatusAction implements ActionInterface
         } else {
             $request->markFailed();
         }
-
     }
 
     private function setPaymentDetails(GetStatusInterface $status, string $key, array $result): void
@@ -83,7 +86,7 @@ class StatusAction implements ActionInterface
         /** @var ArrayObject $arrayObject */
         $arrayObject = $status->getModel();
         $arrayObject['redirect_result'] = [
-            $key => $result
+            $key => $result,
         ];
         $status->setModel($arrayObject);
     }
@@ -100,7 +103,7 @@ class StatusAction implements ActionInterface
             $input,
             true,
             512,
-            JSON_THROW_ON_ERROR
+            \JSON_THROW_ON_ERROR
         );
     }
 
@@ -111,5 +114,4 @@ class StatusAction implements ActionInterface
             $request->getModel() instanceof \ArrayAccess
             ;
     }
-
 }
