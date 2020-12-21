@@ -20,6 +20,6 @@ class EncoderTest extends TestCase
 
         $token = $encoder->encode($parameters, $request->getMerchant()->getSecret());
 
-        self::assertSame($parameters, $encoder->decode($token));
+        self::assertSame(['data' => $parameters], $encoder->decode($token));
     }
 }

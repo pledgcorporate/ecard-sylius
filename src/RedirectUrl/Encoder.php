@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
-use MiladRahimi\Jwt\Cryptography\Algorithms\Hmac\HS256;
-
 /**
  * Encode parameters with JWT HS256 algorithm
  */
