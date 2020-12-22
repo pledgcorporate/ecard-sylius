@@ -4,6 +4,8 @@
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
 
 
+use Payum\Core\Model\GatewayConfigInterface;
+use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
 use Prophecy\Prophet;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\Payment;
@@ -37,9 +39,32 @@ class PaymentBuilder
         $this->id = 1234;
     }
 
+    public function withId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function withOrder(OrderInterface $order): self
     {
         $this->order = $order;
+
+        return $this;
+    }
+
+    public function withMerchant(Merchant $merchant): self
+    {
+        $prophet = new Prophet();
+        $method = $prophet->prophesize(PaymentMethodInterface::class);
+        $gatewayConfig = $prophet->prophesize(GatewayConfigInterface::class);
+        $gatewayConfig->getConfig()->willReturn([
+            'identifier' => $merchant->getIdentifier(),
+            'secret' => $merchant->getSecret(),
+        ]);
+        $method->getGateWayConfig()->willReturn($gatewayConfig->reveal());
+
+        $this->method = $method->reveal();
 
         return $this;
     }
@@ -54,7 +79,7 @@ class PaymentBuilder
         $reflectionClass = new \ReflectionClass(Payment::class);
         $id =  $reflectionClass->getProperty('id');
         $id->setAccessible(true);
-        $id->setValue($id, $this->id);
+        $id->setValue($payment, $this->id);
 
         return $payment;
     }

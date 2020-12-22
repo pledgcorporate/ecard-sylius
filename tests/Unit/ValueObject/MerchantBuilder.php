@@ -22,6 +22,13 @@ class MerchantBuilder
         $this->secret = self::VALID_SECRET;
     }
 
+    public function withSecret(string $secret): self
+    {
+        $this->secret = $secret;
+
+        return $this;
+    }
+
     public function build(): Merchant
     {
         return new Merchant($this->identifier, $this->secret);

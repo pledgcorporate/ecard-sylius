@@ -7,6 +7,7 @@ namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 use Payum\Core\Security\TokenInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
+use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -59,7 +60,7 @@ class ParamBuilder implements ParamBuilderInterface
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
             'title' => $this->order->getNumber(),
-            'reference' => 'pledg_' . $this->payment->getId(),
+            'reference' => (string) new Reference($this->payment->getId()),
             'amountCents' => $this->order->getTotal(),
             'currency' => $this->payment->getCurrencyCode(),
             'firstName' => $this->billingAddress->getFirstName(),

@@ -1,9 +1,3 @@
 acme_sylius_example_shop:
-    resource: "@PledgSyliusPaymentPlugin/Resources/config/shop_routing.yml"
-    prefix: /{_locale}
-    requirements:
-        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
-
-acme_sylius_example_admin:
-    resource: "@PledgSyliusPaymentPlugin/Resources/config/admin_routing.yml"
-    prefix: /admin
+    resource: "@PledgSyliusPaymentPlugin/Resources/config/routing.yml"
+    prefix: /pledg
