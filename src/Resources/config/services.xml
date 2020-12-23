@@ -45,6 +45,7 @@
             <tag name="payum.action" factory="pledg" alias="payum.action.capture" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction" public="true">
+            <argument key="$pledgUrl">%pledg_sylius_payment_plugin.front_url%</argument>
             <tag name="payum.action" factory="pledg" alias="payum.action.redirect_url" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">

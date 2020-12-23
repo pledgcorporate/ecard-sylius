@@ -1,0 +1,3 @@
+pledg_sylius_payment_plugin:
+    identifier: Merchant identifier
+    secret: Secret
