@@ -19,6 +19,7 @@ class RedirectUrlAction implements ActionInterface
     /** @var EncoderInterface */
     protected $encoder;
 
+    /** @var string  */
     protected $pledgUrl;
 
     public function __construct(
@@ -40,7 +41,7 @@ class RedirectUrlAction implements ActionInterface
 
         $parameters = $this->paramBuilderFactory->fromRedirectUrlRequest($request)->build();
         $token = $this->encoder->encode($parameters, $request->getMerchant()->getSecret());
-        
+
         $this->setPaymentDetails($request, $parameters, $token);
 
         throw new HttpRedirect($this->getPurchaseUrl() . '?signature=' . $token);
