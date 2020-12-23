@@ -14,3 +14,6 @@ parameters:
 sylius_shop:
     product_grid:
         include_all_descendants: true
+
+pledg_sylius_payment:
+    sandbox: true

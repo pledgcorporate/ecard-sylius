@@ -5,6 +5,7 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Action;
 
 
 use Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction;
+use Pledg\SyliusPaymentPlugin\PledgUrl;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\Encoder;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory;
@@ -27,6 +28,6 @@ class RedirectUrlActionBuilder
 
     public function build(): RedirectUrlAction
     {
-        return new RedirectUrlAction($this->paramBuilderFactory, $this->encoder);
+        return new RedirectUrlAction($this->paramBuilderFactory, $this->encoder, PledgUrl::SANDBOX_FRONT);
     }
 }

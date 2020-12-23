@@ -19,10 +19,16 @@ class RedirectUrlAction implements ActionInterface
     /** @var EncoderInterface */
     protected $encoder;
 
-    public function __construct(ParamBuilderFactoryInterface $paramBuilderFactory, EncoderInterface $encoder)
-    {
+    protected $pledgUrl;
+
+    public function __construct(
+        ParamBuilderFactoryInterface $paramBuilderFactory,
+        EncoderInterface $encoder,
+        string $pledgUrl
+    ) {
         $this->paramBuilderFactory = $paramBuilderFactory;
         $this->encoder = $encoder;
+        $this->pledgUrl = $pledgUrl;
     }
 
     /**
@@ -34,10 +40,10 @@ class RedirectUrlAction implements ActionInterface
 
         $parameters = $this->paramBuilderFactory->fromRedirectUrlRequest($request)->build();
         $token = $this->encoder->encode($parameters, $request->getMerchant()->getSecret());
-
+        
         $this->setPaymentDetails($request, $parameters, $token);
 
-        throw new HttpRedirect('https://staging.front.ecard.pledg.co/purchase?signature=' . $token);
+        throw new HttpRedirect($this->getPurchaseUrl() . '?signature=' . $token);
     }
 
     private function setPaymentDetails(RedirectUrlInterface $request, array $parameters, string $token): void
@@ -45,8 +51,8 @@ class RedirectUrlAction implements ActionInterface
         $request->getPayment()->setDetails([
             'redirect_parameters' => $parameters,
             'redirect_urls' => [
-                'plain_url' => 'https://staging.front.ecard.pledg.co/purchase?' . http_build_query($parameters),
-                'signed_url' => 'https://staging.front.ecard.pledg.co/purchase?signature=' . $token,
+                'plain_url' => $this->getPurchaseUrl() . '?' . http_build_query($parameters),
+                'signed_url' => $this->getPurchaseUrl() . '?signature=' . $token,
             ],
         ]);
     }
@@ -54,5 +60,10 @@ class RedirectUrlAction implements ActionInterface
     public function supports($request)
     {
         return $request instanceof RedirectUrlInterface;
+    }
+
+    protected function getPurchaseUrl(): string
+    {
+        return sprintf('%s/purchase', $this->pledgUrl);
     }
 }

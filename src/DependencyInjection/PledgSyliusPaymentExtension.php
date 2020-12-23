@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\DependencyInjection;
 
+use Pledg\SyliusPaymentPlugin\PledgUrl;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -16,6 +17,11 @@ final class PledgSyliusPaymentExtension extends Extension
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $container->setParameter(
+            'pledg_sylius_payment_plugin.front_url',
+            $config['sandbox'] ? PledgUrl::SANDBOX_FRONT : PledgUrl::PROD_FRONT
+        );
 
         $loader->load('services.xml');
     }
