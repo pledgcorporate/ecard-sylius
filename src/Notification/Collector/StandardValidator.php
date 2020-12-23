@@ -69,7 +69,7 @@ class StandardValidator implements ValidatorInterface
     {
         $parameters = $this->retrieveSignedParameters($content);
         /** @var string $hash */
-        $hash = hash('SHA256', implode($parameters, $merchant->getSecret()));
+        $hash = hash('SHA256', implode($merchant->getSecret(), $parameters));
 
         return strtoupper($hash);
     }
