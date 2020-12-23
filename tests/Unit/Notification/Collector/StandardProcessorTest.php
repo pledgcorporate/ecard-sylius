@@ -78,7 +78,7 @@ class StandardProcessorTest extends TestCase
     private function buildValidPayment(array $content): PaymentInterface
     {
         return (new PaymentBuilder())
-            ->withId(Reference::fromString($content['reference'])->getId())
+            ->withId(Reference::fromString($content['reference'])->getPaymentId())
             ->withMerchant(
                 (new MerchantBuilder())
                     ->withSecret('SECRET')
@@ -113,7 +113,7 @@ class StandardProcessorTest extends TestCase
     private function buildWithInvalidSignature(array $content): ProcessorInterface
     {
         $payment = (new PaymentBuilder())
-            ->withId(Reference::fromString($content['reference'])->getId())
+            ->withId(Reference::fromString($content['reference'])->getPaymentId())
             ->withMerchant(
                 (new MerchantBuilder())
                     ->build()

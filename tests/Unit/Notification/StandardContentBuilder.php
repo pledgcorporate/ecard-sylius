@@ -44,8 +44,8 @@ class StandardContentBuilder
         $this->status = new Status(Status::COMPLETED);
         $this->sandbox = true;
         $this->error = '';
-        $this->reference = 'PLEDG_1086986786391';
-        $this->signature = 'B1C777835C01CA96AC4C3097FD46A7CA49B92BE157EDE0CB3552880D12A15359';
+        $this->reference = 'PLEDG_108698_6786391';
+        $this->signature = '6E9728899AA20E5767015165177B304ECDA4E48E79918E21D26C905E575B1EEB';
     }
 
     public function withReference(string $reference): self

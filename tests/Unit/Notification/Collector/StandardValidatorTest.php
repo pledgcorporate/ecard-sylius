@@ -5,7 +5,6 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\Collector;
 
 use Doctrine\ORM\ORMException;
 use PHPUnit\Framework\TestCase;
-use Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator;
 use Pledg\SyliusPaymentPlugin\Notification\Collector\ValidatorInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\StandardContentBuilder;
@@ -54,7 +53,7 @@ class StandardValidatorTest extends TestCase
     private function buildWithValidContent(array $content): ValidatorInterface
     {
         $payment = (new PaymentBuilder())
-            ->withId(Reference::fromString($content['reference'])->getId())
+            ->withId(Reference::fromString($content['reference'])->getPaymentId())
             ->withMerchant(
                 (new MerchantBuilder())
                     ->withSecret('SECRET')

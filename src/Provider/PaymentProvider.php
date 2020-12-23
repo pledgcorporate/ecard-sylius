@@ -23,7 +23,7 @@ final class PaymentProvider implements PaymentProviderInterface
         $vo = Reference::fromString($reference);
 
         /** @var PaymentInterface $payment */
-        $payment = $this->paymentRepository->find($vo->getId());
+        $payment = $this->paymentRepository->find($vo->getPaymentId());
 
         return $payment;
     }

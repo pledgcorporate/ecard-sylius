@@ -9,31 +9,43 @@ use Webmozart\Assert\Assert;
 class Reference
 {
     /** @var int */
-    private $id;
+    private $paymentId;
 
-    private const PREFIX = 'PLEDG_';
+    /** @var int */
+    private $orderId;
 
-    public function __construct(int $id)
+    private const PREFIX = 'PLEDG';
+
+    public function __construct(int $orderId, int $paymentId)
     {
-        $this->id = $id;
+        $this->orderId = $orderId;
+        $this->paymentId = $paymentId;
     }
 
-    public function getId(): int
+    public function getPaymentId(): int
     {
-        return $this->id;
+        return $this->paymentId;
+    }
+
+    public function getOrderId(): int
+    {
+        return $this->orderId;
     }
 
     public function __toString(): string
     {
-        return sprintf('%s%d', self::PREFIX, $this->id);
+        return sprintf('%s_%d_%d', self::PREFIX, $this->orderId, $this->paymentId);
     }
 
     public static function fromString(string $reference): self
     {
-        $id = (int) str_replace(self::PREFIX, '', $reference);
-        $vo = new self($id);
+        $parts = explode('_', $reference);
 
-        Assert::eq($reference, (string) $vo);
+        Assert::count($parts, 3, sprintf('The reference %s is invalid the format should be PLEG_ORDERID_PAYMENTID', $reference));
+        Assert::eq($parts[0], self::PREFIX);
+        $vo = new self((int) $parts[1], (int) $parts[2]);
+
+        Assert::eq($reference, (string) $vo, sprintf('The reference is invalid : %s provide %s expected', $reference, (string) $vo));
 
         return $vo;
     }
