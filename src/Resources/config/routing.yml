@@ -1,4 +1,4 @@
-pledg_sylius_payment_plugin_wehbook_notification:
+pledg_sylius_payment_plugin_webhook_notification:
     path: /notification
     methods: POST
     defaults:

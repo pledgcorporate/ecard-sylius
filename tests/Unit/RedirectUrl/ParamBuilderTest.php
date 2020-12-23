@@ -6,6 +6,7 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\RedirectUrl;
 use PHPUnit\Framework\TestCase;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrl;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilder;
+use Symfony\Component\Routing\RouterInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request\RedirectUrlBuilder;
 
 class ParamBuilderTest extends TestCase
@@ -15,7 +16,7 @@ class ParamBuilderTest extends TestCase
     {
         $redirectUrl = (new RedirectUrlBuilder())->withCompleteCaptureRequest()->build();
 
-        $parameters = ParamBuilder::fromRedirectUrlRequest($redirectUrl)->build();
+        $parameters = ParamBuilder::fromRedirectUrlRequest($redirectUrl,  $this->prophesize(RouterInterface::class)->reveal())->build();
 
         self::assertArrayHasKey('merchantUid', $parameters);
         self::assertArrayHasKey('title', $parameters);

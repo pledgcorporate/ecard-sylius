@@ -12,6 +12,7 @@ use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class ParamBuilder implements ParamBuilderInterface
 {
@@ -36,9 +37,13 @@ class ParamBuilder implements ParamBuilderInterface
     /** @var TokenInterface */
     protected $token;
 
-    public static function fromRedirectUrlRequest(RedirectUrlInterface $request): ParamBuilderInterface
+    /** @var RouterInterface */
+    protected $router;
+
+    public static function fromRedirectUrlRequest(RedirectUrlInterface $request, RouterInterface $router): ParamBuilderInterface
     {
         $builder = new self();
+        $builder->router = $router;
         $builder->payment = $request->getModel();
         $builder->order = $builder->payment->getOrder();
         $builder->customer = $builder->order->getCustomer();
@@ -71,7 +76,11 @@ class ParamBuilder implements ParamBuilderInterface
             'shippingAddress' => $this->buildAddress($this->shippingAddress),
             'redirectUrl' => $this->token->getAfterUrl(),
             'cancelUrl' => $this->token->getAfterUrl(),
-            'paymentNotificationUrl' => 'http://www.google.com',
+            'paymentNotificationUrl' => $this->router->generate(
+                'pledg_sylius_payment_plugin_webhook_notification',
+                [],
+                RouterInterface::ABSOLUTE_URL
+            ),
         ];
     }
 
