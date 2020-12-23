@@ -1,0 +1,5 @@
+pledg_sylius_payment_plugin_webhook_notification:
+    path: /notification
+    methods: POST
+    defaults:
+        _controller: Pledg\SyliusPaymentPlugin\Controller\Webhook\NotificationAction

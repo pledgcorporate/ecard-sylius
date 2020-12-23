@@ -5,6 +5,7 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use Pledg\SyliusPaymentPlugin\ValueObject\Status;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request\GetStatusBuilder;
 
 class StatusTest extends TestCase
@@ -50,6 +51,36 @@ class StatusTest extends TestCase
         return [
             Status::PENDING => [new Status(Status::PENDING)],
             Status::PENDING_CAPTURE => [new Status(Status::PENDING_CAPTURE)]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider convertStatus
+     */
+    public function it_convert_status_to_payment_state(Status $status, string $state): void
+    {
+        self::assertSame($status->convertToPaymentState(), $state);
+    }
+
+    public function convertStatus(): array
+    {
+        return [
+            Status::PENDING => [new Status(Status::PENDING), PaymentInterface::STATE_PROCESSING],
+            Status::PENDING_CAPTURE => [new Status(Status::PENDING_CAPTURE), PaymentInterface::STATE_PROCESSING],
+            Status::IN_REVIEW => [new Status(Status::IN_REVIEW), PaymentInterface::STATE_PROCESSING],
+            Status::AUTHORIZED => [new Status(Status::AUTHORIZED), PaymentInterface::STATE_AUTHORIZED],
+            Status::COMPLETED => [new Status(Status::COMPLETED), PaymentInterface::STATE_COMPLETED],
+            Status::FAILED => [new Status(Status::FAILED), PaymentInterface::STATE_FAILED],
+            Status::BLOCKED => [new Status(Status::BLOCKED), PaymentInterface::STATE_FAILED],
+            Status::REFUNDED => [new Status(Status::REFUNDED), PaymentInterface::STATE_REFUNDED],
+            Status::CHARGEBACK_INITIATED => [new Status(Status::CHARGEBACK_INITIATED), PaymentInterface::STATE_UNKNOWN],
+            Status::FRAUD_NOTIFICATION => [new Status(Status::FRAUD_NOTIFICATION), PaymentInterface::STATE_UNKNOWN],
+            Status::RESERVED => [new Status(Status::RESERVED), PaymentInterface::STATE_UNKNOWN],
+            Status::SOLVED => [new Status(Status::SOLVED), PaymentInterface::STATE_UNKNOWN],
+            Status::VOIDED => [new Status(Status::VOIDED), PaymentInterface::STATE_UNKNOWN],
+            Status::RETRIEVAL_REQUEST => [new Status(Status::RETRIEVAL_REQUEST), PaymentInterface::STATE_UNKNOWN],
+            Status::WAITING => [new Status(Status::WAITING), PaymentInterface::STATE_UNKNOWN],
         ];
     }
 }

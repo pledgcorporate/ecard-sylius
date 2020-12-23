@@ -12,6 +12,9 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 class OrderBuilder
 {
+    /** @var int  */
+    private $id;
+
     /** @var int */
     private $total;
 
@@ -29,6 +32,7 @@ class OrderBuilder
     public function __construct()
     {
         $prophet = new Prophet();
+        $this->id = 1234;
         $this->total = 10000;
         $this->number = 123421234;
         $this->shippingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
@@ -68,6 +72,9 @@ class OrderBuilder
         $total =  $reflectionClass->getProperty('total');
         $total->setAccessible(true);
         $total->setValue($order, $this->total);
+        $id =  $reflectionClass->getProperty('id');
+        $id->setAccessible(true);
+        $id->setValue($order, $this->id);
 
         return $order;
     }

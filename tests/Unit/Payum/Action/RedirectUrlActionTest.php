@@ -37,7 +37,9 @@ class RedirectUrlActionTest extends TestCase
     /** @test */
     public function it_throw_HttpRedirect_response_with_valid_request(): void
     {
-        $request = (new RedirectUrlBuilder())->build();
+        $request = (new RedirectUrlBuilder())
+            ->withCompleteCaptureRequest()
+            ->build();
         $action = (new RedirectUrlActionBuilder())->build();
 
         $this->expectException(HttpRedirect::class);

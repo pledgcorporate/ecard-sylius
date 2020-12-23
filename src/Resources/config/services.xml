@@ -2,6 +2,29 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <defaults autowire="true" autoconfigure="true" public="false"/>
+
+        <service id="Pledg\SyliusPaymentPlugin\Provider\MerchantProvider" />
+        <service id="Pledg\SyliusPaymentPlugin\Provider\MerchantProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\MerchantProvider" />
+
+        <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentProvider">
+            <argument type="service" id="sylius.repository.payment" />
+        </service>
+        <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\PaymentProvider" />
+
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardProcessor">
+            <argument type="service" key="$validator" id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
+            <argument type="service" key="$stateMachineFactory" id="sm.factory" />
+        </service>
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\ProcessorInterface" alias="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardProcessor" />
+
+        <service id="Pledg\SyliusPaymentPlugin\Controller\Webhook\NotificationAction">
+            <argument type="service" key="$paymentManager" id="doctrine.orm.entity_manager" />
+            <tag name="controller.service_arguments"/>
+        </service>
 
         <service id="pledg_sylius_payment_plugin.factory.pledg_gateway_factory" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory</argument>
@@ -22,12 +45,9 @@
             <tag name="payum.action" factory="pledg" alias="payum.action.capture" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction" public="true">
-            <argument type="service" id="Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface" />
-            <argument type="service" id="Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface" />
             <tag name="payum.action" factory="pledg" alias="payum.action.redirect_url" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">
-            <argument type="service" id="request_stack" />
             <tag name="payum.action" factory="pledg" alias="payum.action.status"/>
         </service>
     </services>

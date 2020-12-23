@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pledg\SyliusPaymentPlugin\ValueObject;
 
 use Payum\Core\Request\GetStatusInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
 
 /**
  * Source :
@@ -89,6 +90,27 @@ class Status
                 break;
             default: // WAITING, VOIDED, RETRIEVAL_REQUEST, FRAUD_NOTIFICATION, CHARGEBACK_INITIATED, SOLVED, RESERVED
                 $getStatus->markUnknown();
+        }
+    }
+
+    public function convertToPaymentState(): string
+    {
+        switch ($this->value) {
+            case static::PENDING:
+            case static::PENDING_CAPTURE:
+            case static::IN_REVIEW:
+                return PaymentInterface::STATE_PROCESSING;
+            case static::AUTHORIZED:
+                return PaymentInterface::STATE_AUTHORIZED;
+            case static::COMPLETED:
+                return PaymentInterface::STATE_COMPLETED;
+            case static::FAILED:
+            case static::BLOCKED:
+                return PaymentInterface::STATE_FAILED;
+            case static::REFUNDED:
+                return PaymentInterface::STATE_REFUNDED;
+            default: // WAITING, VOIDED, RETRIEVAL_REQUEST, FRAUD_NOTIFICATION, CHARGEBACK_INITIATED, SOLVED, RESERVED
+                return PaymentInterface::STATE_UNKNOWN;
         }
     }
 
