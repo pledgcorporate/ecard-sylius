@@ -19,7 +19,7 @@ class RedirectUrlAction implements ActionInterface
     /** @var EncoderInterface */
     protected $encoder;
 
-    /** @var string  */
+    /** @var string */
     protected $pledgUrl;
 
     public function __construct(
