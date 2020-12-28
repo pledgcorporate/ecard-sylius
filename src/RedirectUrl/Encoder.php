@@ -16,7 +16,7 @@ class Encoder implements EncoderInterface
             $this->safeBase65Encode(json_encode(['data' => $parameters], \JSON_THROW_ON_ERROR)), // build Parameters
         ];
 
-        $segments[] = $this->safeBase65Encode(hash_hmac('sha256', implode('.', $segments), $secret)); // build the signature
+        $segments[] = $this->safeBase65Encode(hash_hmac('sha256', implode('.', $segments), $secret, true)); // build the signature
 
         return implode('.', $segments);
     }
