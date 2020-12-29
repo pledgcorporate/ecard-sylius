@@ -1,3 +1,3 @@
-acme_sylius_example_shop:
+pledg_sylius_payment:
     resource: "@PledgSyliusPaymentPlugin/Resources/config/routing.yml"
     prefix: /pledg
