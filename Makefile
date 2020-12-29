@@ -30,10 +30,10 @@ phpunit: ## launch phpunit tests
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit --testdox
 
 ecs-check:
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit
 
 ecs-fix:
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src --fix
+	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit --fix
 
 #behat: ## Launch behat tests
 #	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"

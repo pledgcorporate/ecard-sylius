@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\ValueObject;
 
@@ -50,7 +51,7 @@ class StatusTest extends TestCase
     {
         return [
             Status::PENDING => [new Status(Status::PENDING)],
-            Status::PENDING_CAPTURE => [new Status(Status::PENDING_CAPTURE)]
+            Status::PENDING_CAPTURE => [new Status(Status::PENDING_CAPTURE)],
         ];
     }
 

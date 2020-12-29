@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Repository;
-
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
@@ -19,6 +19,7 @@ class InMemoryPaymentRepository implements PaymentRepositoryInterface
         if (!isset($this->payments[$id])) {
             throw new EntityNotFoundException(sprintf('The payment %s does not exist', $id));
         }
+
         return $this->payments[$id];
     }
 

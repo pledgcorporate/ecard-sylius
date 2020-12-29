@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request;
-
 
 use Payum\Core\Request\Capture;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrl;
@@ -57,6 +57,6 @@ class RedirectUrlBuilder extends RequestBuilder
 
     public function build(): RedirectUrlInterface
     {
-       return RedirectUrl::fromCaptureAndMerchant($this->capture, $this->merchant);
+        return RedirectUrl::fromCaptureAndMerchant($this->capture, $this->merchant);
     }
 }

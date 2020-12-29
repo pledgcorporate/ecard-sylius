@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\Collector;
 
@@ -36,7 +37,6 @@ class StandardValidatorTest extends TestCase
         $validator = $this->buildWithValidContent($content);
 
         self::assertTrue($validator->validate($content));
-
     }
 
     /** @test */

@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request;
-
 
 use Payum\Core\Request\Capture;
 use Sylius\Component\Core\Model\PaymentInterface;

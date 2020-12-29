@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
-
 
 use Sylius\Component\Core\Model\Customer;
 use Sylius\Component\Core\Model\CustomerInterface;

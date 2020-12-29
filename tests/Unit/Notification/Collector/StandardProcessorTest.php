@@ -1,19 +1,17 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\Collector;
-
 
 use PHPUnit\Framework\TestCase;
 use Pledg\SyliusPaymentPlugin\Notification\Collector\InvalidSignatureException;
 use Pledg\SyliusPaymentPlugin\Notification\Collector\NotSupportedException;
 use Pledg\SyliusPaymentPlugin\Notification\Collector\ProcessorInterface;
-use Pledg\SyliusPaymentPlugin\Notification\Collector\ValidatorInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
 use Pledg\SyliusPaymentPlugin\ValueObject\Status;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Payment\PaymentTransitions;
-use Sylius\Component\Resource\StateMachine\StateMachine;
 use Sylius\Component\Resource\StateMachine\StateMachineInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\StandardContentBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Provider\PaymentProviderBuilder;

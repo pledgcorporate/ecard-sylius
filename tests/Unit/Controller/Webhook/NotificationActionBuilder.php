@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Controller\Webhook;
-
 
 use Doctrine\Persistence\ObjectManager;
 use Pledg\SyliusPaymentPlugin\Controller\Webhook\NotificationAction;

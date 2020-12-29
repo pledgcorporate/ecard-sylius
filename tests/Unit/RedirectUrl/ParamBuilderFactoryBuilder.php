@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\RedirectUrl;
-
 
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface;

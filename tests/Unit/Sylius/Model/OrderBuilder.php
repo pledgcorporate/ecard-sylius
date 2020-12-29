@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
-
 
 use Prophecy\Prophet;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -12,7 +12,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 class OrderBuilder
 {
-    /** @var int  */
+    /** @var int */
     private $id;
 
     /** @var int */
@@ -34,7 +34,7 @@ class OrderBuilder
         $prophet = new Prophet();
         $this->id = 1234;
         $this->total = 10000;
-        $this->number = 123421234;
+        $this->number = '123421234';
         $this->shippingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->billingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->customer = $prophet->prophesize(CustomerInterface::class)->reveal();
@@ -69,10 +69,10 @@ class OrderBuilder
         $order->setCustomer($this->customer);
         $order->setNumber($this->number);
         $reflectionClass = new \ReflectionClass(Order::class);
-        $total =  $reflectionClass->getProperty('total');
+        $total = $reflectionClass->getProperty('total');
         $total->setAccessible(true);
         $total->setValue($order, $this->total);
-        $id =  $reflectionClass->getProperty('id');
+        $id = $reflectionClass->getProperty('id');
         $id->setAccessible(true);
         $id->setValue($order, $this->id);
 

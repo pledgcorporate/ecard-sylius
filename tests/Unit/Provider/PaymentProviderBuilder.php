@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Provider;
-
 
 use Pledg\SyliusPaymentPlugin\Provider\PaymentProvider;
 use Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface;
@@ -11,7 +11,7 @@ use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Repository\InMemoryPaymentReposi
 
 class PaymentProviderBuilder
 {
-    /** @var PaymentRepositoryInterface  */
+    /** @var PaymentRepositoryInterface */
     private $repository;
 
     public function __construct()

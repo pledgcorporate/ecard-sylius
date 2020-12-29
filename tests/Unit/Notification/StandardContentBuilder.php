@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Notification;
-
 
 use Pledg\SyliusPaymentPlugin\ValueObject\Status;
 
@@ -39,7 +39,7 @@ class StandardContentBuilder
     {
         $this->createdAt = '2019-04-04T12:20:34.97138Z';
         $this->id = 'test-valid';
-        $this->additionalData = ['xx' => 'yy' ];
+        $this->additionalData = ['xx' => 'yy'];
         $this->metadata = ['foo' => 'bar'];
         $this->status = new Status(Status::COMPLETED);
         $this->sandbox = true;
@@ -66,7 +66,7 @@ class StandardContentBuilder
             'sandbox' => $this->sandbox,
             'error' => $this->error,
             'reference' => $this->reference,
-            'signature' => $this->signature
+            'signature' => $this->signature,
         ];
     }
 }

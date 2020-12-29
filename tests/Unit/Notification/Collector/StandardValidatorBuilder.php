@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\Collector;
-
 
 use Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator;
 use Pledg\SyliusPaymentPlugin\Notification\Collector\ValidatorInterface;

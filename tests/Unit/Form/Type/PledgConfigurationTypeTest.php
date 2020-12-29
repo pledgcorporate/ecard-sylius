@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Form\Type;
-
 
 use Pledg\SyliusPaymentPlugin\Form\Type\PledgConfigurationType;
 use Symfony\Component\Form\Test\TypeTestCase;
@@ -24,6 +24,5 @@ class PledgConfigurationTypeTest extends TypeTestCase
         // This check ensures there are no transformation failures
         self::assertTrue($form->isSynchronized());
         self::assertSame($formData, $form->getData());
-
     }
 }
