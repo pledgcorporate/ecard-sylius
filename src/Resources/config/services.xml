@@ -4,6 +4,9 @@
     <services>
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
+        <service id="Pledg\SyliusPaymentPlugin\JWT\HS256Handler" />
+        <service id="Pledg\SyliusPaymentPlugin\JWT\HandlerInterface" alias="Pledg\SyliusPaymentPlugin\JWT\HS256Handler" />
+
         <service id="Pledg\SyliusPaymentPlugin\Provider\MerchantProvider" />
         <service id="Pledg\SyliusPaymentPlugin\Provider\MerchantProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\MerchantProvider" />
 

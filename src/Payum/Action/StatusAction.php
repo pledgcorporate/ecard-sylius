@@ -59,13 +59,9 @@ class StatusAction implements ActionInterface
 
         $this->setPaymentDetails($request, self::PLEDG_RESULT, $result);
 
-        $status = $result['transaction']['status'] ?? null;
+        $status = $result['transaction']['status'] ?? Status::WAITING; // waiting for transfer mode
 
-        if (null !== $status) {
-            (new Status($status))->markRequest($request);
-        } else {
-            $request->markUnknown();
-        }
+        (new Status($status))->markRequest($request);
     }
 
     private function handlePledgError(GetStatusInterface $request, string $jsonError): void

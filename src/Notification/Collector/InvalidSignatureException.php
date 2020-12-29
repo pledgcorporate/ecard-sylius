@@ -14,4 +14,9 @@ class InvalidSignatureException extends \InvalidArgumentException implements Col
             json_encode($content, \JSON_THROW_ON_ERROR)
         ));
     }
+
+    public static function withSignature(string $signature): self
+    {
+        return new self(sprintf('The signature %s is not valid', $signature));
+    }
 }
