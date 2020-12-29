@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
-
 
 use Sylius\Component\Core\Model\Address;
 use Sylius\Component\Core\Model\AddressInterface;

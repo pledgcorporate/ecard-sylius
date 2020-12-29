@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\ValueObject;
 
-
 use PHPUnit\Framework\TestCase;
-use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
 
 class MerchantTest extends TestCase
 {

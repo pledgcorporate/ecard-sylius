@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Action;
-
 
 use Payum\Core\Exception\RequestNotSupportedException;
 use PHPUnit\Framework\TestCase;
@@ -56,9 +56,9 @@ class StatusActionTest extends TestCase
         $request->query = new ParameterBag([
             'pledg_result' => json_encode([
                 'transaction' => [
-                    'status' => (string)$status
-                ]
-            ], JSON_THROW_ON_ERROR)
+                    'status' => (string) $status,
+                ],
+            ], \JSON_THROW_ON_ERROR),
         ]);
         $requestStack = $this->prophesize(RequestStack::class);
         $requestStack->getCurrentRequest()->willReturn($request->reveal());

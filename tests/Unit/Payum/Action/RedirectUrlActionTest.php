@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request;
-
 
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Reply\HttpRedirect;
 use PHPUnit\Framework\TestCase;
-use Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Action\RedirectUrlActionBuilder;
 
 class RedirectUrlActionTest extends TestCase

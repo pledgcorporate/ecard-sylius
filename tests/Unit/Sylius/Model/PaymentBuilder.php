@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
-
 
 use Payum\Core\Model\GatewayConfigInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
@@ -14,7 +14,7 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentBuilder
 {
-    /** @var integer */
+    /** @var int */
     private $id;
 
     /** @var PaymentMethodInterface */
@@ -26,7 +26,7 @@ class PaymentBuilder
     /** @var string */
     private $currencyCode;
 
-    /** @var integer */
+    /** @var int */
     private $amount;
 
     public function __construct()
@@ -77,7 +77,7 @@ class PaymentBuilder
         $payment->setAmount($this->amount);
         $payment->setCurrencyCode($this->currencyCode);
         $reflectionClass = new \ReflectionClass(Payment::class);
-        $id =  $reflectionClass->getProperty('id');
+        $id = $reflectionClass->getProperty('id');
         $id->setAccessible(true);
         $id->setValue($payment, $this->id);
 

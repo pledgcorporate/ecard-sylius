@@ -4,6 +4,9 @@
     <services>
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
+        <service id="Pledg\SyliusPaymentPlugin\JWT\HS256Handler" />
+        <service id="Pledg\SyliusPaymentPlugin\JWT\HandlerInterface" alias="Pledg\SyliusPaymentPlugin\JWT\HS256Handler" />
+
         <service id="Pledg\SyliusPaymentPlugin\Provider\MerchantProvider" />
         <service id="Pledg\SyliusPaymentPlugin\Provider\MerchantProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\MerchantProvider" />
 
@@ -18,8 +21,22 @@
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardProcessor">
             <argument type="service" key="$validator" id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
             <argument type="service" key="$stateMachineFactory" id="sm.factory" />
+            <tag name="pledg_sylius_payment_plugin.notification_processor"/>
         </service>
-        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\ProcessorInterface" alias="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardProcessor" />
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\TransferValidator" />
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\TransferProcessor">
+            <argument type="service" key="$validator" id="Pledg\SyliusPaymentPlugin\Notification\Collector\TransferValidator" />
+            <argument type="service" key="$stateMachineFactory" id="sm.factory" />
+            <tag name="pledg_sylius_payment_plugin.notification_processor"/>
+        </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\CompositeProcessor">
+            <argument type="tagged_iterator" tag="pledg_sylius_payment_plugin.notification_processor"/>
+        </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\ProcessorInterface" alias="Pledg\SyliusPaymentPlugin\Notification\Collector\CompositeProcessor" />
 
         <service id="Pledg\SyliusPaymentPlugin\Controller\Webhook\NotificationAction">
             <argument type="service" key="$paymentManager" id="doctrine.orm.entity_manager" />

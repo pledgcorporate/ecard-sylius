@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Provider;
-
 
 use PHPUnit\Framework\TestCase;
 use Pledg\SyliusPaymentPlugin\Provider\MerchantProvider;

@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request;
-
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Request\GetStatusInterface;
@@ -20,6 +20,7 @@ class GetStatusBuilder extends RequestBuilder
     {
         $request = new GetStatus($this->token);
         $request->setModel($this->model);
+
         return $request;
     }
 }

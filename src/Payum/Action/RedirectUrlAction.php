@@ -51,10 +51,7 @@ class RedirectUrlAction implements ActionInterface
     {
         $request->getPayment()->setDetails([
             'redirect_parameters' => $parameters,
-            'redirect_urls' => [
-                'plain_url' => $this->getPurchaseUrl() . '?' . http_build_query($parameters),
-                'signed_url' => $this->getPurchaseUrl() . '?signature=' . $token,
-            ],
+            'redirect_url' => $this->getPurchaseUrl() . '?signature=' . $token,
         ]);
     }
 

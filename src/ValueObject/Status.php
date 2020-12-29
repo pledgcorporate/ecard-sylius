@@ -66,6 +66,7 @@ class Status
     public function markRequest(GetStatusInterface $getStatus): void
     {
         switch ($this->value) {
+            case static::WAITING:
             case static::PENDING:
             case static::PENDING_CAPTURE:
                 $getStatus->markPending();
@@ -88,7 +89,7 @@ class Status
                 $getStatus->markRefunded();
 
                 break;
-            default: // WAITING, VOIDED, RETRIEVAL_REQUEST, FRAUD_NOTIFICATION, CHARGEBACK_INITIATED, SOLVED, RESERVED
+            default: // VOIDED, RETRIEVAL_REQUEST, FRAUD_NOTIFICATION, CHARGEBACK_INITIATED, SOLVED, RESERVED
                 $getStatus->markUnknown();
         }
     }
