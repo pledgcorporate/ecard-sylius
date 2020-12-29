@@ -13,6 +13,7 @@ use Pledg\SyliusPaymentPlugin\Notification\Collector\ProcessorInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Resource\StateMachine\StateMachineInterface;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Notification\TransferContentBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Provider\PaymentProviderBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\PaymentBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Repository\InMemoryPaymentRepository;
@@ -45,8 +46,7 @@ class TransferProcessorTest extends TestCase
     /** @test */
     public function it_throws_exception_when_payment_reference_does_not_exist_in_database(): void
     {
-        $token = $this->getValidContent();
-        $content = json_decode($token, true, 512, \JSON_THROW_ON_ERROR);
+        $content = (new TransferContentBuilder())->withValidContent()->build();
         $processor = (new TransferProcessorBuilder())->build();
 
         $this->expectException(EntityNotFoundException::class);
@@ -57,7 +57,7 @@ class TransferProcessorTest extends TestCase
     /** @test */
     public function it_throws_exception_when_the_signature_is_invalid(): void
     {
-        $content = json_decode($this->getContentWithInvalidSignature(), true, 512, \JSON_THROW_ON_ERROR);
+        $content = (new TransferContentBuilder())->withInvalidSignature()->build();
         $processor = $this->buildWithInvalidSignature($content);
 
         $this->expectException(InvalidSignatureException::class);
@@ -68,7 +68,7 @@ class TransferProcessorTest extends TestCase
     /** @test */
     public function it_should_update_payment_details_if_content_is_valid(): void
     {
-        $content = json_decode($this->getValidContent(), true, 512, \JSON_THROW_ON_ERROR);
+        $content = (new TransferContentBuilder())->withValidContent()->build();
         $body = (new HS256Handler())->decode($content['signature']);
         $payment = $this->buildValidPayment($body);
         $processor = $this->buildWithValidContent($payment);
@@ -140,15 +140,5 @@ class TransferProcessorTest extends TestCase
                     ->build()
             )
             ->build();
-    }
-
-    private function getValidContent(): string
-    {
-        return '{"signature":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWZlcmVuY2UiOiJQTEVER18xMjZfMTU4IiwiY3JlYXRlZCI6IjIwMjAtMTItMjggMTA6Mzc6MDYuMzM3NjQwIiwidHJhbnNmZXJfb3JkZXJfaXRlbV91aWQiOiJ0cmlfODk0NWM3NzAtYmZiNi00MDFlLTgzNDYtYzIzOTllNzYwM2Q5IiwiYW1vdW50X2NlbnRzIjoyODY3LCJtZXRhZGF0YSI6eyJwbGVkZ19zZXNzaW9uIjp7ImlwIjoiOTEuMTYxLjE4MS4zMiIsInVzZXJfYWdlbnQiOnsic3RyaW5nIjoiTW96aWxsYS81LjAgKFgxMTsgVWJ1bnR1OyBMaW51eCB4ODZfNjQ7IHJ2Ojg0LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvODQuMCIsInBsYXRmb3JtIjoibGludXgiLCJicm93c2VyIjoiZmlyZWZveCIsInZlcnNpb24iOiI4NC4wIiwibGFuZ3VhZ2UiOm51bGx9fX19.aQ9sLecFiD4yazL_T2hA-WMdbCQT_I157tn0P2sIoMc"}';
-    }
-
-    private function getContentWithInvalidSignature(): string
-    {
-        return '{"signature":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZWZlcmVuY2UiOiJQTEVER18xMjZfMTU4IiwiY3JlYXRlZCI6IjIwMjAtMTItMjggMTA6Mzc6MDYuMzM3NjQwIiwidHJhbnNmZXJfb3JkZXJfaXRlbV91aWQiOiJ0cmlfODk0NWM3NzAtYmZiNi00MDFlLTgzNDYtYzIzOTllNzYwM2Q5IiwiYW1vdW50X2NlbnRzIjoyODY3LCJtZXRhZGF0YSI6eyJwbGVkZ19zZXNzaW9uIjp7ImlwIjoiOTEuMTYxLjE4MS4zMiIsInVzZXJfYWdlbnQiOnsic3RyaW5nIjoiTW96aWxsYS81LjAgKFgxMTsgVWJ1bnR1OyBMaW51eCB4ODZfNjQ7IHJ2Ojg0LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvODQuMCIsInBsYXRmb3JtIjoibGludXgiLCJicm93c2VyIjoiZmlyZWZveCIsInZlcnNpb24iOiI4NC4wIiwibGFuZ3VhZ2UiOm51bGx9fX19.4s1WhHfpbi9ykxiWNWLAgaiH6g5JwHUB5uE2m2Rc0q"}';
     }
 }
