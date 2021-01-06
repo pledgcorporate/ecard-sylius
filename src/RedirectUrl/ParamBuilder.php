@@ -65,6 +65,7 @@ class ParamBuilder implements ParamBuilderInterface
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
             'title' => $this->order->getNumber(),
+            'lang' => $this->order->getLocaleCode(),
             'reference' => (string) new Reference($this->order->getId(), $this->payment->getId()),
             'amountCents' => $this->order->getTotal(),
             'currency' => $this->payment->getCurrencyCode(),
@@ -74,6 +75,7 @@ class ParamBuilder implements ParamBuilderInterface
             'phoneNumber' => $this->billingAddress->getPhoneNumber(),
             'address' => $this->buildAddress($this->billingAddress),
             'shippingAddress' => $this->buildAddress($this->shippingAddress),
+            'countryCode' => $this->billingAddress->getCountryCode(),
             'redirectUrl' => $this->token->getAfterUrl(),
             'cancelUrl' => $this->token->getAfterUrl(),
             'paymentNotificationUrl' => $this->router->generate(

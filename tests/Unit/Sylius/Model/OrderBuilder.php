@@ -20,6 +20,9 @@ class OrderBuilder
 
     private $number;
 
+    /** @var string */
+    private $localCode;
+
     /** @var AddressInterface */
     private $shippingAddress;
 
@@ -35,6 +38,7 @@ class OrderBuilder
         $this->id = 1234;
         $this->total = 10000;
         $this->number = '123421234';
+        $this->localCode = 'fr_FR';
         $this->shippingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->billingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->customer = $prophet->prophesize(CustomerInterface::class)->reveal();
@@ -68,6 +72,7 @@ class OrderBuilder
         $order->setShippingAddress($this->shippingAddress);
         $order->setCustomer($this->customer);
         $order->setNumber($this->number);
+        $order->setLocaleCode($this->localCode);
         $reflectionClass = new \ReflectionClass(Order::class);
         $total = $reflectionClass->getProperty('total');
         $total->setAccessible(true);
