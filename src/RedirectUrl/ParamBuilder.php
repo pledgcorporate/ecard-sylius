@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
+use Doctrine\Common\Collections\Collection;
 use Payum\Core\Security\TokenInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -64,7 +66,7 @@ class ParamBuilder implements ParamBuilderInterface
     {
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
-            'title' => $this->order->getNumber(),
+            'title' => $this->buildTitle($this->order->getItems()),
             'lang' => $this->order->getLocaleCode(),
             'reference' => (string) new Reference($this->order->getId(), $this->payment->getId()),
             'amountCents' => $this->order->getTotal(),
@@ -94,5 +96,23 @@ class ParamBuilder implements ParamBuilderInterface
             'zipcode' => $address->getPostcode(),
             'country' => $address->getCountryCode(),
         ];
+    }
+
+    /**
+     * @param Collection|OrderItemInterface[] $orderItems
+     */
+    private function buildTitle(Collection $orderItems): string
+    {
+        $names = [];
+        /** @var OrderItemInterface $item */
+        foreach ($orderItems as $item) {
+            if (null !== $item->getProductName()) {
+                $names[] = $item->getProductName();
+            } elseif (null !== $item->getVariantName()) {
+                $names[] = $item->getVariantName();
+            }
+        }
+
+        return implode(', ', $names);
     }
 }
