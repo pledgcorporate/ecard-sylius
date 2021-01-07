@@ -59,7 +59,13 @@ class StatusAction implements ActionInterface
 
         $this->setPaymentDetails($request, self::PLEDG_RESULT, $result);
 
-        $status = $result['transaction']['status'] ?? Status::WAITING; // waiting for transfer mode
+        $status = Status::WAITING;
+
+        if (isset($result['transaction']['status'])) {
+            $status = $result['transaction']['status'];
+        } elseif (isset($result['purchase'])) {
+            $status = Status::COMPLETED;
+        }
 
         (new Status($status))->markRequest($request);
     }

@@ -6,8 +6,12 @@ namespace Pledg\SyliusPaymentPlugin\Notification\Collector;
 
 use Pledg\SyliusPaymentPlugin\JWT\HandlerInterface;
 use Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface;
+use Pledg\SyliusPaymentPlugin\ValueObject\Status;
 use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Payment\PaymentTransitions;
+use Sylius\Component\Resource\StateMachine\StateMachineInterface;
+use Webmozart\Assert\Assert;
 
 class TransferProcessor implements ProcessorInterface
 {
@@ -49,6 +53,10 @@ class TransferProcessor implements ProcessorInterface
         $payment = $this->paymentProvider->getByReference($body['reference']);
 
         $this->updatePaymentDetails($payment, $body);
+
+        if (isset($body['transfer_order_item_uid'])) {
+            $this->updatePaymentState($payment, new Status(Status::COMPLETED));
+        }
     }
 
     protected function updatePaymentDetails(PaymentInterface $payment, array $body): void
@@ -56,5 +64,16 @@ class TransferProcessor implements ProcessorInterface
         $details = $payment->getDetails();
         $details['notification_content'] = $body;
         $payment->setDetails($details);
+    }
+
+    protected function updatePaymentState(PaymentInterface $payment, Status $status): void
+    {
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+
+        Assert::isInstanceOf($stateMachine, StateMachineInterface::class);
+
+        if (null !== $transition = $stateMachine->getTransitionToState($status->convertToPaymentState())) {
+            $stateMachine->apply($transition);
+        }
     }
 }
