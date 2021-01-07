@@ -19,6 +19,7 @@ class ParamBuilderTest extends TestCase
         $parameters = ParamBuilder::fromRedirectUrlRequest($redirectUrl, $this->prophesize(RouterInterface::class)->reveal())->build();
 
         self::assertArrayHasKey('merchantUid', $parameters);
+        self::assertArrayHasKey('lang', $parameters);
         self::assertArrayHasKey('title', $parameters);
         self::assertArrayHasKey('reference', $parameters);
         self::assertArrayHasKey('amountCents', $parameters);
@@ -27,6 +28,7 @@ class ParamBuilderTest extends TestCase
         self::assertArrayHasKey('lastName', $parameters);
         self::assertArrayHasKey('email', $parameters);
         self::assertArrayHasKey('phoneNumber', $parameters);
+        self::assertArrayHasKey('countryCode', $parameters);
         self::assertArrayHasKey('redirectUrl', $parameters);
         self::assertArrayHasKey('cancelUrl', $parameters);
         self::assertArrayHasKey('paymentNotificationUrl', $parameters);
