@@ -1,4 +1,4 @@
-# Payment Gateway Plugin using Pledg
+# Sylius Payment Gateway Plugin using Pledg
 
 ## Installation
 
