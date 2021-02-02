@@ -9,6 +9,7 @@ use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\GetStatusInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Status;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -17,13 +18,17 @@ class StatusAction implements ActionInterface
     /** @var RequestStack */
     private $requestStack;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     private const PLEDG_RESULT = 'pledg_result';
 
     private const PLEDG_ERROR = 'pledg_error';
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, LoggerInterface $logger)
     {
         $this->requestStack = $requestStack;
+        $this->logger = $logger;
     }
 
     /**
@@ -74,9 +79,11 @@ class StatusAction implements ActionInterface
     {
         $error = $this->jsonDecode($jsonError);
 
+        $this->logger->error($jsonError);
+
         $this->setPaymentDetails($request, self::PLEDG_ERROR, $error);
 
-        if ($error['type'] === 'abandonment') {
+        if (isset($error['type']) && $error['type'] === 'abandonment') {
             $request->markCanceled();
         } else {
             $request->markFailed();
