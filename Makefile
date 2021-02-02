@@ -29,10 +29,10 @@ phpstan: ## launch phpstan
 phpunit: ## launch phpunit tests
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit --testdox
 
-ecs-check:
+ecs-check: ## Check coding styles
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit
 
-ecs-fix:
+ecs-fix: ## fix coding styles
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit --fix
 
 #behat: ## Launch behat tests
