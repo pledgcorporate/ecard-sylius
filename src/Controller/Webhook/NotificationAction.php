@@ -53,6 +53,6 @@ final class NotificationAction
 
         $this->paymentManager->flush();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonResponse([], Response::HTTP_OK);
     }
 }
