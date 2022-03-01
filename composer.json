@@ -7,7 +7,7 @@
     "require": {
         "php": "^7.3",
         "ext-json": "*",
-        "sylius/sylius": "^1.6"
+        "sylius/sylius": "~1.6.0 | ~1.7.0 | ~1.8.0"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -30,7 +30,7 @@
         "phpstan/phpstan-webmozart-assert": "0.12.4",
         "phpunit/phpunit": "^8.5",
         "sensiolabs/security-checker": "^6.0",
-        "sylius-labs/coding-standard": "^3.1",
+        "sylius-labs/coding-standard": "^4.0",
         "symfony/browser-kit": "^4.4",
         "symfony/debug-bundle": "^4.4|^5.0",
         "symfony/dotenv": "^4.4|^5.0",
@@ -56,6 +56,11 @@
     },
     "config": {
         "sort-packages": true,
-        "vendor-dir": "tests/Application/vendor"
+        "vendor-dir": "tests/Application/vendor",
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true,
+            "symfony/thanks": true
+        }
     }
 }

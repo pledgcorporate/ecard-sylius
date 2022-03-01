@@ -3,7 +3,7 @@
 /node_modules/
 /composer.lock
 /composer.phar
-
+/docker-compose.override.yml
 /etc/build/*
 !/etc/build/.gitignore
 
