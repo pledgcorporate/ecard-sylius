@@ -39,7 +39,8 @@ class RedirectUrlBuilder extends RequestBuilder
 
     public function withCompleteCaptureRequest(): self
     {
-        return $this->withCapture((new CaptureBuilder())
+        return $this->withCapture(
+            (new CaptureBuilder())
             ->withPayment(
                 (new PaymentBuilder())
                     ->withOrder(

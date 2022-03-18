@@ -1,0 +1,7 @@
+version: '3.4'
+
+services:
+  mysql:
+    # use this for Mac M1 ARM chip  and avoid error :
+    # no matching manifest for linux/arm64/v8 in the manifest list entries
+    platform: linux/x86_64

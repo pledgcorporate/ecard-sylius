@@ -3,12 +3,9 @@
 /node_modules/
 /composer.lock
 /composer.phar
-
+/docker-compose.override.yml
 /etc/build/*
 !/etc/build/.gitignore
-
-/tests/Application/yarn.lock
-
 /.phpunit.result.cache
 /behat.yml
 /phpspec.yml
