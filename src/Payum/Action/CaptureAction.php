@@ -19,6 +19,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 class CaptureAction implements ActionInterface, GatewayAwareInterface, ApiAwareInterface
 {
     use GatewayAwareTrait;
+
     use ApiAwareTrait;
 
     public function __construct()

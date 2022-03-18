@@ -19,7 +19,6 @@ class StandardValidator implements ValidatorInterface
     protected const REQUIRED_KEYS = [
         'created_at',
         'id',
-        'additional_data',
         'metadata',
         'status',
         'sandbox',
