@@ -15,9 +15,6 @@ class StandardContentBuilder
     protected $id;
 
     /** @var array */
-    protected $additionalData;
-
-    /** @var array */
     protected $metadata;
 
     /** @var Status */
@@ -39,7 +36,6 @@ class StandardContentBuilder
     {
         $this->createdAt = '2019-04-04T12:20:34.97138Z';
         $this->id = 'test-valid';
-        $this->additionalData = ['xx' => 'yy'];
         $this->metadata = ['foo' => 'bar'];
         $this->status = new Status(Status::COMPLETED);
         $this->sandbox = true;
@@ -60,7 +56,6 @@ class StandardContentBuilder
         return [
             'created_at' => $this->createdAt,
             'id' => $this->id,
-            'additional_data' => $this->additionalData,
             'metadata' => $this->metadata,
             'status' => (string) $this->status,
             'sandbox' => $this->sandbox,
