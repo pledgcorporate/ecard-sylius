@@ -13,8 +13,10 @@ use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
@@ -78,6 +80,7 @@ class ParamBuilder implements ParamBuilderInterface
             'address' => $this->buildAddress($this->billingAddress),
             'shippingAddress' => $this->buildAddress($this->shippingAddress),
             'countryCode' => $this->billingAddress->getCountryCode(),
+            'metadata' => $this->buildMetadata(),
             'redirectUrl' => $this->token->getAfterUrl(),
             'cancelUrl' => $this->token->getAfterUrl(),
             'paymentNotificationUrl' => $this->router->generate(
@@ -114,5 +117,37 @@ class ParamBuilder implements ParamBuilderInterface
         }
 
         return implode(', ', $names);
+    }
+
+    private function buildMetadata(): array
+    {
+        return [
+            'products' => $this->buildProductsMetadata($this->order->getItems()),
+        ];
+    }
+
+    /**
+     * @param Collection|OrderItemInterface[] $orderItems
+     */
+    private function buildProductsMetadata(Collection $orderItems): array
+    {
+        $products = [];
+
+        /** @var OrderItemInterface $item */
+        foreach ($orderItems as $item) {
+            Assert::isInstanceOf($item->getVariant(), ProductVariantInterface::class);
+
+            $products[] = [
+                'reference' => $item->getVariant()->getCode(),
+                'name' => $item->getVariantName(),
+                'quantity' => $item->getQuantity(),
+                'unit_amount_cents' => $item->getUnitPrice(),
+                'type' => $item->getVariant()->isShippingRequired()
+                    ? 'physical'
+                    : 'virtual',
+            ];
+        }
+
+        return $products;
     }
 }

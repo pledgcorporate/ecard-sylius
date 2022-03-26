@@ -6,8 +6,13 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\RedirectUrl;
 
 use PHPUnit\Framework\TestCase;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilder;
+use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request\RedirectUrlBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AddressBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\CustomerBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderItemBuilder;
 
 class ParamBuilderTest extends TestCase
 {
@@ -42,5 +47,62 @@ class ParamBuilderTest extends TestCase
         self::assertArrayHasKey('city', $parameters['shippingAddress']);
         self::assertArrayHasKey('zipcode', $parameters['shippingAddress']);
         self::assertArrayHasKey('country', $parameters['shippingAddress']);
+    }
+
+    /** @test */
+    public function it_builds_param_with_metadata(): void
+    {
+        $order = (new OrderBuilder())
+            ->withItems([
+                (new OrderItemBuilder())
+                    ->withVariantCode('SKU1')
+                    ->withVariantName('product 1')
+                    ->withQuantity(2)
+                    ->withUnitPrice(100)
+                    ->isShippingRequired(true)
+                    ->build(),
+                (new OrderItemBuilder())
+                    ->withVariantCode('SKU2')
+                    ->withVariantName('product 2')
+                    ->withQuantity(1)
+                    ->withUnitPrice(500)
+                    ->isShippingRequired(false)
+                    ->build(),
+            ])
+            ->withBillingAddress((new AddressBuilder())->build())
+            ->withShippingAddress((new AddressBuilder())->build())
+            ->withCustomer((new CustomerBuilder())->build())
+            ->build();
+
+        $paramBuilder = $this->createWithOrder($order)->build();
+
+        self::assertArrayHasKey('metadata', $paramBuilder);
+        self::assertSame([
+            'products' => [
+                [
+                    'reference' => 'SKU1',
+                    'name' => 'product 1',
+                    'quantity' => 2,
+                    'unit_amount_cents' => 100,
+                    'type' => 'physical',
+                ],
+                [
+                    'reference' => 'SKU2',
+                    'name' => 'product 2',
+                    'quantity' => 1,
+                    'unit_amount_cents' => 500,
+                    'type' => 'virtual',
+                ],
+            ],
+        ], $paramBuilder['metadata']);
+    }
+
+    private function createWithOrder(OrderInterface $order): ParamBuilder
+    {
+        $redirectUrl = (new RedirectUrlBuilder())
+            ->withOrder($order)
+            ->build();
+
+        return ParamBuilder::fromRedirectUrlRequest($redirectUrl, $this->prophesize(RouterInterface::class)->reveal());
     }
 }

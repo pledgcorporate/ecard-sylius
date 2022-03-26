@@ -9,6 +9,7 @@ use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\OrderItemInterface;
 
 class OrderBuilder
 {
@@ -31,6 +32,9 @@ class OrderBuilder
 
     /** @var CustomerInterface */
     private $customer;
+
+    /** @var OrderItemInterface[] */
+    private $items = [];
 
     public function __construct()
     {
@@ -65,6 +69,16 @@ class OrderBuilder
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    public function withItems(array $items): self
+    {
+        $this->items = $items;
+
+        return $this;
+    }
+
     public function build(): OrderInterface
     {
         $order = new Order();
@@ -73,6 +87,9 @@ class OrderBuilder
         $order->setCustomer($this->customer);
         $order->setNumber($this->number);
         $order->setLocaleCode($this->localCode);
+        foreach ($this->items as $item) {
+            $order->addItem($item);
+        }
         $reflectionClass = new \ReflectionClass(Order::class);
         $total = $reflectionClass->getProperty('total');
         $total->setAccessible(true);

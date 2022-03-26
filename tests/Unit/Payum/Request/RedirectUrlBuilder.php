@@ -8,6 +8,7 @@ use Payum\Core\Request\Capture;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrl;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
+use Sylius\Component\Core\Model\OrderInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AddressBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\CustomerBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderBuilder;
@@ -35,6 +36,19 @@ class RedirectUrlBuilder extends RequestBuilder
         $this->capture = $capture;
 
         return $this;
+    }
+
+    public function withOrder(OrderInterface $order): self
+    {
+        return $this->withCapture(
+            (new CaptureBuilder())
+                ->withPayment(
+                    (new PaymentBuilder())
+                        ->withOrder($order)
+                    ->build()
+                )
+                ->build()
+        );
     }
 
     public function withCompleteCaptureRequest(): self
