@@ -10,6 +10,7 @@ use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
 use Sylius\Component\Core\Model\AddressInterface;
+use Sylius\Component\Core\Model\Customer;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -121,9 +122,10 @@ class ParamBuilder implements ParamBuilderInterface
 
     private function buildMetadata(): array
     {
-        return [
-            'products' => $this->buildProductsMetadata($this->order->getItems()),
-        ];
+        return array_merge(
+            $this->buildProductsMetadata($this->order->getItems()),
+            $this->buildCustomerMetadata($this->order->getCustomer()),
+        );
     }
 
     /**
@@ -148,6 +150,24 @@ class ParamBuilder implements ParamBuilderInterface
             ];
         }
 
-        return $products;
+        return ['products' => $products];
+    }
+
+    private function buildCustomerMetadata(?CustomerInterface $customer = null): array
+    {
+        if (!$customer instanceof Customer) {
+            return [];
+        }
+
+        return [
+            'account' => [
+                'creation_date' => $customer->getCreatedAt() instanceof \DateTimeInterface
+                    ? $customer->getCreatedAt()->format('Y-m-d')
+                    : null,
+            ],
+            'session' => [
+                'customer_id' => $customer->getId(),
+            ],
+        ];
     }
 }

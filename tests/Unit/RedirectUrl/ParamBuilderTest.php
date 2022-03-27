@@ -71,7 +71,12 @@ class ParamBuilderTest extends TestCase
             ])
             ->withBillingAddress((new AddressBuilder())->build())
             ->withShippingAddress((new AddressBuilder())->build())
-            ->withCustomer((new CustomerBuilder())->build())
+            ->withCustomer(
+                (new CustomerBuilder())
+                    ->withId(12345)
+                    ->withCreatedAt(new \DateTimeImmutable('2022-03-27'))
+                    ->build()
+            )
             ->build();
 
         $paramBuilder = $this->createWithOrder($order)->build();
@@ -93,6 +98,12 @@ class ParamBuilderTest extends TestCase
                     'unit_amount_cents' => 500,
                     'type' => 'virtual',
                 ],
+            ],
+            'account' => [
+                'creation_date' => '2022-03-27',
+            ],
+            'session' => [
+                'customer_id' => 12345,
             ],
         ], $paramBuilder['metadata']);
     }
