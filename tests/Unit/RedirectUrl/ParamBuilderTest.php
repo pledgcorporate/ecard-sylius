@@ -13,6 +13,7 @@ use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AddressBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\CustomerBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderItemBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\ShipmentBuilder;
 
 class ParamBuilderTest extends TestCase
 {
@@ -69,20 +70,26 @@ class ParamBuilderTest extends TestCase
                     ->isShippingRequired(false)
                     ->build(),
             ])
-            ->withBillingAddress((new AddressBuilder())->build())
-            ->withShippingAddress((new AddressBuilder())->build())
             ->withCustomer(
                 (new CustomerBuilder())
                     ->withId(12345)
                     ->withCreatedAt(new \DateTimeImmutable('2022-03-27'))
                     ->build()
             )
+            ->withShipments([
+                (new ShipmentBuilder())
+                    ->withSippingMethodName('UPS')
+                    ->build(),
+            ])
+            ->withBillingAddress((new AddressBuilder())->build())
+            ->withShippingAddress((new AddressBuilder())->build())
             ->build();
 
         $paramBuilder = $this->createWithOrder($order)->build();
 
         self::assertArrayHasKey('metadata', $paramBuilder);
         self::assertSame([
+            'delivery_label' => 'UPS',
             'products' => [
                 [
                     'reference' => 'SKU1',

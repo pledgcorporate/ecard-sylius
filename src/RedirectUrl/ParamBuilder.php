@@ -15,7 +15,9 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
+use Sylius\Component\Shipping\Model\ShippingMethodInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Webmozart\Assert\Assert;
 
@@ -123,9 +125,32 @@ class ParamBuilder implements ParamBuilderInterface
     private function buildMetadata(): array
     {
         return array_merge(
+            $this->buildShipmentMetadata($this->order->getShipments()),
             $this->buildProductsMetadata($this->order->getItems()),
             $this->buildCustomerMetadata($this->order->getCustomer()),
         );
+    }
+
+    /**
+     * @param Collection|ShipmentInterface[] $shipments
+     */
+    private function buildShipmentMetadata(Collection $shipments): array
+    {
+        if ($shipments->isEmpty()) {
+            return [];
+        }
+
+        $names = [];
+        /** @var ShipmentInterface $shipment */
+        foreach ($shipments as $shipment) {
+            /** @var ShippingMethodInterface $method */
+            $method = $shipment->getMethod();
+            $names[] = $method;
+        }
+
+        return [
+            'delivery_label' => implode(', ', $names),
+        ];
     }
 
     /**

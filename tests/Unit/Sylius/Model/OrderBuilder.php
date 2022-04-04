@@ -10,6 +10,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
+use Sylius\Component\Core\Model\ShipmentInterface;
 
 class OrderBuilder
 {
@@ -32,6 +33,9 @@ class OrderBuilder
 
     /** @var CustomerInterface */
     private $customer;
+
+    /** @var ShipmentInterface[] */
+    private $shipments = [];
 
     /** @var OrderItemInterface[] */
     private $items = [];
@@ -70,6 +74,18 @@ class OrderBuilder
     }
 
     /**
+     * @param array|ShipmentInterface[] $shipments
+     *
+     * @return $this
+     */
+    public function withShipments(array $shipments): self
+    {
+        $this->shipments = $shipments;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function withItems(array $items): self
@@ -89,6 +105,9 @@ class OrderBuilder
         $order->setLocaleCode($this->localCode);
         foreach ($this->items as $item) {
             $order->addItem($item);
+        }
+        foreach ($this->shipments as $shipment) {
+            $order->addShipment($shipment);
         }
         $reflectionClass = new \ReflectionClass(Order::class);
         $total = $reflectionClass->getProperty('total');
