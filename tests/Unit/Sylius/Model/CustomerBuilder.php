@@ -15,10 +15,30 @@ class CustomerBuilder
     /** @var string */
     protected $lastName;
 
+    /** @var int */
+    protected $id;
+
+    protected $createdAt;
+
     public function __construct()
     {
+        $this->id = 1;
         $this->firstName = 'John';
         $this->lastName = 'Doe';
+    }
+
+    public function withId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function withCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function build(): CustomerInterface
@@ -26,6 +46,11 @@ class CustomerBuilder
         $customer = new Customer();
         $customer->setFirstName($this->firstName);
         $customer->setLastName($this->lastName);
+        $customer->setCreatedAt($this->createdAt);
+        $reflectionClass = new \ReflectionClass(Customer::class);
+        $id = $reflectionClass->getProperty('id');
+        $id->setAccessible(true);
+        $id->setValue($customer, $this->id);
 
         return $customer;
     }
