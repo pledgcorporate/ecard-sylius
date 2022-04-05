@@ -22,7 +22,7 @@ class GatewayConfigBuilder
         return $this;
     }
 
-    public function withConfig(string $name, string $value): self
+    public function withConfig(string $name, $value): self
     {
         $this->config[$name] = $value;
 

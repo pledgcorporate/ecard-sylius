@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Form\Type;
 
+use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -18,6 +20,10 @@ class PledgConfigurationType extends AbstractType
             ])
             ->add('secret', TextType::class, [
                 'label' => 'pledg_sylius_payment_plugin.secret',
-            ]);
+            ])
+            ->add(PledgGatewayFactory::RESTRICTED_COUNTRIES, CountryType::class, [
+                'multiple' => true,
+            ])
+        ;
     }
 }

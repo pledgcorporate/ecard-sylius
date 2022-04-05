@@ -12,6 +12,8 @@ class PledgGatewayFactory extends GatewayFactory
 {
     public const NAME = 'pledg';
 
+    public const RESTRICTED_COUNTRIES = 'restricted_countries';
+
     protected function populateConfig(ArrayObject $config): void
     {
         $config->defaults([

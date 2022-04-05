@@ -29,6 +29,13 @@ class AddressBuilder
         $this->countryCode = 'FR';
     }
 
+    public function withCountry(string $country): self
+    {
+        $this->countryCode = $country;
+
+        return $this;
+    }
+
     public function build(): AddressInterface
     {
         $address = new Address();

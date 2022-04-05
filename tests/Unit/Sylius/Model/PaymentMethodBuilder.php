@@ -10,8 +10,18 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentMethodBuilder
 {
+    /** @var string */
+    private $name;
+
     /** @var GatewayConfigInterface */
     private $config;
+
+    public function withName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 
     public function withConfig(GatewayConfigInterface $config): self
     {
@@ -23,6 +33,8 @@ class PaymentMethodBuilder
     public function build(): PaymentMethodInterface
     {
         $method = new PaymentMethod();
+        $method->setCurrentLocale('fr_FR');
+        $method->setName($this->name);
         $method->setGatewayConfig($this->config);
 
         return $method;
