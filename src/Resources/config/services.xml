@@ -68,5 +68,9 @@
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">
             <tag name="payum.action" factory="pledg" alias="payum.action.status"/>
         </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" decorates="sylius.payment_methods_resolver">
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver.inner" />
+        </service>
     </services>
 </container>

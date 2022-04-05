@@ -36,7 +36,10 @@ ecs-fix: ## fix coding styles
 	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit --fix
 
 install: ## install Sylius
-	bin/console sylius:install # use EUR currency when ask
+	bin/console sylius:install # use EUR currency and fr_FR locale when ask
+
+db:
+	docker-compose exec mysql mysql -u sylius -pnopassword sylius
 
 #behat: ## Launch behat tests
 #	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"

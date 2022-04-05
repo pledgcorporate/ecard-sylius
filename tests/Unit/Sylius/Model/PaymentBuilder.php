@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
 
-use Payum\Core\Model\GatewayConfigInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
 use Prophecy\Prophet;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -32,7 +31,7 @@ class PaymentBuilder
     public function __construct()
     {
         $prophet = new Prophet();
-        $this->method = $prophet->prophesize(PaymentMethodInterface::class)->reveal();
+        $this->method = (new PaymentMethodBuilder())->build();
         $this->order = (new OrderBuilder())->build();
         $this->currencyCode = 'EUR';
         $this->amount = 10000;
@@ -55,16 +54,14 @@ class PaymentBuilder
 
     public function withMerchant(Merchant $merchant): self
     {
-        $prophet = new Prophet();
-        $method = $prophet->prophesize(PaymentMethodInterface::class);
-        $gatewayConfig = $prophet->prophesize(GatewayConfigInterface::class);
-        $gatewayConfig->getConfig()->willReturn([
-            'identifier' => $merchant->getIdentifier(),
-            'secret' => $merchant->getSecret(),
-        ]);
-        $method->getGateWayConfig()->willReturn($gatewayConfig->reveal());
-
-        $this->method = $method->reveal();
+        $this->method = (new PaymentMethodBuilder())
+            ->withConfig(
+                (new GatewayConfigBuilder())
+                    ->withConfig('identifier', $merchant->getIdentifier())
+                    ->withConfig('secret', $merchant->getSecret())
+                    ->build()
+            )
+            ->build();
 
         return $this;
     }
