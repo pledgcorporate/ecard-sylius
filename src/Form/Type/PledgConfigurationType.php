@@ -15,10 +15,10 @@ class PledgConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('identifier', TextType::class, [
+            ->add(PledgGatewayFactory::IDENTIFIER, TextType::class, [
                 'label' => 'pledg_sylius_payment_plugin.identifier',
             ])
-            ->add('secret', TextType::class, [
+            ->add(PledgGatewayFactory::SECRET, TextType::class, [
                 'label' => 'pledg_sylius_payment_plugin.secret',
             ])
             ->add(PledgGatewayFactory::RESTRICTED_COUNTRIES, CountryType::class, [

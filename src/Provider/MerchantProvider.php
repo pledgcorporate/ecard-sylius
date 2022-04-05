@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Provider;
 
+use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -21,9 +22,9 @@ class MerchantProvider implements MerchantProviderInterface
 
         $config = $paymentMethod->getGatewayConfig()->getConfig();
 
-        Assert::keyExists($config, 'identifier');
-        Assert::keyExists($config, 'secret');
+        Assert::keyExists($config, PledgGatewayFactory::IDENTIFIER);
+        Assert::keyExists($config, PledgGatewayFactory::SECRET);
 
-        return new Merchant($config['identifier'], $config['secret']);
+        return new Merchant($config[PledgGatewayFactory::IDENTIFIER], $config[PledgGatewayFactory::SECRET]);
     }
 }

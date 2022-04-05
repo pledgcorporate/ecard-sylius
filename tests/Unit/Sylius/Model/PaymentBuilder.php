@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
 
+use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
 use Prophecy\Prophet;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -57,8 +58,8 @@ class PaymentBuilder
         $this->method = (new PaymentMethodBuilder())
             ->withConfig(
                 (new GatewayConfigBuilder())
-                    ->withConfig('identifier', $merchant->getIdentifier())
-                    ->withConfig('secret', $merchant->getSecret())
+                    ->withConfig(PledgGatewayFactory::IDENTIFIER, $merchant->getIdentifier())
+                    ->withConfig(PledgGatewayFactory::SECRET, $merchant->getSecret())
                     ->build()
             )
             ->build();
