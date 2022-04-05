@@ -18,6 +18,10 @@ class PledgGatewayFactory extends GatewayFactory
 
     public const RESTRICTED_COUNTRIES = 'restricted_countries';
 
+    public const PRICE_RANGE_MIN = 'price_range_min';
+
+    public const PRICE_RANGE_MAX = 'price_range_max';
+
     protected function populateConfig(ArrayObject $config): void
     {
         $config->defaults([

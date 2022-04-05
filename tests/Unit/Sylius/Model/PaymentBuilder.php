@@ -46,6 +46,13 @@ class PaymentBuilder
         return $this;
     }
 
+    public function withAmountInCents(int $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
     public function withOrder(OrderInterface $order): self
     {
         $this->order = $order;

@@ -16,6 +16,8 @@ class PledgConfigurationTypeTest extends TypeTestCase
         $formData = [
             PledgGatewayFactory::IDENTIFIER => 'mer_aee4846c-ac62-4835-8adf-bea9f8737144',
             PledgGatewayFactory::SECRET => 'aIDZLuoAdK8NAqoFIFPBao72WEQ6jrWMvYwaXaiO',
+            PledgGatewayFactory::PRICE_RANGE_MIN => null,
+            PledgGatewayFactory::PRICE_RANGE_MAX => null,
             PledgGatewayFactory::RESTRICTED_COUNTRIES => ['FR'],
         ];
 

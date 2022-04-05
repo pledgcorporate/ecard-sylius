@@ -2,3 +2,5 @@ pledg_sylius_payment_plugin:
     identifier: Merchant identifier
     secret: Secret
     restricted_countries: Restricted countries
+    price_range_min: Minimum Price
+    price_range_max: Maximum Price
