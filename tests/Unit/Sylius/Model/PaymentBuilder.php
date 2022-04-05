@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model;
 
-use Payum\Core\Model\GatewayConfigInterface;
+use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
 use Pledg\SyliusPaymentPlugin\ValueObject\Merchant;
 use Prophecy\Prophet;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -32,7 +32,7 @@ class PaymentBuilder
     public function __construct()
     {
         $prophet = new Prophet();
-        $this->method = $prophet->prophesize(PaymentMethodInterface::class)->reveal();
+        $this->method = (new PaymentMethodBuilder())->build();
         $this->order = (new OrderBuilder())->build();
         $this->currencyCode = 'EUR';
         $this->amount = 10000;
@@ -46,6 +46,13 @@ class PaymentBuilder
         return $this;
     }
 
+    public function withAmountInCents(int $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
     public function withOrder(OrderInterface $order): self
     {
         $this->order = $order;
@@ -55,16 +62,14 @@ class PaymentBuilder
 
     public function withMerchant(Merchant $merchant): self
     {
-        $prophet = new Prophet();
-        $method = $prophet->prophesize(PaymentMethodInterface::class);
-        $gatewayConfig = $prophet->prophesize(GatewayConfigInterface::class);
-        $gatewayConfig->getConfig()->willReturn([
-            'identifier' => $merchant->getIdentifier(),
-            'secret' => $merchant->getSecret(),
-        ]);
-        $method->getGateWayConfig()->willReturn($gatewayConfig->reveal());
-
-        $this->method = $method->reveal();
+        $this->method = (new PaymentMethodBuilder())
+            ->withConfig(
+                (new GatewayConfigBuilder())
+                    ->withConfig(PledgGatewayFactory::IDENTIFIER, $merchant->getIdentifier())
+                    ->withConfig(PledgGatewayFactory::SECRET, $merchant->getSecret())
+                    ->build()
+            )
+            ->build();
 
         return $this;
     }
