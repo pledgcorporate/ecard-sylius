@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Twig\Extension;
 
 use PHPUnit\Framework\TestCase;
@@ -24,7 +26,7 @@ class PledgExtensionTest extends TestCase
                         ->withFactoryName(PledgGatewayFactory::NAME)
                         ->build()
                 )
-                ->build()
+                ->build(),
         ]);
 
         self::assertTrue($extension->isPledgMethod($methodCode));
@@ -43,7 +45,7 @@ class PledgExtensionTest extends TestCase
                         ->withFactoryName(PledgGatewayFactory::NAME)
                         ->build()
                 )
-                ->build()
+                ->build(),
         ]);
 
         self::assertFalse($extension->isPledgMethod($methodCode));

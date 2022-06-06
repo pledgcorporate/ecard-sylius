@@ -4,3 +4,6 @@ pledg_sylius_payment_plugin:
     restricted_countries: Restricted countries
     price_range_min: Minimum Price
     price_range_max: Maximum Price
+    payment_date: Payment Date
+    amount: Amount
+    fees: Fees

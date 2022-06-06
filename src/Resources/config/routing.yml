@@ -3,3 +3,8 @@ pledg_sylius_payment_plugin_webhook_notification:
     methods: POST
     defaults:
         _controller: Pledg\SyliusPaymentPlugin\Controller\Webhook\NotificationAction
+
+pledg_sylius_payment_plugin_shop_simulate_payment:
+    path: /shop/simulate-payment/{code}
+    defaults:
+        _controller: Pledg\SyliusPaymentPlugin\Controller\Shop\SimulatePaymentAction

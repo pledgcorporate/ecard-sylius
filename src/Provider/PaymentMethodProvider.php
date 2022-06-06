@@ -6,6 +6,7 @@ namespace Pledg\SyliusPaymentPlugin\Provider;
 
 use Doctrine\ORM\EntityRepository;
 use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 class PaymentMethodProvider implements PaymentMethodProviderInterface
 {
@@ -25,5 +26,14 @@ class PaymentMethodProvider implements PaymentMethodProviderInterface
             ->setParameter('factoryName', PledgGatewayFactory::NAME)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findOneByCode(string $code): PaymentMethodInterface
+    {
+        return $this->repository->createQueryBuilder('o')
+            ->andWhere('o.code = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getSingleResult();
     }
 }

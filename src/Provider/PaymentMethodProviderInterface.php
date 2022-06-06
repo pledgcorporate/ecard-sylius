@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Provider;
 
-use Sylius\Component\Payment\Model\PaymentMethodInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 interface PaymentMethodProviderInterface
 {
@@ -12,4 +12,6 @@ interface PaymentMethodProviderInterface
      * @return PaymentMethodInterface[]
      */
     public function getPledgMethods(): array;
+
+    public function findOneByCode(string $code): PaymentMethodInterface;
 }

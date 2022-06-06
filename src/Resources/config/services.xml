@@ -47,6 +47,10 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Pledg\SyliusPaymentPlugin\Controller\Shop\SimulatePaymentAction">
+            <tag name="controller.service_arguments"/>
+        </service>
+
         <service id="pledg_sylius_payment_plugin.factory.pledg_gateway_factory" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory</argument>
             <tag name="payum.gateway_factory_builder" factory="pledg" />
@@ -73,13 +77,20 @@
             <tag name="payum.action" factory="pledg" alias="payum.action.status"/>
         </service>
 
+        <service id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationApi">
+            <argument type="service" id="pledg_sylius_payment_plugin.http_client"/>
+            <argument key="$pledgUrl">%pledg_sylius_payment_plugin.back_url%</argument>
+        </service>
+        <service id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationInterface" alias="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationApi"/>
+
         <service id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" decorates="sylius.payment_methods_resolver">
             <argument type="service" id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver.inner" />
         </service>
 
         <service id="Pledg\SyliusPaymentPlugin\Twig\Extension\PledgExtension">
-            <argument type="service" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface"/>
             <tag name="twig.extension" />
         </service>
+
+        <service id="pledg_sylius_payment_plugin.http_client" class="GuzzleHttp\Client" public="false" />
     </services>
 </container>
