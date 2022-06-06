@@ -15,6 +15,10 @@
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\PaymentProvider" />
 
+        <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProvider">
+            <argument type="service" id="sylius.repository.payment_method" />
+        </service>
+        <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProvider"/>
 
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
 
@@ -71,6 +75,11 @@
 
         <service id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" decorates="sylius.payment_methods_resolver">
             <argument type="service" id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver.inner" />
+        </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Twig\Extension\PledgExtension">
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface"/>
+            <tag name="twig.extension" />
         </service>
     </services>
 </container>
