@@ -50,7 +50,7 @@ final class SimulatePaymentAction
         );
 
         return  new Response($this->twig->render(
-            '@PledgSyliusPaymentPlugin/simulation.html.twig',
+            '@PledgSyliusPaymentPlugin/Checkout/SelectPayment/simulation.html.twig',
             [
                 'simulation' => $this->simulation->simulate($merchant, $amount, new \DateTimeImmutable()),
             ]
