@@ -10,6 +10,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 
 class OrderBuilder
@@ -39,6 +40,9 @@ class OrderBuilder
 
     /** @var OrderItemInterface[] */
     private $items = [];
+
+    /** @var PaymentInterface[] */
+    private $payments = [];
 
     public function __construct()
     {
@@ -86,6 +90,18 @@ class OrderBuilder
     }
 
     /**
+     * @param array|PaymentInterface[] $payments
+     *
+     * @return $this
+     */
+    public function withPayments(array $payments): self
+    {
+        $this->payments = $payments;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function withItems(array $items): self
@@ -108,6 +124,9 @@ class OrderBuilder
         }
         foreach ($this->shipments as $shipment) {
             $order->addShipment($shipment);
+        }
+        foreach ($this->payments as $payment) {
+            $order->addPayment($payment);
         }
         $reflectionClass = new \ReflectionClass(Order::class);
         $total = $reflectionClass->getProperty('total');

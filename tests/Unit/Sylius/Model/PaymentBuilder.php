@@ -74,6 +74,13 @@ class PaymentBuilder
         return $this;
     }
 
+    public function withMethod(PaymentMethodInterface $method): self
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
     public function build(): PaymentInterface
     {
         $payment = new Payment();

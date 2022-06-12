@@ -9,6 +9,13 @@ class PaymentSchedule
     /** @var Payment[] */
     public $payments = [];
 
+    public function getFees(): int
+    {
+        return array_reduce($this->payments, function (int $total, Payment $payment): int {
+            return $total + $payment->fees;
+        }, 0);
+    }
+
     public static function fromArray(array $paymentSchedule): self
     {
         $dto = new self();

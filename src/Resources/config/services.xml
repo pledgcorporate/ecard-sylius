@@ -83,6 +83,9 @@
         </service>
         <service id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationInterface" alias="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationApi"/>
 
+        <service id="Pledg\SyliusPaymentPlugin\Processor\PaymentFeeProcessor" />
+        <service id="Pledg\SyliusPaymentPlugin\Processor\PaymentFeeProcessorInterface" alias="Pledg\SyliusPaymentPlugin\Processor\PaymentFeeProcessor" public="true"/>
+
         <service id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" decorates="sylius.payment_methods_resolver">
             <argument type="service" id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver.inner" />
         </service>
