@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pledg\SyliusPaymentPlugin\PaymentSchedule\DTO;
 
 class Payment
