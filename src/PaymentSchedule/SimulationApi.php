@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pledg\SyliusPaymentPlugin\PaymentSchedule;
 
 use GuzzleHttp\ClientInterface;
+use Pledg\SyliusPaymentPlugin\PaymentSchedule\DTO\PaymentSchedule;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 
 class SimulationApi implements SimulationInterface
@@ -23,7 +24,7 @@ class SimulationApi implements SimulationInterface
         $this->pledgUrl = $pledgUrl;
     }
 
-    public function simulate(MerchantInterface $merchant, int $amount, \DateTimeInterface $createdAt): array
+    public function simulate(MerchantInterface $merchant, int $amount, \DateTimeInterface $createdAt): PaymentSchedule
     {
         $response = $this->client->request(
             'POST',
@@ -40,6 +41,8 @@ class SimulationApi implements SimulationInterface
             ]
         );
 
-        return json_decode($response->getBody()->getContents(), true)['INSTALLMENT'];
+        return PaymentSchedule::fromArray(
+            json_decode($response->getBody()->getContents(), true)['INSTALLMENT']
+        );
     }
 }

@@ -8,13 +8,13 @@
         </tr>
     </thead>
     <tbody>
-        {% for row in simulation %}
+        {% for payment in simulation.payments %}
         <tr>
-            <td>{{ row['payment_date'] }}</td>
+            <td>{{ payment.date|format_date }}</td>
             <td>
-                {{ money.convertAndFormat(row['amount_cents'] + row['fees']) }}
-                {% if row['fees'] != 0 %}
-                    ({{ money.convertAndFormat(row['fees']) }} {{ 'pledg_sylius_payment_plugin.included_in_price'|trans }})
+                {{ money.convertAndFormat(payment.amount + payment.fees) }}
+                {% if payment.fees != 0 %}
+                    ({{ money.convertAndFormat(payment.fees) }} {{ 'pledg_sylius_payment_plugin.included_in_price'|trans }})
                 {% endif %}
             </td>
         </tr>
