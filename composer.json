@@ -5,7 +5,7 @@
     "description": "Payment Gateway Plugin using Pledg",
     "license": "MIT",
     "require": {
-        "php": "^7.3",
+        "php": "^7.3 | ^8,0",
         "ext-json": "*",
         "sylius/sylius": "~1.6.0 | ~1.7.0 | ~1.8.0"
     },
