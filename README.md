@@ -40,16 +40,29 @@ Now you can use the plugin and create your first Pledg Payment method :
 
 ![](docs/images/step1.png)
 
-2. Fill all required fields (specially with your merchant id and secret) and don't forget to activate the method on your channel.
+2. Fill all required fields (specially with your merchant id, secret and restricted countries). Don't forget to activate the method on your channel.
 
 ![](docs/images/step2.png)
 
 Pledg allow to use a payment method without a signature but the plugin does not allow it. 
 So even in sandbox mode, the secret is required and exchanges will be signed.
 
-Now you just have to use it.
+## Add assets
 
+```bash
+mkdir -p templates/bundles/SyliusAdminBundle/
+mkdir -p templates/bundles/SyliusShopBundle/
+cp -R vendor/pledg/sylius-payment-plugin/tests/Application/templates/bundles/SyliusAdminBundle/* templates/bundles/SyliusAdminBundle/
+cp -R vendor/pledg/sylius-payment-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
+```
 
+## Add state machine configuration 
+
+Import the configuration in `_sylius.yaml` or your `pledg_sylius_payment_plugin.yaml` file :
+````yaml
+imports:
+  - { resource: "@PledgSyliusPaymentPlugin/Resources/config/state_machine.yaml" }
+````
 ## How the plugin works ?
 
 We use Payum and the Sylius payment workflow in order to redirect on the Pledg payment page.
