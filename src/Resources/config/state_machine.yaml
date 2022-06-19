@@ -1,0 +1,8 @@
+winzou_state_machine:
+  sylius_order_checkout:
+    callbacks:
+      after:
+        pledg_sylius_payment_plugin_payment_fees:
+          on: ["select_payment"]
+          do: ["@Pledg\\SyliusPaymentPlugin\\Processor\\PaymentFeeProcessorInterface", "process"]
+          args: ["object"]

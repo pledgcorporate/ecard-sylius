@@ -1,0 +1,12 @@
+{% import "@SyliusAdmin/Common/Macro/money.html.twig" as money %}
+
+{% set paymentFeesAdjustmentType = constant('Pledg\\SyliusPaymentPlugin\\Model\\AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT') %}
+
+<tr>
+    <td colspan="5"></td>
+    <td colspan="4" id="promotion-total" class="right aligned">
+        {% set paymentFeeTotal = order.getAdjustmentsTotalRecursively(paymentFeesAdjustmentType) %}
+        <strong>{{ 'pledg_sylius_payment_plugin.payment_fee'|trans }}</strong>:
+        {{ money.format(paymentFeeTotal, order.currencyCode) }}
+    </td>
+</tr>

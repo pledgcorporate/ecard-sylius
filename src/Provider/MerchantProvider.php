@@ -18,9 +18,14 @@ class MerchantProvider implements MerchantProviderInterface
         /** @var PaymentMethodInterface $paymentMethod */
         $paymentMethod = $payment->getMethod();
 
-        Assert::notNull($paymentMethod->getGatewayConfig());
+        return $this->findByMethod($paymentMethod);
+    }
 
-        $config = $paymentMethod->getGatewayConfig()->getConfig();
+    public function findByMethod(PaymentMethodInterface $method): MerchantInterface
+    {
+        Assert::notNull($method->getGatewayConfig());
+
+        $config = $method->getGatewayConfig()->getConfig();
 
         Assert::keyExists($config, PledgGatewayFactory::IDENTIFIER);
         Assert::keyExists($config, PledgGatewayFactory::SECRET);

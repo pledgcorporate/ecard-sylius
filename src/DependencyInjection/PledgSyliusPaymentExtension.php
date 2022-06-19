@@ -22,6 +22,10 @@ final class PledgSyliusPaymentExtension extends Extension
             'pledg_sylius_payment_plugin.front_url',
             $config['sandbox'] ? PledgUrl::SANDBOX_FRONT : PledgUrl::PROD_FRONT
         );
+        $container->setParameter(
+            'pledg_sylius_payment_plugin.back_url',
+            $config['sandbox'] ? PledgUrl::SANDBOX_BACK : PledgUrl::PROD_BACK
+        );
 
         $loader->load('services.xml');
     }

@@ -113,7 +113,7 @@ class PaymentMethodsResolverTest extends TestCase
             ->withName($name)
             ->withConfig(
                 (new GatewayConfigBuilder())
-                    ->withFactoryName('pledg')
+                    ->withFactoryName(PledgGatewayFactory::NAME)
                     ->withConfig(PledgGatewayFactory::RESTRICTED_COUNTRIES, $restrictedCountries)
                     ->withConfig(PledgGatewayFactory::PRICE_RANGE_MIN, $range['min'] ?? null)
                     ->withConfig(PledgGatewayFactory::PRICE_RANGE_MAX, $range['max'] ?? null)
