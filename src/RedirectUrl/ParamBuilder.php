@@ -6,6 +6,7 @@ namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
 use Doctrine\Common\Collections\Collection;
 use Payum\Core\Security\TokenInterface;
+use Pledg\SyliusPaymentPlugin\Model\AdjustmentInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Reference;
@@ -74,7 +75,7 @@ class ParamBuilder implements ParamBuilderInterface
             'title' => $this->buildTitle($this->order->getItems()),
             'lang' => $this->order->getLocaleCode(),
             'reference' => (string) new Reference($this->order->getId(), $this->payment->getId()),
-            'amountCents' => $this->order->getTotal(),
+            'amountCents' => $this->buildTotalWithoutFees($this->order),
             'currency' => $this->payment->getCurrencyCode(),
             'firstName' => $this->billingAddress->getFirstName(),
             'lastName' => $this->billingAddress->getLastName(),
@@ -92,6 +93,21 @@ class ParamBuilder implements ParamBuilderInterface
                 RouterInterface::ABSOLUTE_URL
             ),
         ];
+    }
+
+    private function buildTotalWithoutFees(OrderInterface $order): int
+    {
+        $feesAdjustments = $order->getAdjustments(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT);
+
+        if ($feesAdjustments->isEmpty()) {
+            return $order->getTotal();
+        }
+
+        $fees = $feesAdjustments->map(static function (\Sylius\Component\Order\Model\AdjustmentInterface $adjustment): int {
+            return $adjustment->getAmount();
+        });
+
+        return $order->getTotal() - array_sum($fees->toArray());
     }
 
     private function buildAddress(AddressInterface $address): array

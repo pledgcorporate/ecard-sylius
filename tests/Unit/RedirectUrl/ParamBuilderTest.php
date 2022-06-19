@@ -10,6 +10,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request\RedirectUrlBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AddressBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AdjustmentBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\CustomerBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderItemBuilder;
@@ -114,6 +115,31 @@ class ParamBuilderTest extends TestCase
             ],
             'plugin' => 'sylius1.7-pledg-plugin0.1',
         ], $paramBuilder['metadata']);
+    }
+
+    /** @test */
+    public function it_send_price_without_fees(): void
+    {
+        $order = (new OrderBuilder())
+            ->withItems([
+                (new OrderItemBuilder())
+                    ->withVariantCode('SKU1')
+                    ->withVariantName('product 1')
+                    ->withQuantity(2)
+                    ->withUnitPrice(100)
+                    ->isShippingRequired(true)
+                    ->build(),
+            ])
+            ->withAdjustments([
+                (new AdjustmentBuilder())
+                    ->withNotNeutralPledgFees(10)
+                    ->build(),
+            ])
+            ->build();
+
+        $parameters = $this->createWithOrder($order)->build();
+        self::assertArrayHasKey('amountCents', $parameters);
+        self::assertSame($parameters['amountCents'], 200);
     }
 
     private function createWithOrder(OrderInterface $order): ParamBuilder

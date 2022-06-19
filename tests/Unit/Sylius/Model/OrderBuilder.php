@@ -12,14 +12,12 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
+use Sylius\Component\Order\Model\AdjustmentInterface;
 
 class OrderBuilder
 {
     /** @var int */
     private $id;
-
-    /** @var int */
-    private $total;
 
     private $number;
 
@@ -44,11 +42,13 @@ class OrderBuilder
     /** @var PaymentInterface[] */
     private $payments = [];
 
+    /** @var AdjustmentInterface[] */
+    private $adjustments = [];
+
     public function __construct()
     {
         $prophet = new Prophet();
         $this->id = 1234;
-        $this->total = 10000;
         $this->number = '123421234';
         $this->localCode = 'fr_FR';
         $this->shippingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
@@ -111,6 +111,13 @@ class OrderBuilder
         return $this;
     }
 
+    public function withAdjustments(array $adjustments): self
+    {
+        $this->adjustments = $adjustments;
+
+        return $this;
+    }
+
     public function build(): OrderInterface
     {
         $order = new Order();
@@ -128,10 +135,12 @@ class OrderBuilder
         foreach ($this->payments as $payment) {
             $order->addPayment($payment);
         }
+        foreach ($this->adjustments as $adjustment) {
+            $order->addAdjustment($adjustment);
+        }
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
         $reflectionClass = new \ReflectionClass(Order::class);
-        $total = $reflectionClass->getProperty('total');
-        $total->setAccessible(true);
-        $total->setValue($order, $this->total);
         $id = $reflectionClass->getProperty('id');
         $id->setAccessible(true);
         $id->setValue($order, $this->id);
