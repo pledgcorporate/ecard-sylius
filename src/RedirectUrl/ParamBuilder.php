@@ -144,7 +144,7 @@ class ParamBuilder implements ParamBuilderInterface
             $this->buildShipmentMetadata($this->order->getShipments()),
             $this->buildProductsMetadata($this->order->getItems()),
             $this->buildCustomerMetadata($this->order->getCustomer()),
-            ['plugin' => 'sylius1.7-pledg-plugin0.1'],
+            ['plugin' => 'sylius-pledg-plugin0.1.*'],
         );
     }
 
