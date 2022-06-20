@@ -1,0 +1,11 @@
+pledg_sylius_payment_plugin:
+  identifier: Identifiant du marchant
+  secret: Secret
+  restricted_countries: Restrictions des pays
+  price_range_min: Prix minimum
+  price_range_max: Prix maximum
+  due_date: Date d'échéance
+  amount: Montant
+  payment_fee: Frais de paiement
+  included_in_price: inclue dans le prix
+  fees: Frais
