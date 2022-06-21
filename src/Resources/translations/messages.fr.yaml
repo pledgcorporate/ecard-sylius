@@ -7,5 +7,5 @@ pledg_sylius_payment_plugin:
   due_date: Date d'échéance
   amount: Montant
   payment_fee: Frais de paiement
-  included_in_price: inclue dans le prix
+  included_in_price: inclus dans le prix
   fees: Frais
