@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Pledg\SyliusPaymentPlugin\Unit\RedirectUrl;
 
+use Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFees;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactory;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface;
 use Prophecy\Prophet;
@@ -26,6 +27,6 @@ class ParamBuilderFactoryBuilder
 
     public function build(): ParamBuilderFactoryInterface
     {
-        return new ParamBuilderFactory($this->router);
+        return new ParamBuilderFactory(new TotalWithoutFees(), $this->router);
     }
 }

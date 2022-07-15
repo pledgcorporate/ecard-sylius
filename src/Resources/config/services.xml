@@ -4,6 +4,9 @@
     <services>
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
+        <service id="Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFees" />
+        <service id="Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFeesInterface" alias="Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFees" />
+
         <service id="Pledg\SyliusPaymentPlugin\JWT\HS256Handler" />
         <service id="Pledg\SyliusPaymentPlugin\JWT\HandlerInterface" alias="Pledg\SyliusPaymentPlugin\JWT\HS256Handler" />
 
