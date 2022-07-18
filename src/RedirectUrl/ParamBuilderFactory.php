@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
+use Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFeesInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class ParamBuilderFactory implements ParamBuilderFactoryInterface
+final class ParamBuilderFactory implements ParamBuilderFactoryInterface
 {
     /** @var RouterInterface */
     private $router;
 
-    public function __construct(RouterInterface $router)
+    /** @var TotalWithoutFeesInterface */
+    private $totalWithoutFees;
+
+    public function __construct(TotalWithoutFeesInterface $totalWithoutFees, RouterInterface $router)
     {
+        $this->totalWithoutFees = $totalWithoutFees;
         $this->router = $router;
     }
 
     public function fromRedirectUrlRequest(RedirectUrlInterface $request): ParamBuilderInterface
     {
-        return ParamBuilder::fromRedirectUrlRequest($request, $this->router);
+        return ParamBuilder::fromRedirectUrlRequest($request, $this->totalWithoutFees, $this->router);
     }
 }

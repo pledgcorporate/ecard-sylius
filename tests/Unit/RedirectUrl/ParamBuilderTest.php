@@ -7,7 +7,6 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\RedirectUrl;
 use PHPUnit\Framework\TestCase;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilder;
 use Sylius\Component\Core\Model\OrderInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Payum\Request\RedirectUrlBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AddressBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\AdjustmentBuilder;
@@ -23,7 +22,7 @@ class ParamBuilderTest extends TestCase
     {
         $redirectUrl = (new RedirectUrlBuilder())->withCompleteCaptureRequest()->build();
 
-        $parameters = ParamBuilder::fromRedirectUrlRequest($redirectUrl, $this->prophesize(RouterInterface::class)->reveal())->build();
+        $parameters = (new ParamBuilderFactoryBuilder())->build()->fromRedirectUrlRequest($redirectUrl)->build();
 
         self::assertArrayHasKey('merchantUid', $parameters);
         self::assertArrayHasKey('lang', $parameters);
@@ -148,6 +147,6 @@ class ParamBuilderTest extends TestCase
             ->withOrder($order)
             ->build();
 
-        return ParamBuilder::fromRedirectUrlRequest($redirectUrl, $this->prophesize(RouterInterface::class)->reveal());
+        return (new ParamBuilderFactoryBuilder())->build()->fromRedirectUrlRequest($redirectUrl);
     }
 }
