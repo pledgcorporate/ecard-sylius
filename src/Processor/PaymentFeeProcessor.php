@@ -12,6 +12,7 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Order\Factory\AdjustmentFactoryInterface;
 use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Webmozart\Assert\Assert;
 
 class PaymentFeeProcessor implements PaymentFeeProcessorInterface
@@ -22,16 +23,21 @@ class PaymentFeeProcessor implements PaymentFeeProcessorInterface
     /** @var MerchantProviderInterface */
     private $merchantProvider;
 
+    /** @var OrderProcessorInterface */
+    private $orderProcessor;
+
     /** @var SimulationInterface */
     private $simulation;
 
     public function __construct(
         AdjustmentFactoryInterface $adjustmentFactory,
         MerchantProviderInterface $merchantProvider,
+        OrderProcessorInterface $orderProcessor,
         SimulationInterface $simulation
     ) {
         $this->adjustmentFactory = $adjustmentFactory;
         $this->merchantProvider = $merchantProvider;
+        $this->orderProcessor = $orderProcessor;
         $this->simulation = $simulation;
     }
 
@@ -67,5 +73,7 @@ class PaymentFeeProcessor implements PaymentFeeProcessorInterface
         $adjustment->setNeutral(false);
 
         $order->addAdjustment($adjustment);
+
+        $this->orderProcessor->process($order);
     }
 }

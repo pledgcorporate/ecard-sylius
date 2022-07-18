@@ -24,6 +24,9 @@ class OrderBuilder
     /** @var string */
     private $localCode;
 
+    /** @var string */
+    private $currencyCode;
+
     /** @var AddressInterface */
     private $shippingAddress;
 
@@ -51,6 +54,7 @@ class OrderBuilder
         $this->id = 1234;
         $this->number = '123421234';
         $this->localCode = 'fr_FR';
+        $this->currencyCode = 'EUR';
         $this->shippingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->billingAddress = $prophet->prophesize(AddressInterface::class)->reveal();
         $this->customer = $prophet->prophesize(CustomerInterface::class)->reveal();
@@ -126,6 +130,7 @@ class OrderBuilder
         $order->setCustomer($this->customer);
         $order->setNumber($this->number);
         $order->setLocaleCode($this->localCode);
+        $order->setCurrencyCode($this->currencyCode);
         foreach ($this->items as $item) {
             $order->addItem($item);
         }
