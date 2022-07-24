@@ -97,10 +97,10 @@ class PaymentFeeProcessorTest extends TestCase
                 ])
                 ->build()
         );
-        $adjustment = new Adjustment();
-        $adjustment->setType(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT);
-        $adjustment->setAmount(200);
-        $order->addAdjustment($adjustment);
+        $oldAdjustment = new Adjustment();
+        $oldAdjustment->setType(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT);
+        $oldAdjustment->setAmount(200);
+        $order->addAdjustment($oldAdjustment);
 
         $processor->process($order);
 
@@ -110,6 +110,31 @@ class PaymentFeeProcessorTest extends TestCase
         self::assertSame(10, $order->getAdjustmentsTotal());
         self::assertSame(110, $order->getTotal());
         self::assertSame(110, $payment->getAmount());
+    }
+
+    /** @test */
+    public function it_will_remove_fees_when_new_payment_does_not_has_fees_and_order_already_has_fees(): void
+    {
+        $order = $this->createOrderWithFactoryNameAndAmount('other', 100);
+        $processor = $this->createProcessor(
+            $order,
+            (new SimulationBuilder())
+                ->withSimulation([])
+                ->build()
+        );
+        $oldAdjustment = new Adjustment();
+        $oldAdjustment->setType(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT);
+        $oldAdjustment->setAmount(200);
+        $order->addAdjustment($oldAdjustment);
+
+        $processor->process($order);
+
+        $payment = $order->getPayments()->first();
+        self::assertInstanceOf(PaymentInterface::class, $payment);
+        self::assertCount(0, $order->getAdjustments());
+        self::assertSame(0, $order->getAdjustmentsTotal());
+        self::assertSame(100, $order->getTotal());
+        self::assertSame(100, $payment->getAmount());
     }
 
     private function createOrderWithFactoryNameAndAmount(string $name, int $amount): OrderInterface

@@ -51,13 +51,13 @@ class PaymentFeeProcessor implements PaymentFeeProcessorInterface
         /** @var PaymentMethodInterface $paymentMethod */
         $paymentMethod = $payment->getMethod();
 
+        if (!$order->getAdjustments(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT)->isEmpty()) {
+            $order->removeAdjustments(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT);
+        }
+
         if ($paymentMethod->getGatewayConfig() === null
             || $paymentMethod->getGatewayConfig()->getFactoryName() !== PledgGatewayFactory::NAME) {
             return;
-        }
-
-        if (!$order->getAdjustments(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT)->isEmpty()) {
-            $order->removeAdjustments(AdjustmentInterface::PAYMENT_FEES_ADJUSTMENT);
         }
 
         $paymentSchedule = $this->simulation->simulate(
