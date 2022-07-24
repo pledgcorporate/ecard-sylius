@@ -20,7 +20,7 @@ use Sylius\Component\Order\Factory\AdjustmentFactory;
 use Sylius\Component\Order\Model\Adjustment;
 use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Sylius\Component\Resource\Factory\Factory;
-use Tests\Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationBuilder;
+use Tests\Pledg\SyliusPaymentPlugin\Unit\PaymentSchedule\SimulationBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\GatewayConfigBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderBuilder;
 use Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Model\OrderItemBuilder;
