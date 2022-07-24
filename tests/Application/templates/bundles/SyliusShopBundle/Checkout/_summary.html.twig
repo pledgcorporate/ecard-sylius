@@ -78,7 +78,7 @@
                 </td>
             </tr>
         {% endif %}
-        <tr {% if paymentFeeTotal == 0 %}style="display: none"{% endif %}>
+        <tr id="pledg-payment-fee-row" {% if paymentFeeTotal == 0 %}style="display: none"{% endif %}>
             <td colspan="1">
                 <strong>{{ 'pledg_sylius_payment_plugin.payment_fee'|trans }}</strong>
             </td>

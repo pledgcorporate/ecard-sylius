@@ -8,3 +8,8 @@ pledg_sylius_payment_plugin_shop_simulate_payment:
     path: /shop/simulate-payment/{code}
     defaults:
         _controller: Pledg\SyliusPaymentPlugin\Controller\Shop\SimulatePaymentAction
+
+pledg_sylius_payment_plugin_shop_recalculate_total:
+    path: /shop/recalculate-total/{fees}
+    defaults:
+        _controller: Pledg\SyliusPaymentPlugin\Controller\Shop\RecalculateTotalAction
