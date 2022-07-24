@@ -53,6 +53,7 @@ class PaymentFeeProcessor implements PaymentFeeProcessorInterface
 
         if ($paymentMethod->getGatewayConfig() === null
             || $paymentMethod->getGatewayConfig()->getFactoryName() !== PledgGatewayFactory::NAME) {
+            $this->orderProcessor->process($order);
             return;
         }
 
