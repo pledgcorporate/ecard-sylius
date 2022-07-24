@@ -49,6 +49,17 @@ class SimulationApi implements SimulationInterface
             );
             $content = json_decode($response->getBody()->getContents(), true);
 
+            if (!isset($content['INSTALLMENT'])) {
+                $this->logger->error('the simulation call has failed', [
+                    'merchant_id' => $merchant->getIdentifier(),
+                    'amount' => $amount,
+                    'created_at' => $createdAt->format('Y-m-d'),
+                    'content' => $content,
+                ]);
+
+                return new PaymentSchedule();
+            }
+
             return PaymentSchedule::fromArray(
                 $content['INSTALLMENT']
             );

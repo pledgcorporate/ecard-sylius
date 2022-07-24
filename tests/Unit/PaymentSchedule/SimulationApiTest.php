@@ -88,4 +88,45 @@ class SimulationApiTest extends TestCase
 
         $simulation->simulate($merchant, 10, $createdAt);
     }
+
+    /** @test */
+    public function it_return_empty_simulation_when_api_response_is_not_correct(): void
+    {
+        $simulation = (new SimulationBuilder())
+            ->withSimulation([])
+            ->build();
+
+        $schedule = $simulation->simulate((new MerchantBuilder())->build(), 10, new \DateTimeImmutable());
+
+        self::assertInstanceOf(PaymentSchedule::class, $schedule);
+        self::assertCount(0, $schedule->payments);
+    }
+
+    /**
+     * @test
+     */
+    public function it_log_an_error_when_api_response_is_not_correct(): void
+    {
+        $merchant = (new MerchantBuilder())->withIdentifier('identifier')->build();
+        $amount = 10;
+        $createdAt = new \DateTimeImmutable();
+        $content = [];
+
+        $message = 'the simulation call has failed';
+        $logger = $this->prophesize(LoggerInterface::class);
+
+        $logger->error($message, [
+            'merchant_id' => $merchant->getIdentifier(),
+            'amount' => $amount,
+            'created_at' => $createdAt->format('Y-m-d'),
+            'content' => $content,
+        ])->shouldBeCalled();
+
+        $simulation = (new SimulationBuilder())
+            ->withLogger($logger->reveal())
+            ->withSimulation($content)
+            ->build();
+
+        $simulation->simulate($merchant, 10, $createdAt);
+    }
 }
