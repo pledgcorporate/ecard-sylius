@@ -49,7 +49,7 @@ class SimulationApi implements SimulationInterface
             );
             $content = json_decode($response->getBody()->getContents(), true);
 
-            if (!isset($content['INSTALLMENT'])) {
+            if (!isset($content['INSTALLMENT']) && !isset($content['DEFERRED'])) {
                 $this->logger->error('the simulation call has failed', [
                     'merchant_id' => $merchant->getIdentifier(),
                     'amount' => $amount,
@@ -60,8 +60,11 @@ class SimulationApi implements SimulationInterface
                 return new PaymentSchedule();
             }
 
+            $deferredSchedule = isset($content['DEFERRED']) ? [$content['DEFERRED']] : [];
+            $standardSchedule = $content['INSTALLMENT'] ?? [];
+
             return PaymentSchedule::fromArray(
-                $content['INSTALLMENT']
+                $deferredSchedule !== [] ? $deferredSchedule : $standardSchedule
             );
         } catch (GuzzleException $e) {
             $this->logger->error('the simulation call has failed', [
