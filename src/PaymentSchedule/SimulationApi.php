@@ -8,9 +8,13 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Pledg\SyliusPaymentPlugin\PaymentSchedule\DTO\PaymentSchedule;
 use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
+use Psr\Log\LoggerInterface;
 
 class SimulationApi implements SimulationInterface
 {
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var ClientInterface */
     private $client;
 
@@ -19,8 +23,9 @@ class SimulationApi implements SimulationInterface
 
     private const ROUTE = '/api/users/me/merchants/<merchant_uid>/simulate_payment_schedule';
 
-    public function __construct(ClientInterface $client, string $pledgUrl)
+    public function __construct(ClientInterface $client, string $pledgUrl, LoggerInterface $logger)
     {
+        $this->logger = $logger;
         $this->client = $client;
         $this->pledgUrl = $pledgUrl;
     }
@@ -42,11 +47,30 @@ class SimulationApi implements SimulationInterface
                     ]),
                 ]
             );
+            $content = json_decode($response->getBody()->getContents(), true);
+
+            if (!isset($content['INSTALLMENT'])) {
+                $this->logger->error('the simulation call has failed', [
+                    'merchant_id' => $merchant->getIdentifier(),
+                    'amount' => $amount,
+                    'created_at' => $createdAt->format('Y-m-d'),
+                    'content' => $content,
+                ]);
+
+                return new PaymentSchedule();
+            }
 
             return PaymentSchedule::fromArray(
-                json_decode($response->getBody()->getContents(), true)['INSTALLMENT']
+                $content['INSTALLMENT']
             );
         } catch (GuzzleException $e) {
+            $this->logger->error('the simulation call has failed', [
+                'merchant_id' => $merchant->getIdentifier(),
+                'amount' => $amount,
+                'created_at' => $createdAt->format('Y-m-d'),
+                'exception_message' => $e->getMessage(),
+            ]);
+
             return new PaymentSchedule();
         }
     }

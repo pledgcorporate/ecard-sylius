@@ -31,6 +31,13 @@ class MerchantBuilder
         return $this;
     }
 
+    public function withIdentifier(string $identifier): self
+    {
+        $this->identifier = $identifier;
+
+        return $this;
+    }
+
     public function build(): Merchant
     {
         return new Merchant($this->identifier, $this->secret);

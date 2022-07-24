@@ -1,6 +1,8 @@
 <?php
 
-namespace Tests\Pledg\SyliusPaymentPlugin\PaymentSchedule;
+declare(strict_types=1);
+
+namespace Tests\Pledg\SyliusPaymentPlugin\Unit\PaymentSchedule;
 
 use GuzzleHttp\ClientInterface;
 use Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationApi;
@@ -9,14 +11,25 @@ use Prophecy\Argument;
 use Prophecy\Prophet;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 
 class SimulationBuilder
 {
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var ClientInterface */
     private $client;
 
     /** @var string */
     private $url = '';
+
+    public function withLogger(LoggerInterface $logger): self
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
 
     public function withClient(ClientInterface $client): self
     {
@@ -43,13 +56,14 @@ class SimulationBuilder
         $this->client = $client->reveal();
 
         return $this;
-
     }
+
     public function build(): SimulationInterface
     {
         return new SimulationApi(
             $this->client,
-            $this->url
+            $this->url,
+            $this->logger ?: (new Prophet())->prophesize(LoggerInterface::class)->reveal()
         );
     }
 }
