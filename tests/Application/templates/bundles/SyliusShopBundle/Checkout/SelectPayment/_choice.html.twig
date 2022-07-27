@@ -1,4 +1,6 @@
-{% if is_pledg_method(form.vars.value) %}
+{% set factoryName = constant('Pledg\\SyliusPaymentPlugin\\Payum\\Factory\\PledgGatewayFactory::NAME') %}
+
+{% if method.gatewayConfig.factoryName == factoryName %}
     <div class="item" {{ sylius_test_html_attribute('payment-item') }}>
         <div class="field">
             <div class="ui radio checkbox" {{ sylius_test_html_attribute('payment-method-checkbox') }}>
@@ -7,8 +9,8 @@
         </div>
         <div class="content ui accordion">
             <a class="header title ui pledg_payment_method_choice">
-                {{ form_label(form, null, {'label_attr': {'data-test-payment-method-label': ''}}) }}</a>
-            <div class="content">{{ render(controller('Pledg\\SyliusPaymentPlugin\\Controller\\Shop\\SimulatePaymentAction', { code: form.vars.value })) }}</div>
+                {{ form_label(form, null, {'label_attr': {'data-factory-name' : method.gatewayConfig.factoryName, 'data-test-payment-method-label': ''}}) }}</a>
+            <div id="{{ form.vars.value }}-simulation" class="content">{{ render(controller('Pledg\\SyliusPaymentPlugin\\Controller\\Shop\\SimulatePaymentAction', { code: form.vars.value })) }}</div>
             {% if method.description is not null %}
                 <div class="description">
                     <p>{{ method.description }}</p>
@@ -24,7 +26,7 @@
             </div>
         </div>
         <div class="content">
-            <a class="header">{{ form_label(form, null, {'label_attr': {'data-test-payment-method-label': ''}}) }}</a>
+            <a class="header">{{ form_label(form, null, {'label_attr': {'data-factory-name' : method.gatewayConfig.factoryName, 'data-test-payment-method-label': ''}}) }}</a>
             {% if method.description is not null %}
                 <div class="description">
                     <p>{{ method.description }}</p>

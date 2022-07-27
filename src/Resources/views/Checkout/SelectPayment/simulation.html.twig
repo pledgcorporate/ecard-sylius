@@ -1,6 +1,6 @@
 {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 
-<table class="ui table">
+<table class="ui table" data-total-fees={{ simulation.fees }}>
     <thead>
         <tr>
             <th>{{ 'pledg_sylius_payment_plugin.due_date'|trans }}</th>

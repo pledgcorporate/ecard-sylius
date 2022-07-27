@@ -54,6 +54,10 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Pledg\SyliusPaymentPlugin\Controller\Shop\RecalculateTotalAction">
+            <tag name="controller.service_arguments"/>
+        </service>
+
         <service id="pledg_sylius_payment_plugin.factory.pledg_gateway_factory" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory</argument>
             <tag name="payum.gateway_factory_builder" factory="pledg" />
