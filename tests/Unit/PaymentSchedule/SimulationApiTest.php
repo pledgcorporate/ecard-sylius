@@ -16,7 +16,7 @@ use Tests\Pledg\SyliusPaymentPlugin\Unit\ValueObject\MerchantBuilder;
 class SimulationApiTest extends TestCase
 {
     /** @test */
-    public function it_handle_simulation_when_the_response_is_correct(): void
+    public function it_handle_simulation_when_response_is_correct(): void
     {
         $rawSchedule = [
             [
@@ -38,6 +38,30 @@ class SimulationApiTest extends TestCase
         self::assertCount(2, $schedule->payments);
         self::assertSame(12, $schedule->getFees());
         self::assertSame($rawSchedule, array_map(function (Payment $paymentDto) {
+            return [
+                'payment_date' => $paymentDto->date->format('Y-m-d'),
+                'amount_cents' => $paymentDto->amount,
+                'fees' => $paymentDto->fees,
+            ];
+        }, $schedule->payments));
+    }
+
+    /** @test */
+    public function it_handle_deferred_simulation_when_response_is_correct(): void
+    {
+        $rawSchedule = [
+            'payment_date' => '2022-02-02',
+            'amount_cents' => 100,
+            'fees' => 10,
+        ];
+        $simulation = (new SimulationBuilder())->withSimulation(['DEFERRED' => $rawSchedule])->build();
+
+        $schedule = $simulation->simulate((new MerchantBuilder())->build(), 100, new \DateTimeImmutable());
+
+        self::assertInstanceOf(PaymentSchedule::class, $schedule);
+        self::assertCount(1, $schedule->payments);
+        self::assertSame(10, $schedule->getFees());
+        self::assertSame([$rawSchedule], array_map(function (Payment $paymentDto) {
             return [
                 'payment_date' => $paymentDto->date->format('Y-m-d'),
                 'amount_cents' => $paymentDto->amount,
