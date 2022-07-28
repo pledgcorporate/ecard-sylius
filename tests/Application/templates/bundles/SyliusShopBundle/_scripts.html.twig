@@ -1,7 +1,7 @@
 {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
 <script>
   $(function () {
-    const recalculateTotalWithFeesUrl = '/pledg/shop/recalculate-total/';
+    const recalculateTotalWithFeesUrl = '{{ app.request.schemeAndHttpHost }}/pledg/shop/recalculate-total/';
     const pledgFactoryName = 'pledg';
     const orderTotal = $('#sylius-summary-grand-total');
     const paymentFee = $('#pledg-payment-fee-total');
