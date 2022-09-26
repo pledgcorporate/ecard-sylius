@@ -1,0 +1,11 @@
+pledg_sylius_payment_plugin:
+    identifier: Händler-Identifikation
+    secret: Geheim
+    restricted_countries: Eingeschränkte Länder
+    price_range_min: Minimaler Preis
+    price_range_max: Maximaler Preis
+    due_date: Fälligkeitsdatum
+    amount: Betrag
+    payment_fee: Zahlungs-Gebühr
+    included_in_price: im Preis enthalten
+    fees: Gebühren
