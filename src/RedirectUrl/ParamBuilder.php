@@ -80,7 +80,7 @@ class ParamBuilder implements ParamBuilderInterface
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
             'title' => $this->buildTitle($this->order->getItems()),
-            'lang' => $this->order->getLocaleCode(),
+            'lang' => str_replace("fr","fr_FR",$this->order->getLocaleCode()),
             'reference' => (string) new Reference($this->order->getId(), $this->payment->getId()),
             'amountCents' => $this->totalWithoutFees->calculate($this->order),
             'currency' => $this->payment->getCurrencyCode(),
