@@ -6,6 +6,7 @@ namespace Tests\Pledg\SyliusPaymentPlugin\Unit\Sylius\Repository;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
+use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
@@ -58,7 +59,17 @@ class InMemoryPaymentRepository implements PaymentRepositoryInterface
         throw new \RuntimeException('not implemented yet');
     }
 
+    public function findOneByCustomer($id, CustomerInterface $customer): ?PaymentInterface
+    {
+        throw new \RuntimeException('not implemented yet');
+    }
+
     public function findOneByOrderId($paymentId, $orderId): ?PaymentInterface
+    {
+        throw new \RuntimeException('not implemented yet');
+    }
+
+    public function findOneByOrderToken(string $paymentId, string $orderToken): ?PaymentInterface
     {
         throw new \RuntimeException('not implemented yet');
     }
