@@ -103,7 +103,7 @@ class StatusAction implements ActionInterface
     private function getParameter(string $key): ?string
     {
         return $this->requestStack->getCurrentRequest() instanceof Request
-            ? $this->requestStack->getCurrentRequest()->query->get($key) : null;
+            ? (string) $this->requestStack->getCurrentRequest()->query->get($key) : null;
     }
 
     private function jsonDecode(string $input): array
