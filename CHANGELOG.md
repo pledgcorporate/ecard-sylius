@@ -1,4 +1,6 @@
 # CHANGELOG
+## V2.0.1
+* Add right version number to plugin metadata
 ## V2.0.0
 * Support Sylius 1.9 & 1.10
 ## V1.1.8
