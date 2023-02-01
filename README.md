@@ -83,8 +83,10 @@ All the details (parameters, redirection url, pledg result, pledg errors, pledg 
 
 You just have to : 
 1. Retrieve the package
-2. Launch `make up` in order to install the plugin in a dockerized environment with a test application
-3. Launch `make ci` if you want to check if everything works fine
-4. Make a PR and check if the CI is green.
+2. Launch `make install` to install the database
+3. Launch `make up-d` in order to install the plugin in a dockerized environment with a test application
+4. Launch `make ci` if you want to check if everything works fine
+5. Make a PR and check if the CI is green. Do not forget to upgrade the version number in the CHANGELOG.md and 
+in the Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilder.php file.
 
 The plugin does not (yet) use behat. To compensate this, we wrote unit tests with PHPUnit in a [classical way](https://github.com/testdouble/contributing-tests/wiki/Detroit-school-TDD). 

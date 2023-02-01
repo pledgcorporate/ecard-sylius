@@ -1,4 +1,8 @@
 # CHANGELOG
+## V2.0.2
+* Add Stylius version number to plugin metadata
+* Fix incorrect typing in StatusAction
+* Fix plugin version metadata in tests
 ## V2.0.1
 * Add right version number to plugin metadata
 ## V2.0.0

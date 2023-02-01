@@ -44,13 +44,13 @@ class StatusAction implements ActionInterface
         $jsonError = $this->getParameter(self::PLEDG_ERROR);
 
         if (null !== $jsonResult) {
-            $this->handlePledgResult($request, $jsonResult);
+            $this->handlePledgResult($request, (string) $jsonResult);
 
             return;
         }
 
         if (null !== $jsonError) {
-            $this->handlePledgError($request, $jsonError);
+            $this->handlePledgError($request, (string) $jsonError);
 
             return;
         }
@@ -100,10 +100,13 @@ class StatusAction implements ActionInterface
         $status->setModel($arrayObject);
     }
 
-    private function getParameter(string $key): ?string
+    /**
+     * @return string|int|float|bool|null
+     */
+    private function getParameter(string $key)
     {
         return $this->requestStack->getCurrentRequest() instanceof Request
-            ? (string) $this->requestStack->getCurrentRequest()->query->get($key) : null;
+            ? $this->requestStack->getCurrentRequest()->query->get($key) : null;
     }
 
     private function jsonDecode(string $input): array
