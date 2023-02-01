@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
+use Composer\InstalledVersions;
 use Doctrine\Common\Collections\Collection;
 use Payum\Core\Security\TokenInterface;
 use Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFeesInterface;
@@ -24,6 +25,8 @@ use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
+    public const PLEDG_PLUGIN_VERSION = '2.0.2';
+
     /** @var MerchantInterface */
     protected $merchant;
 
@@ -136,7 +139,7 @@ class ParamBuilder implements ParamBuilderInterface
             $this->buildShipmentMetadata($this->order->getShipments()),
             $this->buildProductsMetadata($this->order->getItems()),
             $this->buildCustomerMetadata($this->order->getCustomer()),
-            ['plugin' => 'sylius-pledg-plugin2.0.1'],
+            $this->buildPluginMetadata()
         );
     }
 
@@ -202,6 +205,19 @@ class ParamBuilder implements ParamBuilderInterface
             'session' => [
                 'customer_id' => $customer->getId(),
             ],
+        ];
+    }
+
+    private function buildPluginMetadata(): array
+    {
+        $syliusVersion = InstalledVersions::getVersion('sylius/sylius');
+
+        return [
+            'plugin' => sprintf(
+                'sylius%s-pledg-plugin%s',
+                $syliusVersion,
+                self::PLEDG_PLUGIN_VERSION
+            ),
         ];
     }
 }

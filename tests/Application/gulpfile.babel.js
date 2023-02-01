@@ -44,13 +44,16 @@ export const buildShop = function buildShop() {
 buildShop.description = 'Build shop assets.';
 
 export const watchShop = function watchShop() {
-  return gulp.src('../../vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle/gulpfile.babel.js', { read: false })
+  return gulp.src('vendor/sylius/sylius/src/Sylius/Bundle/ShopBundle/gulpfile.babel.js', { read: false })
     .pipe(chug({ args: config, tasks: 'watch' }));
 };
 watchShop.description = 'Watch shop asset sources and rebuild on changes.';
 
 export const build = gulp.parallel(buildAdmin, buildShop);
 build.description = 'Build assets.';
+
+export const watch = gulp.parallel(watchAdmin, watchShop);
+watch.description = 'Watch asset sources and rebuild on changes.';
 
 gulp.task('admin', buildAdmin);
 gulp.task('admin-watch', watchAdmin);
