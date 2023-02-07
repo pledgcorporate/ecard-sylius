@@ -2,7 +2,7 @@
 
 ## Installation
 
-1. Install the package
+1. Install the package (beware of which version of our plugin supports your version of Sylius)
    
 ```bash
     composer require pledg/sylius-payment-plugin
