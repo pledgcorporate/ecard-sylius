@@ -1,5 +1,5 @@
 # CHANGELOG
-## V2.0.3
+## V2.0.3zzz
 * Fix PHP version constraint
 ## V2.0.2
 * Add Stylius version number to plugin metadata
