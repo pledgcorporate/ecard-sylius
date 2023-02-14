@@ -1,4 +1,6 @@
 # CHANGELOG
+## V2.0.4
+* Fix missing overriding templates
 ## V2.0.3
 * Fix PHP version constraint
 ## V2.0.2
