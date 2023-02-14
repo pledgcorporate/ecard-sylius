@@ -25,7 +25,7 @@ use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    public const PLEDG_PLUGIN_VERSION = '2.0.2';
+    public const PLEDG_PLUGIN_VERSION = '2.0.3';
 
     /** @var MerchantInterface */
     protected $merchant;

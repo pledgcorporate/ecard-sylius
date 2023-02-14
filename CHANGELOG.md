@@ -1,4 +1,6 @@
 # CHANGELOG
+## V2.0.3
+* Fix PHP version constraint
 ## V2.0.2
 * Add Stylius version number to plugin metadata
 * Fix incorrect typing in StatusAction
