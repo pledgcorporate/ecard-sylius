@@ -14,7 +14,7 @@ class Reference
     /** @var int */
     private $orderId;
 
-    private const PREFIX = 'PLEDG';
+    private const PREFIX = 'PLEDGBYSOFINCO';
 
     public function __construct(int $orderId, int $paymentId)
     {
@@ -41,7 +41,7 @@ class Reference
     {
         $parts = explode('_', $reference);
 
-        Assert::count($parts, 3, sprintf('The reference %s is invalid the format should be PLEG_ORDERID_PAYMENTID', $reference));
+        Assert::count($parts, 3, sprintf('The reference %s is invalid the format should be PLEDGBYSOFINCO_ORDERID_PAYMENTID', $reference));
         Assert::eq($parts[0], self::PREFIX);
         $vo = new self((int) $parts[1], (int) $parts[2]);
 

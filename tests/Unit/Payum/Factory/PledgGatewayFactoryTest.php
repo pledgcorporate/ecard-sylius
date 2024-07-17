@@ -18,8 +18,8 @@ class PledgGatewayFactoryTest extends TestCase
 
         $config = $factory->createConfig();
 
-        self::assertSame('pledg', $config['payum.factory_name']);
-        self::assertSame('Pledg', $config['payum.factory_title']);
+        self::assertSame('pledgbysofinco', $config['payum.factory_name']);
+        self::assertSame('PledgBySofinco', $config['payum.factory_title']);
     }
 
     /** @test */

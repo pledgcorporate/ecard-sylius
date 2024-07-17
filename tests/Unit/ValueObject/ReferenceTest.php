@@ -16,13 +16,13 @@ class ReferenceTest extends TestCase
 
         self::assertSame(1234, $reference->getOrderId());
         self::assertSame(1235, $reference->getPaymentId());
-        self::assertSame('PLEDG_1234_1235', (string) $reference);
+        self::assertSame('PLEDGBYSOFINCO_1234_1235', (string) $reference);
     }
 
     /** @test */
     public function it_can_be_initialized_from_string(): void
     {
-        $reference = Reference::fromString('PLEDG_1234_1234');
+        $reference = Reference::fromString('PLEDGBYSOFINCO_1234_1234');
 
         self::assertSame(1234, $reference->getOrderId());
         self::assertSame(1234, $reference->getPaymentId());
@@ -32,16 +32,16 @@ class ReferenceTest extends TestCase
     public function it_can_not_be_initialized_from_string_with_invalid_identifiers(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectErrorMessage('The reference is invalid : PLEDG_0001234_00123 provide PLEDG_1234_123 expected');
-        Reference::fromString('PLEDG_0001234_00123');
+        $this->expectErrorMessage('The reference is invalid : PLEDGBYSOFINCO_0001234_00123 provide PLEDGBYSOFINCO_1234_123 expected');
+        Reference::fromString('PLEDGBYSOFINCO_0001234_00123');
     }
 
     /** @test */
     public function it_can_not_be_initialized_from_string_with_invalid_format(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectErrorMessage('The reference PLEDG_1234 is invalid the format should be PLEG_ORDERID_PAYMENTID');
-        Reference::fromString('PLEDG_1234');
+        $this->expectErrorMessage('The reference PLEDGBYSOFINCO_1234 is invalid the format should be PLEDGBYSOFINCO_ORDERID_PAYMENTID');
+        Reference::fromString('PLEDGBYSOFINCO_1234');
     }
 
     public function it_can_not_be_initialized_from_string_with_invalid_integers(): void

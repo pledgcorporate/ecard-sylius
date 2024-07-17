@@ -60,10 +60,10 @@
 
         <service id="pledg_sylius_payment_plugin.factory.pledg_gateway_factory" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory</argument>
-            <tag name="payum.gateway_factory_builder" factory="pledg" />
+            <tag name="payum.gateway_factory_builder" factory="pledgbysofinco" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Form\Type\PledgConfigurationType">
-            <tag name="sylius.gateway_configuration_type" type="pledg" label="Pledg" />
+            <tag name="sylius.gateway_configuration_type" type="pledgbysofinco" label="PledgBySofinco" />
             <tag name="form.type" />
         </service>
 
@@ -74,14 +74,14 @@
         <service id="Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface" alias="Pledg\SyliusPaymentPlugin\RedirectUrl\Encoder"/>
 
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\CaptureAction" public="true">
-            <tag name="payum.action" factory="pledg" alias="payum.action.capture" />
+            <tag name="payum.action" factory="pledgbysofinco" alias="payum.action.capture" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\RedirectUrlAction" public="true">
             <argument key="$pledgUrl">%pledg_sylius_payment_plugin.front_url%</argument>
-            <tag name="payum.action" factory="pledg" alias="payum.action.redirect_url" />
+            <tag name="payum.action" factory="pledgbysofinco" alias="payum.action.redirect_url" />
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Payum\Action\StatusAction" public="true">
-            <tag name="payum.action" factory="pledg" alias="payum.action.status"/>
+            <tag name="payum.action" factory="pledgbysofinco" alias="payum.action.status"/>
         </service>
 
         <service id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationApi">
