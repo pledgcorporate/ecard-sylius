@@ -1,4 +1,7 @@
 # CHANGELOG
+## V2.0.5
+* cacf operator rebranding
+* fix deprecated libs required by composer
 ## V2.0.4
 * Fix missing overriding templates
 ## V2.0.3

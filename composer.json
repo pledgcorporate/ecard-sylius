@@ -7,6 +7,12 @@
     "require": {
         "php": "^7.4 | ^8.0",
         "ext-json": "*",
+        "guzzlehttp/guzzle": "^6.5",
+        "lstrojny/fxmlrpc": "^0.22.0",
+        "php-http/message": "^1.16",
+        "php-http/message-factory": "^1.1",
+        "psr/http-factory": "^1.1",
+        "supervisorphp/supervisor": "^4.0",
         "sylius/sylius": "~1.9.0 | ~1.10.0"
     },
     "require-dev": {
@@ -60,7 +66,8 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "phpstan/extension-installer": true,
-            "symfony/thanks": true
+            "symfony/thanks": true,
+            "php-http/discovery": true
         }
     }
 }
