@@ -1,4 +1,6 @@
 # CHANGELOG
+## V2.0.6
+* fix operator in metadata
 ## V2.0.5
 * cacf operator rebranding
 * fix deprecated libs required by composer
