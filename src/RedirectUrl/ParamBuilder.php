@@ -25,7 +25,7 @@ use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    public const PLEDG_PLUGIN_VERSION = '2.0.5';
+    public const PLEDG_PLUGIN_VERSION = '2.0.6';
 
     /** @var MerchantInterface */
     protected $merchant;
@@ -214,7 +214,7 @@ class ParamBuilder implements ParamBuilderInterface
 
         return [
             'plugin' => sprintf(
-                'sylius%s-pledg-plugin%s',
+                'sylius%s-pledgbysofinco-plugin%s',
                 $syliusVersion,
                 self::PLEDG_PLUGIN_VERSION
             ),
