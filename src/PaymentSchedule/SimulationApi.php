@@ -47,6 +47,7 @@ class SimulationApi implements SimulationInterface
                     ]),
                 ]
             );
+            /** @var array $content */
             $content = json_decode($response->getBody()->getContents(), true);
 
             if (!isset($content['INSTALLMENT']) && !isset($content['DEFERRED'])) {

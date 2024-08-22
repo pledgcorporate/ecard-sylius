@@ -20,20 +20,26 @@ class PaymentMethodProvider implements PaymentMethodProviderInterface
 
     public function getPledgMethods(): array
     {
-        return $this->repository->createQueryBuilder('o')
+        /** @var PaymentMethodInterface[] $res */
+        $res = $this->repository->createQueryBuilder('o')
             ->innerJoin('o.gatewayConfig', 'gatewayConfig')
             ->where('gatewayConfig.factoryName = :factoryName')
             ->setParameter('factoryName', PledgGatewayFactory::NAME)
             ->getQuery()
             ->getResult();
+
+        return $res;
     }
 
     public function findOneByCode(string $code): PaymentMethodInterface
     {
-        return $this->repository->createQueryBuilder('o')
+        /** @var PaymentMethodInterface $res */
+        $res = $this->repository->createQueryBuilder('o')
             ->andWhere('o.code = :code')
             ->setParameter('code', $code)
             ->getQuery()
             ->getSingleResult();
+
+        return $res;
     }
 }

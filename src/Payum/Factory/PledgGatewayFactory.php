@@ -28,7 +28,14 @@ class PledgGatewayFactory extends GatewayFactory
             'payum.factory_name' => self::NAME,
             'payum.factory_title' => 'PledgBySofinco',
             'payum.api' => function (ArrayObject $config): Merchant {
-                return new Merchant($config[self::IDENTIFIER], $config[self::SECRET]);
+                /** @var string $identifier */
+                $identifier = $config[self::IDENTIFIER];
+                /** @var string $secret */
+                $secret = $config[self::SECRET];
+
+                $merchant = new Merchant($identifier, $secret);
+
+                return $merchant;
             },
         ]);
     }

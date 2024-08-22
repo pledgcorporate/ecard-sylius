@@ -21,7 +21,9 @@ class RedirectUrl extends Generic implements RedirectUrlInterface
 
     public function getPayment(): PaymentInterface
     {
-        return $this->getModel();
+        /** @var PaymentInterface $ret */
+        $ret = $this->getModel();
+        return $ret;
     }
 
     public static function fromCaptureAndMerchant(Capture $capture, MerchantInterface $merchant): RedirectUrlInterface

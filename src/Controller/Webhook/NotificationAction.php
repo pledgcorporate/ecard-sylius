@@ -36,6 +36,7 @@ final class NotificationAction
 
     public function __invoke(Request $request): JsonResponse
     {
+        /** @var array $content */
         $content = json_decode(
             (string) $request->getContent(false),
             true,

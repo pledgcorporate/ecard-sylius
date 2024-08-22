@@ -112,7 +112,7 @@ class ParamBuilderTest extends TestCase
             'session' => [
                 'customer_id' => 12345,
             ],
-            'plugin' => 'sylius1.10.14.0-pledg-plugin' . ParamBuilder::PLEDG_PLUGIN_VERSION,
+            'plugin' => 'sylius1.11.15.0-pledgbysofinco-plugin' . ParamBuilder::PLEDG_PLUGIN_VERSION,
         ], $paramBuilder['metadata']);
     }
 

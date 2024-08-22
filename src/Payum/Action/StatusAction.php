@@ -55,13 +55,20 @@ class StatusAction implements ActionInterface
             return;
         }
 
+        /** @var GetStatusInterface $request */
         $request->markNew();
     }
 
-    private function handlePledgResult(GetStatusInterface $request, string $jsonResult): void
+    /**
+     * @param GetStatusInterface|mixed $request
+     *
+     * @throws \JsonException
+     */
+    private function handlePledgResult($request, string $jsonResult): void
     {
         $result = $this->jsonDecode($jsonResult);
 
+        /** @var GetStatusInterface $request */
         $this->setPaymentDetails($request, self::PLEDG_RESULT, $result);
 
         $status = Status::WAITING;
@@ -75,12 +82,18 @@ class StatusAction implements ActionInterface
         (new Status($status))->markRequest($request);
     }
 
-    private function handlePledgError(GetStatusInterface $request, string $jsonError): void
+    /**
+     * @param GetStatusInterface|mixed $request
+     *
+     * @throws \JsonException
+     */
+    private function handlePledgError($request, string $jsonError): void
     {
         $error = $this->jsonDecode($jsonError);
 
         $this->logger->error($jsonError);
 
+        /** @var GetStatusInterface $request */
         $this->setPaymentDetails($request, self::PLEDG_ERROR, $error);
 
         if (isset($error['type']) && $error['type'] === 'abandonment') {
@@ -111,12 +124,15 @@ class StatusAction implements ActionInterface
 
     private function jsonDecode(string $input): array
     {
-        return json_decode(
+        /** @var array $ret */
+        $ret = json_decode(
             $input,
             true,
             512,
             \JSON_THROW_ON_ERROR
         );
+
+        return $ret;
     }
 
     public function supports($request)
