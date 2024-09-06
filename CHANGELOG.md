@@ -1,4 +1,6 @@
 # CHANGELOG
+## V2.0.7
+* support sylius-1.11
 ## V2.0.6
 * fix operator in metadata
 ## V2.0.5

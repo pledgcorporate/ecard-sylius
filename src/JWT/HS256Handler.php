@@ -32,7 +32,9 @@ class HS256Handler implements HandlerInterface
     {
         $encodedParameters = explode('.', $token)[1];
 
-        return json_decode($this->safeBase64Decode($encodedParameters), true, 512, \JSON_THROW_ON_ERROR);
+        /** @var array $ret */
+        $ret = json_decode($this->safeBase64Decode($encodedParameters), true, 512, \JSON_THROW_ON_ERROR);
+        return $ret;
     }
 
     private function safeBase65Encode(string $input): string

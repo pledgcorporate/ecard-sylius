@@ -39,6 +39,7 @@ class RedirectUrlAction implements ActionInterface
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
+        /** @var RedirectUrlInterface $request */
         $parameters = $this->paramBuilderFactory->fromRedirectUrlRequest($request)->build();
         $token = $this->encoder->encode($parameters, $request->getMerchant()->getSecret());
 

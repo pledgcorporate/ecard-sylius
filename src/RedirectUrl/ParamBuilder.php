@@ -25,7 +25,7 @@ use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    public const PLEDG_PLUGIN_VERSION = '2.0.6';
+    public const PLEDG_PLUGIN_VERSION = '2.0.7';
 
     /** @var MerchantInterface */
     protected $merchant;
@@ -62,11 +62,27 @@ class ParamBuilder implements ParamBuilderInterface
         $builder = new self();
         $builder->router = $router;
         $builder->totalWithoutFees = $totalWithoutFees;
-        $builder->payment = $request->getModel();
-        $builder->order = $builder->payment->getOrder();
-        $builder->customer = $builder->order->getCustomer();
-        $builder->billingAddress = $builder->order->getBillingAddress();
-        $builder->shippingAddress = $builder->order->getShippingAddress();
+
+        /** @var PaymentInterface $model */
+        $model = $request->getModel();
+        $builder->payment = $model;
+
+        /** @var OrderInterface $order */
+        $order = $builder->payment->getOrder();
+        $builder->order = $order;
+
+        /** @var CustomerInterface $customer */
+        $customer = $builder->order->getCustomer();
+        $builder->customer = $customer;
+
+        /** @var AddressInterface $billingAddress */
+        $billingAddress = $builder->order->getBillingAddress();
+        $builder->billingAddress = $billingAddress;
+
+        /** @var AddressInterface $shippingAddress */
+        $shippingAddress = $builder->order->getShippingAddress();
+        $builder->shippingAddress = $shippingAddress;
+
         $builder->merchant = $request->getMerchant();
 
         if (null === $request->getToken()) {
@@ -152,6 +168,7 @@ class ParamBuilder implements ParamBuilderInterface
             return [];
         }
 
+        /** @var array $names */
         $names = [];
         /** @var ShipmentInterface $shipment */
         foreach ($shipments as $shipment) {
