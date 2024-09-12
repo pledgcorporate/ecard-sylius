@@ -96,11 +96,16 @@ class ParamBuilder implements ParamBuilderInterface
 
     public function build(): array
     {
+        $orderNumber = $this->order->getNumber();
+        if (is_null($orderNumber)) {
+            $orderNumber = '';
+        }
+
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
             'title' => $this->buildTitle($this->order->getItems()),
             'lang' => $this->order->getLocaleCode(),
-            'reference' => (string) new Reference($this->order->getId(), $this->payment->getId()),
+            'reference' => (string) new Reference($orderNumber, $this->payment->getId()),
             'amountCents' => $this->totalWithoutFees->calculate($this->order),
             'currency' => $this->payment->getCurrencyCode(),
             'firstName' => $this->billingAddress->getFirstName(),
