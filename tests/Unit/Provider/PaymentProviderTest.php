@@ -15,7 +15,7 @@ class PaymentProviderTest extends TestCase
     /** @test */
     public function it_finds_payment_by_reference(): void
     {
-        $reference = new Reference(1234, 1234);
+        $reference = new Reference('1234', 1234);
 
         $paymentRepository = new InMemoryPaymentRepository();
         $payment = (new PaymentBuilder())->withId(1234)->build();
