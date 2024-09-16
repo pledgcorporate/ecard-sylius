@@ -1,4 +1,6 @@
 # CHANGELOG
+## V2.0.9
+* fix metadata
 ## V2.0.8
 * update order reference with order number
 ## V2.0.7

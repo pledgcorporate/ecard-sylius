@@ -19,13 +19,14 @@ use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
+use Sylius\Component\Inventory\Checker\AvailabilityChecker;
 use Sylius\Component\Shipping\Model\ShippingMethodInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    public const PLEDG_PLUGIN_VERSION = '2.0.8';
+    public const PLEDG_PLUGIN_VERSION = '2.0.9';
 
     /** @var MerchantInterface */
     protected $merchant;
@@ -157,7 +158,6 @@ class ParamBuilder implements ParamBuilderInterface
     private function buildMetadata(): array
     {
         return array_merge(
-            $this->buildShipmentMetadata($this->order->getShipments()),
             $this->buildProductsMetadata($this->order->getItems()),
             $this->buildCustomerMetadata($this->order->getCustomer()),
             $this->buildPluginMetadata()
@@ -167,8 +167,11 @@ class ParamBuilder implements ParamBuilderInterface
     /**
      * @param Collection|ShipmentInterface[] $shipments
      */
-    private function buildShipmentMetadata(Collection $shipments): array
+    private function buildShipmentMetadata(): array
     {
+        /** @var Collection $shipments */
+        $shipments = $this->order->getShipments();
+
         if ($shipments->isEmpty()) {
             return [];
         }
@@ -182,8 +185,11 @@ class ParamBuilder implements ParamBuilderInterface
             $names[] = $method;
         }
 
+        $namesList = implode(', ', $names);
+
         return [
-            'delivery_label' => implode(', ', $names),
+            'delivery_mode' => $namesList,
+            'delivery_mode_reference' => $namesList,
         ];
     }
 
@@ -194,19 +200,47 @@ class ParamBuilder implements ParamBuilderInterface
     {
         $products = [];
 
+        $shipmentMetadata = $this->buildShipmentMetadata();
+
         /** @var OrderItemInterface $item */
         foreach ($orderItems as $item) {
-            Assert::isInstanceOf($item->getVariant(), ProductVariantInterface::class);
+            $itemVariant = $item->getVariant();
+            Assert::isInstanceOf($itemVariant, ProductVariantInterface::class);
 
-            $products[] = [
-                'reference' => $item->getVariant()->getCode(),
-                'name' => $item->getVariantName(),
+            $availabilityChecker = new AvailabilityChecker(false);
+            $isStockAvailable = $availabilityChecker->isStockAvailable($itemVariant);
+
+            $itemProduct = $item->getProduct();
+            $arrTaxons = $itemProduct->getTaxons();
+            $category = '';
+            $arrSubcategory = [];
+
+            /** @var TaxonInterface $taxon */
+            foreach ($arrTaxons as $taxon) {
+                $taxonName = trim($taxon->getName());
+                $arrSubcategory[] = $taxonName;
+            }
+            $category = $arrSubcategory[0];
+            array_shift($arrSubcategory);
+
+            $productMetadata = [
+                'reference' => $itemVariant->getCode(),
+                'name' => $item->getProductName(),
+                'category' => $category,
+                'sub_categories' => $arrSubcategory,
                 'quantity' => $item->getQuantity(),
                 'unit_amount_cents' => $item->getUnitPrice(),
-                'type' => $item->getVariant()->isShippingRequired()
+                'type' => $itemVariant->isShippingRequired()
                     ? 'physical'
                     : 'virtual',
+                'stock' => $isStockAvailable,
             ];
+
+            // delivery data must be in each product details:
+            $products[] = array_merge(
+                $productMetadata,
+                $shipmentMetadata
+            );
         }
 
         return ['products' => $products];
@@ -223,6 +257,7 @@ class ParamBuilder implements ParamBuilderInterface
                 'creation_date' => $customer->getCreatedAt() instanceof \DateTimeInterface
                     ? $customer->getCreatedAt()->format('Y-m-d')
                     : null,
+                'number_of_purchases' => $customer->getOrders()->count(),
             ],
             'session' => [
                 'customer_id' => $customer->getId(),
