@@ -10,7 +10,7 @@
         "guzzlehttp/guzzle": "^6.5",
         "supervisorphp/supervisor": "^4.0",
         "php-http/message-factory": "^1.1",
-        "sylius/sylius": "~1.9.0|~1.10.0|~1.11.0"
+        "sylius/sylius": "~1.9.0 | ~1.10.0 | ~1.11.0 | ~1.12.0"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
