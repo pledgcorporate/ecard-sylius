@@ -30,6 +30,7 @@
         "phpstan/phpstan-webmozart-assert": "^1.2.0",
         "phpunit/phpunit": "^10.5",
         "psr/http-factory": "^1.1",
+        "php-http/message-factory": "^1.1",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "robertfausk/behat-panther-extension": "^1.1",
         "sylius-labs/coding-standard": "^4.2",
