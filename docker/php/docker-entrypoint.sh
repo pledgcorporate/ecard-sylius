@@ -10,8 +10,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ]; then
 	mkdir -p tests/Application/var/cache tests/Application/var/log tests/Application/public/media
 
 	# fixing permissions on public/media/* folders:
-	chmod o+w tests/Application/public/media/image
-	chmod o+w tests/Application/public/media/cache
+	mkdir -p tests/Application/public/media/image && chmod o+w tests/Application/public/media/image
+	mkdir -p tests/Application/public/media/cache && chmod o+w tests/Application/public/media/cache
 
 	composer install --prefer-dist --no-interaction
 	tests/Application/bin/console assets:install --no-interaction
