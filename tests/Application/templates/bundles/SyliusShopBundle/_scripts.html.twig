@@ -1,1 +1,32 @@
-{{ encore_entry_script_tags('shop-entry', null, 'shop') }}
+{% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
+<script>
+  $(function () {
+    const recalculateTotalWithFeesUrl = '{{ path('pledg_sylius_payment_plugin_shop_recalculate_total', {fees: '__fees__'}) }}';
+    const pledgFactoryName = 'pledg';
+    const orderTotal = $('#sylius-summary-grand-total');
+    const paymentFee = $('#pledg-payment-fee-total');
+    const paymentFeeRaw = $('#pledg-payment-fee-row');
+
+    $('input[id*="sylius_checkout_select_payment_"][type=radio]').on('change', ({currentTarget}) => {
+      const factoryName = document
+              .querySelector('label[for="'+ currentTarget.id +'"]')
+              .getAttribute('data-factory-name');
+
+      if (factoryName === pledgFactoryName) {
+        retrieveTotalWithFees($('#' + currentTarget.value + '-simulation table').data('total-fees'));
+      } else {
+        retrieveTotalWithFees(0);
+      }
+    });
+
+    const retrieveTotalWithFees = (fees) => {
+      fetch(recalculateTotalWithFeesUrl.replace('__fees__', fees))
+        .then((response) => response.json())
+        .then((data) => {
+          paymentFeeRaw.toggle(fees !== 0);
+          orderTotal.text(data.total);
+          paymentFee.text(data.fees);
+        });
+    }
+  });
+</script>
