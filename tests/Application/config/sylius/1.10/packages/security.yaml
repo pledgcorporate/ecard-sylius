@@ -24,8 +24,11 @@ security:
             chain:
                 providers: [sylius_api_shop_user_provider, sylius_api_admin_user_provider]
 
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     encoders:
         Sylius\Component\User\Model\UserInterface: argon2i
+
     firewalls:
         admin:
             switch_user: true

@@ -1,12 +1,5 @@
 {
     "name": "sylius/plugin-skeleton-test-application",
     "description": "Sylius application for plugin testing purposes (composer.json needed for project dir resolving)",
-    "license": "MIT",
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "phpstan/extension-installer": true,
-            "symfony/thanks": true
-        }
-    }
+    "license": "MIT"
 }
