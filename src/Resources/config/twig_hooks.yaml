@@ -1,2 +1,10 @@
 sylius_twig_hooks:
-    hooks: {}
+    hooks:
+        'sylius_admin.payment_method.create.content.form.sections.gateway_configuration.pledgbysofinco':
+            pledg_config:
+                template: '@PledgSyliusPaymentPlugin/Admin/payment_method/form/sections/gateway_configuration/pledg_config.html.twig'
+                priority: 0
+        'sylius_admin.payment_method.update.content.form.sections.gateway_configuration.pledgbysofinco':
+            pledg_config:
+                template: '@PledgSyliusPaymentPlugin/Admin/payment_method/form/sections/gateway_configuration/pledg_config.html.twig'
+                priority: 0

@@ -23,6 +23,8 @@
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProvider"/>
 
+        <service id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
+
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
 
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardProcessor">

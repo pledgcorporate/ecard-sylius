@@ -1,11 +1,48 @@
 pledg_sylius_payment_plugin:
-    identifier: Händler-Identifikation
-    secret: Geheim
-    restricted_countries: Eingeschränkte Länder
-    price_range_min: Minimaler Preis
-    price_range_max: Maximaler Preis
-    due_date: Fälligkeitsdatum
-    amount: Betrag
-    payment_fee: Zahlungs-Gebühr
-    included_in_price: im Preis enthalten
-    fees: Gebühren
+  identifier: Händler-Identifikation
+  secret: Geheim
+  api_key: API-Schlüssel (OAuth Backoffice)
+  api_key_help: Für Überweisungsrückerstattung; sonst Händler-ID.
+  api_secret: API-Geheimnis (OAuth Backoffice)
+  api_secret_help: Zum API-Schlüssel; sonst Händlergeheimnis.
+  company_uid: Unternehmens-UID (Widgets / Simulation)
+  company_uid_help: z. B. cmp_… — für Simulations-URL; sonst Händler-ID.
+  widget_product: Ratenzahlungs-Link auf Produktseite
+  widget_checkout: Ratenzahlungs-Link im Warenkorb
+  widget_catalog: Banner auf Produktlisten (Taxonomie)
+  restricted_countries: Eingeschränkte Länder
+  price_range_min: Mindestpreis
+  price_range_max: Höchstpreis
+  due_date: Fälligkeitsdatum
+  amount: Betrag
+  payment_fee: Zahlungsgebühr
+  included_in_price: im Preis enthalten
+  fees: Gebühren
+  sandbox: Sandbox-Umgebung (Staging)
+  sandbox_help: "Aktiv = Staging · Inaktiv = Produktion"
+  refund_amount: Betrag (€)
+  refund_title: Sofinco-Rückerstattung
+  refund_total: Gesamtbetrag
+  refund_already_refunded: Bereits erstattet
+  refund_remaining: Restbetrag
+  refund_mode_total: Vollständige Rückerstattung
+  refund_mode_custom: Freier Betrag
+  refund_mode_products: Ausgewählte Produkte
+  refund_max: "Max: %amount% €"
+  refund_history: Verlauf
+  refund_fully_refunded: Vollständig erstattet
+  refund_confirm: Sofinco-Rückerstattung bestätigen?
+  refund_submit: Über Sofinco erstatten
+  refund_product: Produkt
+  refund_qty_max: Max. Menge
+  refund_qty_refund: Erstatt. Menge
+  refund_unit_price: E-Preis
+  refund_subtotal: Zwischensumme
+  refund_products_total: Produktsumme
+  widget_schedule_link: Beispiel-Ratenzahlung (Sofinco)
+  widget_cart_schedule_link: Ratenzahlung für Warenkorb (Sofinco)
+  widget_catalog_intro: Ratenzahlung im Warenkorb verfügbar.
+  widget_catalog_cta: Zum Warenkorb
+  widget_schedule_title: Ratenzahlungsplan (Sofinco)
+  widget_schedule_unavailable: Plan für diesen Betrag nicht verfügbar.
+  widget_schedule_error: Plan konnte nicht geladen werden.

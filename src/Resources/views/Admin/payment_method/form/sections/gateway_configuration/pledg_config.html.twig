@@ -1,0 +1,7 @@
+{% set form = hookable_metadata.context.form %}
+
+{% if form.gatewayConfig.config is defined %}
+    <div class="col-12">
+        {{ form_widget(form.gatewayConfig.config) }}
+    </div>
+{% endif %}
