@@ -5,10 +5,11 @@
     "description": "Payment Gateway Plugin using Pledg",
     "license": "MIT",
     "require": {
-        "php": "^7.4 | ^8.0",
-        "sylius/sylius": "~1.9.0|~1.10.0|~1.11.0|~1.12.0|~1.13.0|~1.14.0",
+        "php": "^8.2",
+        "sylius/sylius": "^2.0",
         "psr/http-factory": "^1.1",
-        "php-http/message-factory": "^1.1"
+        "php-http/message-factory": "^1.1",
+        "symfony/yaml": "^7.0"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -35,17 +36,14 @@
         "robertfausk/behat-panther-extension": "^1.1",
         "sylius-labs/coding-standard": "^4.2",
         "sylius-labs/suite-tags-extension": "^0.2",
-        "symfony/browser-kit": "^5.4 || ^6.4",
-        "symfony/debug-bundle": "^5.4 || ^6.4",
-        "symfony/dotenv": "^5.4 || ^6.4",
+        "symfony/browser-kit": "^7.0",
+        "symfony/debug-bundle": "^7.0",
+        "symfony/dotenv": "^7.0",
         "symfony/flex": "^2.4",
-        "symfony/intl": "^5.4 || ^6.4",
-        "symfony/mailer": "^5.0 | ^6.0 | ^7.0",
-        "symfony/web-profiler-bundle": "^5.4 || ^6.4",
+        "symfony/intl": "^7.0",
+        "symfony/mailer": "^7.0",
+        "symfony/web-profiler-bundle": "^7.0",
         "symfony/webpack-encore-bundle": "^1.15"
-    },
-    "conflict": {
-        "symfony/framework-bundle": "6.2.8"
     },
     "config": {
         "sort-packages": true,
@@ -58,11 +56,8 @@
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "1.13-dev"
-        },
         "symfony": {
-            "require": "^5.4 || ^6.4"
+            "require": "^7.0"
         }
     },
     "autoload": {
@@ -88,8 +83,7 @@
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "security-checker security:check": "script"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         }
     }
 }
