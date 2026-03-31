@@ -15,6 +15,19 @@ pledg_sylius_payment_plugin_shop_simulate_payment:
     defaults:
         _controller: Pledg\SyliusPaymentPlugin\Controller\Shop\SimulatePaymentAction
 
+pledg_sylius_payment_plugin_shop_simulate_payment_amount:
+    path: /shop/simulate-payment/{code}/{amountCents}
+    requirements:
+        amountCents: '\d+'
+    defaults:
+        _controller: Pledg\SyliusPaymentPlugin\Controller\Shop\SimulatePaymentForAmountAction
+
+pledg_sylius_payment_plugin_widget_simulate_batch:
+    path: /widget/simulate-batch
+    methods: [POST]
+    defaults:
+        _controller: Pledg\SyliusPaymentPlugin\Controller\Shop\SimulateWidgetAction
+
 pledg_sylius_payment_plugin_shop_recalculate_total:
     path: /shop/recalculate-total/{fees}
     defaults:

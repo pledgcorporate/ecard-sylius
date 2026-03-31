@@ -1,0 +1,15 @@
+{% set cart = hookable_metadata.context.cart ?? null %}
+{% set code = pledg_first_method_code() %}
+{% if pledg_widget_checkout_enabled() and code and cart and cart.total > 0 %}
+    {% set overhead = cart.total - cart.itemsTotal %}
+    <div class="pledg-lazy-widget"
+         data-amount-cents="{{ cart.total }}"
+         data-pledg-type="cart"
+         data-overhead-cents="{{ overhead }}"></div>
+
+    <script type="application/json" id="pledg-cart-unit-prices">
+    [{% for item in cart.items %}{"qty":{{ item.quantity }},"unit":{{ item.discountedUnitPrice }}}{% if not loop.last %},{% endif %}{% endfor %}]
+    </script>
+
+    {% include '@PledgSyliusPaymentPlugin/shop/widget/_pledg_widget_js.html.twig' %}
+{% endif %}

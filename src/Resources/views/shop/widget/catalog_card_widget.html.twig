@@ -1,0 +1,12 @@
+{# Rendered server-side inside each product card (hook: sylius_shop.shared.product.card.prices) #}
+{% set variant = hookable_metadata.context.variant|default(null) %}
+{% if variant is null %}
+    {% set product = hookable_metadata.context.product|default(null) %}
+    {% if product is not null and product.enabledVariants is defined and product.enabledVariants|length > 0 %}
+        {% set variant = product.enabledVariants|first %}
+    {% endif %}
+{% endif %}
+{% set priceCents = pledg_variant_price(variant) %}
+{% if pledg_widget_catalog_enabled() and pledg_first_method_code() and priceCents > 0 and pledg_price_in_range(priceCents) %}
+    <div class="pledg-lazy-widget" data-amount-cents="{{ priceCents }}" data-pledg-type="catalog" style="margin-top:4px;"></div>
+{% endif %}

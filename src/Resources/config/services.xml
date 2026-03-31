@@ -76,6 +76,24 @@
             <tag name="controller.service_arguments"/>
         </service>
 
+        <service id="Pledg\SyliusPaymentPlugin\Controller\Shop\SimulatePaymentForAmountAction" public="true" autoconfigure="true">
+            <argument type="service" id="twig" />
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationInterface" />
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\Provider\MerchantProviderInterface" />
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" />
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
+            <tag name="controller.service_arguments" />
+        </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Controller\Shop\SimulateWidgetAction" public="true" autoconfigure="true">
+            <argument type="service" key="$simulation" id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationInterface" />
+            <argument type="service" key="$merchantProvider" id="Pledg\SyliusPaymentPlugin\Provider\MerchantProviderInterface" />
+            <argument type="service" key="$paymentMethodProvider" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" />
+            <argument type="service" key="$pledgGatewayConfigReader" id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
+            <argument type="service" key="$logger" id="logger" />
+            <tag name="controller.service_arguments" />
+        </service>
+
         <service id="pledg_sylius_payment_plugin.factory.pledg_gateway_factory" class="Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder">
             <argument>Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory</argument>
             <tag name="payum.gateway_factory_builder" factory="pledgbysofinco" />

@@ -1,0 +1,88 @@
+{% set method = hookable_metadata.context.method %}
+{% set parent_form = hookable_metadata.context.parent_form %}
+{% set choice_form = hookable_metadata.context.form %}
+
+{% if method.gatewayConfig is defined
+   and method.gatewayConfig.factoryName == 'pledgbysofinco'
+   and pledg_widget_checkout_enabled() %}
+
+{% set methodCode = method.code|default('') %}
+{% set amountCents = parent_form.vars.data.amount|default(0) %}
+
+{% if amountCents > 0 and methodCode != '' %}
+{% set schedules = pledg_checkout_schedule(amountCents, methodCode) %}
+
+{% if schedules|length > 0 %}
+
+{% set radioId = choice_form.vars.id|default('') %}
+
+<div class="pledg-checkout-schedule mt-3 ps-4"
+     id="pledg-schedule-{{ radioId }}"
+     style="display:none"
+     onclick="event.stopPropagation();">
+
+    {% for item in schedules %}
+    <div class="mb-3">
+        <table class="table table-sm table-borderless mb-1" style="font-size:.85rem;max-width:460px">
+            <thead>
+                <tr style="border-bottom:1px solid #e2e8f0">
+                    <th style="font-size:.72rem;color:#94a3b8;font-weight:600;text-transform:uppercase;padding:5px 10px;width:55%">Date d'échéance</th>
+                    <th style="font-size:.72rem;color:#94a3b8;font-weight:600;text-transform:uppercase;padding:5px 10px">Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in item.schedule %}
+                <tr{% if not loop.last %} style="border-bottom:1px solid #f1f5f9"{% endif %}>
+                    <td style="padding:6px 10px;color:#475569">
+                        {% if line.date is not empty %}
+                            {{ line.date|format_date('long', locale='fr') }}
+                        {% endif %}
+                    </td>
+                    <td style="padding:6px 10px">
+                        <span class="fw-medium">{{ line.amount }}&nbsp;€</span>
+                        {% if line.fees is not empty %}
+                            <span class="text-muted" style="font-size:.78rem">({{ line.fees }}&nbsp;€ inclus dans le prix)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <small class="text-muted" style="font-size:.78rem">
+            Sofinco paiement en {{ item.nb }} fois {{ item.has_fees ? 'avec frais' : 'sans frais' }}
+            {% if item.taeg_str is not empty %}
+                — TAEG : {{ item.taeg_str }}&nbsp;%
+            {% endif %}
+        </small>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    var scheduleEl = document.getElementById('pledg-schedule-{{ radioId }}');
+    if (!scheduleEl) return;
+
+    var radio = document.getElementById('{{ radioId }}');
+    if (!radio) return;
+
+    var formName = radio.getAttribute('name');
+    if (!formName) return;
+
+    function updateMyVisibility() {
+        scheduleEl.style.display = radio.checked ? '' : 'none';
+    }
+
+    var radios = document.querySelectorAll('input[name="' + formName + '"]');
+    radios.forEach(function(r) {
+        r.addEventListener('change', updateMyVisibility);
+    });
+
+    updateMyVisibility();
+})();
+</script>
+
+{% endif %}{# schedules #}
+{% endif %}{# amountCents #}
+{% endif %}{# pledg method #}
