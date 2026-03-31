@@ -18,6 +18,7 @@ use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\ShipmentInterface;
+use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Inventory\Checker\AvailabilityChecker;
 use Sylius\Component\Shipping\Model\ShippingMethodInterface;
@@ -220,8 +221,10 @@ class ParamBuilder implements ParamBuilderInterface
                 $taxonName = trim($taxon->getName());
                 $arrSubcategory[] = $taxonName;
             }
-            $category = $arrSubcategory[0];
-            array_shift($arrSubcategory);
+            $category = $arrSubcategory[0] ?? '';
+            if ($arrSubcategory !== []) {
+                array_shift($arrSubcategory);
+            }
 
             $productMetadata = [
                 'reference' => $itemVariant->getCode(),
@@ -244,6 +247,15 @@ class ParamBuilder implements ParamBuilderInterface
         }
 
         return ['products' => $products];
+    }
+
+    private function forceHttps(string $url): string
+    {
+        if (str_starts_with($url, 'http://')) {
+            return 'https://' . substr($url, 7);
+        }
+
+        return $url;
     }
 
     private function buildCustomerMetadata(?CustomerInterface $customer = null): array

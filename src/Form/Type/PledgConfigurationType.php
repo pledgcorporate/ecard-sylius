@@ -35,6 +35,7 @@ class PledgConfigurationType extends AbstractType
             ->add(PledgGatewayFactory::RESTRICTED_COUNTRIES, CountryType::class, [
                 'label' => 'pledg_sylius_payment_plugin.restricted_countries',
                 'multiple' => true,
+                'required' => false,
             ])
         ;
     }

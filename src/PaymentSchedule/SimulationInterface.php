@@ -9,5 +9,9 @@ use Pledg\SyliusPaymentPlugin\ValueObject\MerchantInterface;
 
 interface SimulationInterface
 {
-    public function simulate(MerchantInterface $merchant, int $amount, \DateTimeInterface $createdAt): PaymentSchedule;
+    /**
+     * @param string|null $scheduleMerchantUid Optional UID (e.g. company) for the simulation API path
+     * @param string|null $backUrlOverride     Base URL for the Pledg back office API
+     */
+    public function simulate(MerchantInterface $merchant, int $amount, \DateTimeInterface $createdAt, ?string $scheduleMerchantUid = null, ?string $backUrlOverride = null): PaymentSchedule;
 }

@@ -12,51 +12,77 @@ use Psr\Log\LoggerInterface;
 
 class SimulationApi implements SimulationInterface
 {
-    /** @var LoggerInterface */
-    private $logger;
-
-    /** @var ClientInterface */
-    private $client;
-
-    /** @var string */
-    private $pledgUrl;
-
     private const ROUTE = '/api/users/me/merchants/<merchant_uid>/simulate_payment_schedule';
+    private const COMPANY_ROUTE = '/api/users/me/companies/<company_uid>/simulate_payment_schedule';
 
-    public function __construct(ClientInterface $client, string $pledgUrl, LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->pledgUrl = $pledgUrl;
+    public function __construct(
+        private ClientInterface $client,
+        private string $pledgUrl,
+        private LoggerInterface $logger,
+    ) {
     }
 
-    public function simulate(MerchantInterface $merchant, int $amount, \DateTimeInterface $createdAt): PaymentSchedule
+    public function simulate(MerchantInterface $merchant, int $amount, \DateTimeInterface $createdAt, ?string $scheduleMerchantUid = null, ?string $backUrlOverride = null): PaymentSchedule
+    {
+        $baseUrl = $backUrlOverride ?? $this->pledgUrl;
+
+        $uidsToTry = [];
+        if (null !== $scheduleMerchantUid && $scheduleMerchantUid !== '') {
+            $uidsToTry[] = $scheduleMerchantUid;
+        }
+        $merchantId = $merchant->getIdentifier();
+        if (!\in_array($merchantId, $uidsToTry, true)) {
+            $uidsToTry[] = $merchantId;
+        }
+
+        foreach ($uidsToTry as $uid) {
+            $result = $this->doSimulate($uid, $amount, $createdAt, $baseUrl);
+            if (!$result->isEmpty()) {
+                return $result;
+            }
+        }
+
+        return new PaymentSchedule();
+    }
+
+    private function resolveRoute(string $uid): string
+    {
+        if (str_starts_with($uid, 'cmp_')) {
+            return str_replace('<company_uid>', $uid, self::COMPANY_ROUTE);
+        }
+
+        return str_replace('<merchant_uid>', $uid, self::ROUTE);
+    }
+
+    private function doSimulate(string $uid, int $amount, \DateTimeInterface $createdAt, string $baseUrl): PaymentSchedule
     {
         try {
-            $response = $this->client->request(
-                'POST',
-                sprintf(
-                    '%s%s',
-                    $this->pledgUrl,
-                    str_replace('<merchant_uid>', $merchant->getIdentifier(), self::ROUTE, )
-                ),
-                [
-                    'body' => json_encode([
-                        'amount_cents' => $amount,
-                        'created' => $createdAt->format('Y-m-d'),
-                    ]),
-                ]
-            );
+            $url = $baseUrl . $this->resolveRoute($uid);
+            $response = $this->client->request('POST', $url, [
+                'body' => json_encode([
+                    'amount_cents' => $amount,
+                    'created' => $createdAt->format('Y-m-d'),
+                ]),
+            ]);
+
             /** @var array $content */
             $content = json_decode($response->getBody()->getContents(), true);
 
-            if (!isset($content['INSTALLMENT']) && !isset($content['DEFERRED'])) {
-                $this->logger->error('the simulation call has failed', [
-                    'merchant_id' => $merchant->getIdentifier(),
+            if (!isset($content['INSTALLMENT']) && !isset($content['DEFERRED']) && !isset($content['items'])) {
+                $this->logger->warning('Pledg simulation: no schedule data', [
+                    'merchant_id' => $uid,
                     'amount' => $amount,
-                    'created_at' => $createdAt->format('Y-m-d'),
-                    'content' => $content,
                 ]);
+
+                return new PaymentSchedule();
+            }
+
+            if (isset($content['items'])) {
+                $firstItem = $content['items'][0] ?? [];
+                $installments = $firstItem['INSTALLMENT'] ?? $firstItem['installment'] ?? [];
+                if (!empty($installments)) {
+                    return PaymentSchedule::fromArray($installments);
+                }
 
                 return new PaymentSchedule();
             }
@@ -68,11 +94,9 @@ class SimulationApi implements SimulationInterface
                 $deferredSchedule !== [] ? $deferredSchedule : $standardSchedule
             );
         } catch (GuzzleException $e) {
-            $this->logger->error('the simulation call has failed', [
-                'merchant_id' => $merchant->getIdentifier(),
+            $this->logger->warning('Pledg simulation failed for ' . $uid, [
                 'amount' => $amount,
-                'created_at' => $createdAt->format('Y-m-d'),
-                'exception_message' => $e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
 
             return new PaymentSchedule();

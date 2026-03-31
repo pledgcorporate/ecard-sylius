@@ -7,36 +7,18 @@ namespace Pledg\SyliusPaymentPlugin\Notification\Collector;
 use Pledg\SyliusPaymentPlugin\JWT\HandlerInterface;
 use Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface;
 use Pledg\SyliusPaymentPlugin\ValueObject\Status;
-use SM\Factory\FactoryInterface;
+use Sylius\Abstraction\StateMachine\StateMachineInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Payment\PaymentTransitions;
-use Sylius\Component\Resource\StateMachine\StateMachineInterface;
-use Webmozart\Assert\Assert;
 
 class TransferProcessor implements ProcessorInterface
 {
-    /** @var ValidatorInterface */
-    protected $validator;
-
-    /** @var PaymentProviderInterface */
-    protected $paymentProvider;
-
-    /** @var HandlerInterface */
-    protected $handler;
-
-    /** @var FactoryInterface */
-    private $stateMachineFactory;
-
     public function __construct(
-        ValidatorInterface $validator,
-        PaymentProviderInterface $paymentProvider,
-        HandlerInterface $handler,
-        FactoryInterface $stateMachineFactory
+        protected ValidatorInterface $validator,
+        protected PaymentProviderInterface $paymentProvider,
+        protected HandlerInterface $handler,
+        private StateMachineInterface $stateMachine,
     ) {
-        $this->validator = $validator;
-        $this->paymentProvider = $paymentProvider;
-        $this->handler = $handler;
-        $this->stateMachineFactory = $stateMachineFactory;
     }
 
     public function process(array $content): void
@@ -68,12 +50,10 @@ class TransferProcessor implements ProcessorInterface
 
     protected function updatePaymentState(PaymentInterface $payment, Status $status): void
     {
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-
-        Assert::isInstanceOf($stateMachine, StateMachineInterface::class);
-
-        if (null !== $transition = $stateMachine->getTransitionToState($status->convertToPaymentState())) {
-            $stateMachine->apply($transition);
+        $graph = PaymentTransitions::GRAPH;
+        $toState = $status->convertToPaymentState();
+        if (null !== $transition = $this->stateMachine->getTransitionToState($payment, $graph, $toState)) {
+            $this->stateMachine->apply($payment, $graph, $transition);
         }
     }
 }

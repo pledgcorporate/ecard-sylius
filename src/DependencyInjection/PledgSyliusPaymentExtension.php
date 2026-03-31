@@ -9,10 +9,25 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Yaml\Yaml;
 
-final class PledgSyliusPaymentExtension extends Extension
+final class PledgSyliusPaymentExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container): void
+    {
+        $path = __DIR__ . '/../Resources/config/twig_hooks.yaml';
+        if (!is_file($path)) {
+            return;
+        }
+
+        $parsed = Yaml::parseFile($path);
+        if (\is_array($parsed) && isset($parsed['sylius_twig_hooks'])) {
+            $container->prependExtensionConfig('sylius_twig_hooks', $parsed['sylius_twig_hooks']);
+        }
+    }
+
     public function load(array $config, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $config);
@@ -20,11 +35,11 @@ final class PledgSyliusPaymentExtension extends Extension
 
         $container->setParameter(
             'pledg_sylius_payment_plugin.front_url',
-            $config['sandbox'] ? PledgUrl::SANDBOX_FRONT : PledgUrl::PROD_FRONT
+            PledgUrl::frontUrl($config['sandbox'])
         );
         $container->setParameter(
             'pledg_sylius_payment_plugin.back_url',
-            $config['sandbox'] ? PledgUrl::SANDBOX_BACK : PledgUrl::PROD_BACK
+            PledgUrl::backUrl($config['sandbox'])
         );
 
         $loader->load('services.xml');

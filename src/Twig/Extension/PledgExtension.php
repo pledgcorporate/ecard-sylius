@@ -11,18 +11,15 @@ use Twig\TwigFunction;
 
 final class PledgExtension extends AbstractExtension
 {
-    /** @var PaymentMethodProviderInterface */
-    private $paymentMethodProvider;
-
     /** @var string[]|null */
-    private $pledgMethodCodes;
+    private ?array $pledgMethodCodes = null;
 
-    public function __construct(PaymentMethodProviderInterface $paymentMethodProvider)
-    {
-        $this->paymentMethodProvider = $paymentMethodProvider;
+    public function __construct(
+        private PaymentMethodProviderInterface $paymentMethodProvider,
+    ) {
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('is_pledg_method', [$this, 'isPledgMethod']),

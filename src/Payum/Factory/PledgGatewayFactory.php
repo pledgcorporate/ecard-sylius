@@ -33,9 +33,7 @@ class PledgGatewayFactory extends GatewayFactory
                 /** @var string $secret */
                 $secret = $config[self::SECRET];
 
-                $merchant = new Merchant($identifier, $secret);
-
-                return $merchant;
+                return new Merchant($identifier, $secret);
             },
         ]);
     }
