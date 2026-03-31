@@ -27,6 +27,17 @@
 
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
 
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\ErrorNotificationValidator" />
+
+        <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\ErrorNotificationProcessor">
+            <argument type="service" key="$validator" id="Pledg\SyliusPaymentPlugin\Notification\Collector\ErrorNotificationValidator" />
+            <argument type="service" key="$paymentProvider" id="Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface" />
+            <argument type="service" key="$handler" id="Pledg\SyliusPaymentPlugin\JWT\HandlerInterface" />
+            <argument type="service" key="$stateMachine" id="sylius_abstraction.state_machine" />
+            <argument type="service" key="$logger" id="logger" />
+            <tag name="pledg_sylius_payment_plugin.notification_processor" priority="20"/>
+        </service>
+
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardProcessor">
             <argument type="service" key="$validator" id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
             <argument type="service" key="$paymentProvider" id="Pledg\SyliusPaymentPlugin\Provider\PaymentProviderInterface" />
