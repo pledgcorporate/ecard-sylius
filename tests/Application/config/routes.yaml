@@ -2,3 +2,6 @@ pledg_sylius_payment:
     resource: "@PledgSyliusPaymentPlugin/Resources/config/routing.yml"
     prefix: /pledg
 
+pledg_sylius_payment_admin:
+    resource: "@PledgSyliusPaymentPlugin/Resources/config/routing_admin.yml"
+    prefix: /admin

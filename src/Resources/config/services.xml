@@ -121,8 +121,34 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="Pledg\SyliusPaymentPlugin\Api\PledgBackofficeClient">
+            <argument key="$backBaseUrl">%pledg_sylius_payment_plugin.back_url%</argument>
+            <argument key="$httpClient" type="service" id="pledg_sylius_payment_plugin.http_client" />
+            <argument key="$logger" type="service" id="logger" />
+        </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Refund\PledgTransferRefundService">
+            <argument type="service" key="$backofficeClient" id="Pledg\SyliusPaymentPlugin\Api\PledgBackofficeClient" />
+            <argument type="service" key="$entityManager" id="doctrine.orm.entity_manager" />
+            <argument type="service" key="$stateMachine" id="sylius_abstraction.state_machine" />
+            <argument type="service" key="$logger" id="logger" />
+        </service>
+
+        <service id="Pledg\SyliusPaymentPlugin\Controller\Admin\PledgRefundAction" public="true" autoconfigure="true">
+            <argument type="service" id="sylius.repository.order" />
+            <argument type="service" id="sylius.repository.payment" />
+            <argument type="service" id="Pledg\SyliusPaymentPlugin\Refund\PledgTransferRefundService" />
+            <argument type="service" id="router" />
+            <argument type="service" id="security.csrf.token_manager" />
+            <tag name="controller.service_arguments" />
+        </service>
+
         <service id="Pledg\SyliusPaymentPlugin\Twig\Extension\PledgExtension">
             <argument type="service" key="$paymentMethodProvider" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" />
+            <argument type="service" key="$pledgeTransferRefundService" id="Pledg\SyliusPaymentPlugin\Refund\PledgTransferRefundService" />
+            <argument type="service" key="$pledgGatewayConfigReader" id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
+            <argument type="service" key="$channelContext" id="sylius.context.channel" />
+            <argument type="service" key="$simulation" id="Pledg\SyliusPaymentPlugin\PaymentSchedule\SimulationInterface" />
             <tag name="twig.extension" />
         </service>
 
