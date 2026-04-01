@@ -170,6 +170,13 @@
             <tag name="twig.extension" />
         </service>
 
+        <service id="Pledg\SyliusPaymentPlugin\EventListener\SyncWidgetFlagsListener">
+            <argument type="service" key="$paymentMethodRepository" id="sylius.repository.payment_method" />
+            <argument type="service" key="$entityManager" id="doctrine.orm.entity_manager" />
+            <tag name="kernel.event_listener" event="sylius.payment_method.post_create" method="__invoke" />
+            <tag name="kernel.event_listener" event="sylius.payment_method.post_update" method="__invoke" />
+        </service>
+
         <service id="pledg_sylius_payment_plugin.http_client" class="GuzzleHttp\Client" public="false" />
     </services>
 </container>
