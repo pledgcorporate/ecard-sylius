@@ -1,38 +1,29 @@
-/.idea/
+# dev environment
+.env*
+!.env.example
+
+# sylius / symfony application files (created by make install)
 /vendor/
 /node_modules/
-/composer.lock
-/composer.phar
-/docker-compose.override.yml
-/etc/build/*
-!/etc/build/.gitignore
-/.phpunit.result.cache
-/behat.yml
-/phpspec.yml
-/phpunit.xml
-
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
 /var/
-/vendor/
-###< symfony/framework-bundle ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
-
-###> symfony/webpack-encore-bundle ###
-/node_modules/
 /public/build/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-bundle ###
+/public/bundles/
 
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
+# TLS certificates — generated locally via mkcert, used by traefik, never committed
+/certs/*.crt
+/certs/*.key
+/certs/*.pem
+
+# Keep the certs directory itself tracked
+!/certs/.gitkeep
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
