@@ -1,0 +1,96 @@
+# docker compose cp /home/etiennegaschet/workspace/pledg/src/PLUGINS/ecard-sylius/.docker/sylius/config/fixtures/pledg_fixtures_suite.yml php:/var/www/html/config/packages/sylius_fixtures.yaml
+sylius_fixtures:
+    suites:
+        pledg_dev_fixtures_suite:
+            fixtures:
+                locale:
+                    options:
+                        locales:
+                            - "fr_FR"
+                            - "en_GB"
+                            - "es_ES"
+                            - "pt_PT"
+                            - "it_IT"
+                            - "de_DE"
+                            - "en_US"
+                            - "es_MX"
+                currency:
+                    options:
+                        currencies:
+                            - "EUR"
+                            - "GBP"
+                            - "USD"
+                            - 'MXN'
+                geographical:
+                    options:
+                        countries:
+                            - "FR"
+                            - "GB"
+                            - "ES"
+                            - "PT"
+                            - "IT"
+                            - "DE"
+                            - "US"
+                            - "MX"
+                        zones:
+                            EEA:
+                                name: "European Economic Area"
+                                countries:
+                                    - "FR"
+                                    - "GB"
+                                    - "ES"
+                                    - "PT"
+                                    - "IT"
+                                    - "DE"
+                            AMERICA:
+                                name: "America"
+                                countries:
+                                    - "US"
+                                    - "MX"
+                # channel:
+                #     options:
+                #         custom:
+                #             pledg_europe_channel:
+                #                 name: "Pledg Europe Store"
+                #                 code: "WEB_PLEDG_EUROPE"
+                #                 locales:
+                #                     - "fr_FR"
+                #                     - "en_GB"
+                #                     - "es_ES"
+                #                     - "pt_PT"
+                #                     - "it_IT"
+                #                     - "de_DE"
+                #                 default_locale: "fr_FR"
+                #                 currencies:
+                #                     - "EUR"
+                #                     - "GBP"
+                #                 enabled: true
+                #                 shop_billing_data:
+                #                     company: "Pledg Europe Store"
+                #                     country_code: "FR"
+                #                     street: "95, rue Saint-Lazare"
+                #                     city: "Paris"
+                #                     postcode: "75009"
+                #                 menu_taxon: "MENU_CATEGORY"
+                #                 contact_phone_number: "+33 7 99 88 77 66"
+                #                 contact_email: "contact@example.com"
+                #             pledg_america_store:
+                #                 name: "Pledg America Store"
+                #                 code: "WEB_PLEDG_AMERICA"
+                #                 locales:
+                #                     - "en_US"
+                #                     - "es_MX"
+                #                 default_locale: "en_US"
+                #                 currencies:
+                #                     - "USD"
+                #                     - 'MXN'
+                #                 enabled: true
+                #                 shop_billing_data:
+                #                     company: "Pledg America Store"
+                #                     country_code: "US"
+                #                     street: "95, rue Saint-Lazare"
+                #                     city: "Paris"
+                #                     postcode: "75009"
+                #                 menu_taxon: "MENU_CATEGORY"
+                #                 contact_phone_number: "+33 7 99 88 77 66"
+                #                 contact_email: "contact@example.com"

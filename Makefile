@@ -1,49 +1,178 @@
-DC_EXEC_TEST_PHP=docker-compose exec -e APP_ENV=test php
-BIN_PATH=tests/Application/vendor/bin
+# docker-sylius-skeleton Makefile
+#
+# First-time setup:
+#   cp .env.example .env   # edit APP_NAME, APP_DOMAIN, passwords
+#   make install           # build images, start containers, install Sylius
+#
+# Daily usage:
+#   make up    / make down
+#   make shell             # PHP container bash
+#   make console CMD="..."  # run bin/console
+#   make logs
 
-.PHONY: help
-help: ## This help
-	@grep -Eh '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+ifneq (,$(wildcard .env))
+  include .env
+  export
+endif
 
-up: ## Up containers
-	docker-compose up
+APP_NAME    	?= sylius
+APP_DOMAIN  	?= sylius.docker
+TRAEFIK_NETWORK ?= traefik-net
+COMPOSE     	:= docker compose
+PHP         	:= $(COMPOSE) exec php
 
-up-d:
-	docker-compose up -d
+.PHONY: env certs install setup up down build shell console cc logs ps help
 
-ps: ## List containers
-	docker-compose ps
+## env: Ensure .env file exists
+env:
+	@if [ ! -f .env ]; then \
+		echo ""; \
+		echo ">>> Creating .env file..."; \
+		echo ""; \
+		cp .env.example .env; \
+		echo "- .env created from .env.example — review it before continuing."; \
+		echo ""; \
+		echo ""; \
+	fi
 
-stop: ## Stops running containers
-	docker-compose stop
+## certs: Generate local TLS certificates using mkcert
+certs:
+	@bash ./.docker/traefik/scripts/generate-certs.sh
 
-composer-validate:
-	./bin/composer validate --ansi --strict
+## create-project: First-time setup on a fresh skeleton (create-project)
+create-project: certs build up _wait-db _sylius-create-project
 
-doctrine-validate:
-	./bin/console doctrine:schema:validate
+## install: First-time setup on a fresh skeleton (create-project → DB → assets)
+install: certs build up _wait-db _sylius-install display_info
 
-phpstan: ## launch phpstan
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpstan analyse -c phpstan.neon -l max src/
+## setup: Setup for subsequent developers — use this after cloning an existing project
+setup: certs build up _wait-db _sylius-setup display_info
 
-phpunit: ## launch phpunit tests
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/phpunit --testdox
+## up: Start all containers in detached mode
+display_info:
+	@echo ""
+	@echo "Sylius is ready!"
+	@echo "  App:    https://$(APP_DOMAIN)"
+	@echo "  Admin:  https://$(APP_DOMAIN)/admin"
+	@echo "  Mail:   https://mail.$(APP_DOMAIN)"
+	@echo ""
 
-ecs-check: ## Check coding styles
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit
+## up: Start all containers in detached mode
+up:
+	@echo ""
+	@echo ">>> Ensuring Docker network '$(TRAEFIK_NETWORK)' exists..."
+	@echo ""
+	@docker network inspect $(TRAEFIK_NETWORK) > /dev/null 2>&1 \
+		|| docker network create $(TRAEFIK_NETWORK)
+	@echo ""
+	@echo ""
+	@echo ">>> Starting Traefik..."
+	@echo ""
+	@echo "Traefik is up. Dashboard: https://traefik.docker"
+	@echo ""
+	@echo ""
+	$(COMPOSE) up -d
 
-ecs-fix: ## fix coding styles
-	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/ecs check src tests/Unit --fix
+## down: Stop and remove containers (volumes are preserved)
+down:
+	$(COMPOSE) down
+	@echo ""
 
-install: ## install Sylius
-	bin/console sylius:install # use EUR currency and fr_FR locale when ask
+## build: Build Docker images
+build:
+	$(COMPOSE) build
+	@echo ""
 
-db:
-	docker-compose exec mysql mysql -u sylius -pnopassword sylius
+## shell: Open a bash shell in the PHP container
+shell:
+	$(PHP) bash
 
-#behat: ## Launch behat tests
-#	$(DC_EXEC_TEST_PHP) $(BIN_PATH)/behat --strict --tags="~@javascript"
+## console: Run a Symfony console command — usage: make console CMD="cache:clear"
+console:
+	$(PHP) php bin/console $(CMD)
 
-ci: composer-validate doctrine-validate ecs-check phpstan phpunit #behat
+## cc: Clear Symfony cache
+cc:
+	$(PHP) php bin/console cache:clear
 
+## logs: Follow logs for all services (or SERVICES="php nginx" make logs)
+logs:
+	$(COMPOSE) logs -f $(SERVICES)
 
+## ps: Show running services
+ps:
+	$(COMPOSE) ps
+
+## help: List available targets
+help:
+	@grep -E '^## ' Makefile | sed 's/^## //' | column -t -s ':'
+
+# ─── Internal targets ────────────────────────────────────────────────────────
+
+_wait-db:
+	@echo ""
+	@echo ">>> Waiting for MariaDB to be ready..."
+	@echo ""
+	@$(COMPOSE) exec mariadb bash -c \
+		'until mariadb-admin ping -u root -p"$$MYSQL_ROOT_PASSWORD" --silent 2>/dev/null; do sleep 1; done'
+	@echo "MariaDB is ready."
+	@echo ""
+	@echo ""
+
+_sylius-test-env:
+	@echo ">>> test env..."
+	@echo ""
+	$(COMPOSE) exec -u root php env | sort
+	$(COMPOSE) exec php bash -c 'echo "VERSION: $${SYLIUS_VERSION}"'
+	@echo ""
+
+_sylius-create-project:
+	@echo ">>> Installing Sylius via Composer (this takes several minutes)..."
+	@echo ""
+# 	the env var 'SYLIUS_VERSION' is defined in docker-compose.yml
+	$(PHP) bash -c 'composer create-project sylius/sylius-standard /tmp/sylius-install $${SYLIUS_VERSION} --prefer-dist'
+	@echo ""
+	$(PHP) bash -c 'cp -rn /tmp/sylius-install/. /var/www/html/ && rm -rf /tmp/sylius-install'
+	@echo ""
+
+_sylius-install:
+	@echo ">>> Running Sylius install (migrations + fixtures + assets)..."
+	@echo ""
+	$(PHP) php bin/console sylius:install --no-interaction
+	@echo ""
+	@echo ""
+	@echo ">>> Running Sylius fixtures install..."
+	@echo ""
+	$(PHP) php bin/console sylius:fixtures:load pledg_dev_fixtures_suite --no-interaction
+	@echo ""
+	@echo ""
+	@echo ">>> Building frontend assets..."
+	@echo ""
+	$(PHP) npm install
+	$(PHP) npm run build
+	$(PHP) php bin/console cache:warmup
+	$(COMPOSE) exec -u root php chown -R www-data:www-data /var/www/html/var
+
+_sylius-setup:
+	@echo ""
+	@echo ">>> Installing Composer dependencies..."
+	@echo ""
+	$(PHP) composer install --no-interaction
+	@echo ""
+	@echo ""
+	@echo ">>> Running database migrations..."
+	@echo ""
+	$(PHP) php bin/console doctrine:migrations:migrate --no-interaction
+	@echo ""
+	@echo ""
+	@echo ">>> Installing assets..."
+	@echo ""
+	$(PHP) php bin/console assets:install
+	@echo ""
+	@echo ""
+	@echo ">>> Building frontend assets..."
+	@echo ""
+	$(PHP) npm install
+	$(PHP) npm run build
+	$(PHP) php bin/console cache:warmup
+	$(COMPOSE) exec -u root php chown -R www-data:www-data /var/www/html/var

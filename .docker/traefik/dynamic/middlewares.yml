@@ -1,0 +1,22 @@
+# Traefik dynamic configuration — shared middlewares
+#
+# These middlewares are available to all routers (including downstream projects).
+# Reference them in labels as: traefik.http.routers.<name>.middlewares=secure-headers@file
+
+http:
+  middlewares:
+    # Adds common security headers to all responses
+    secure-headers:
+      headers:
+        # HTTP Strict Transport Security — tells browsers to always use HTTPS
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: false          # Do not preload for local dev domains
+        # Prevent MIME type sniffing
+        contentTypeNosniff: true
+        # Legacy XSS protection header (belt-and-suspenders)
+        browserXssFilter: true
+        # Prevent framing (clickjacking protection)
+        frameDeny: true
+        # Referrer policy
+        referrerPolicy: "strict-origin-when-cross-origin"

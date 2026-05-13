@@ -3,6 +3,7 @@
 !.env.example
 
 # sylius / symfony application files (created by make install)
+/sylius_installation/
 /vendor/
 /node_modules/
 /var/
@@ -10,9 +11,9 @@
 /public/bundles/
 
 # TLS certificates — generated locally via mkcert, used by traefik, never committed
-/certs/*.crt
-/certs/*.key
-/certs/*.pem
+/.docker/traefik/certs/*.crt
+/.docker/traefik/certs/*.key
+/.docker/traefik/certs/*.pem
 
 # Keep the certs directory itself tracked
 !/certs/.gitkeep

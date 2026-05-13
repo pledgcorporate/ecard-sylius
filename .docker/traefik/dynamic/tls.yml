@@ -1,0 +1,12 @@
+# Traefik dynamic configuration — TLS store
+#
+# Defines the default TLS certificate used for all HTTPS routes that do not
+# explicitly specify a certificate. The certificate is generated locally by
+# mkcert (run `make certs`) and covers *.local, localhost, and loopback IPs.
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/local.crt
+        keyFile:  /etc/traefik/certs/local.key
