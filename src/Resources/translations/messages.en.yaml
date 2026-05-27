@@ -1,11 +1,48 @@
 pledg_sylius_payment_plugin:
-    identifier: Merchant identifier
-    secret: Secret
-    restricted_countries: Restricted countries
-    price_range_min: Minimum Price
-    price_range_max: Maximum Price
-    due_date: Due Date
-    amount: Amount
-    payment_fee: Payment Fee
-    included_in_price: included in price
-    fees: Fees
+  identifier: Merchant identifier
+  secret: Secret
+  api_key: API key (OAuth back-office)
+  api_key_help: Used for transfer refunds when set; otherwise merchant identifier.
+  api_secret: API secret (OAuth back-office)
+  api_secret_help: Paired with API key; otherwise merchant secret.
+  company_uid: Company UID (widgets / simulation)
+  company_uid_help: e.g. cmp_… — used in simulation URL when set; otherwise merchant identifier.
+  widget_product: Show schedule link on product page
+  widget_checkout: Show schedule link on cart
+  widget_catalog: Show banner on product listing pages (taxonomy)
+  restricted_countries: Restricted countries
+  price_range_min: Minimum price
+  price_range_max: Maximum price
+  due_date: Due date
+  amount: Amount
+  payment_fee: Payment fee
+  included_in_price: included in price
+  fees: Fees
+  sandbox: Sandbox environment (staging)
+  sandbox_help: "Checked = staging · Unchecked = production"
+  refund_amount: Amount (€)
+  refund_title: Sofinco refund
+  refund_total: Total amount
+  refund_already_refunded: Already refunded
+  refund_remaining: Remaining to refund
+  refund_mode_total: Full refund
+  refund_mode_custom: Custom amount
+  refund_mode_products: Selected products
+  refund_max: "Max: %amount% €"
+  refund_history: History
+  refund_fully_refunded: Fully refunded
+  refund_confirm: Confirm Sofinco refund?
+  refund_submit: Refund via Sofinco
+  refund_product: Product
+  refund_qty_max: Max qty
+  refund_qty_refund: Refund qty
+  refund_unit_price: Unit price
+  refund_subtotal: Subtotal
+  refund_products_total: Products total
+  widget_schedule_link: View sample schedule (Sofinco)
+  widget_cart_schedule_link: Simulate schedule for your cart (Sofinco)
+  widget_catalog_intro: Pay in instalments is available on your cart.
+  widget_catalog_cta: View my cart
+  widget_schedule_title: Payment schedule (Sofinco)
+  widget_schedule_unavailable: Schedule unavailable for this amount.
+  widget_schedule_error: Could not load schedule. Please try again.

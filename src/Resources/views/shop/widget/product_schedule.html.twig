@@ -1,0 +1,7 @@
+{% set variant = hookable_metadata.context.variant|default(null) %}
+{% set code = pledg_first_method_code() %}
+{% set priceCents = pledg_variant_price(variant) %}
+{% if pledg_widget_product_enabled() and code and priceCents > 0 and pledg_price_in_range(priceCents) %}
+    <div class="pledg-lazy-widget" data-amount-cents="{{ priceCents }}" data-pledg-type="product"></div>
+    {% include '@PledgSyliusPaymentPlugin/shop/widget/_pledg_widget_js.html.twig' %}
+{% endif %}

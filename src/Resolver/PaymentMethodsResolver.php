@@ -6,7 +6,6 @@ namespace Pledg\SyliusPaymentPlugin\Resolver;
 
 use Payum\Core\Model\GatewayConfigInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
-use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Payment\Model\PaymentInterface;
@@ -14,12 +13,9 @@ use Sylius\Component\Payment\Resolver\PaymentMethodsResolverInterface;
 
 class PaymentMethodsResolver implements PaymentMethodsResolverInterface
 {
-    /** @var PaymentMethodsResolverInterface */
-    private $paymentMethodResolver;
-
-    public function __construct(PaymentMethodsResolverInterface $paymentMethodResolver)
-    {
-        $this->paymentMethodResolver = $paymentMethodResolver;
+    public function __construct(
+        private PaymentMethodsResolverInterface $paymentMethodResolver,
+    ) {
     }
 
     public function getSupportedMethods(PaymentInterface $subject): array
@@ -70,12 +66,16 @@ class PaymentMethodsResolver implements PaymentMethodsResolverInterface
 
     private function billingCountryIsInPledgRestrictedCountries(PaymentMethodInterface $method, string $country): bool
     {
-        return $method->getGatewayConfig() instanceof GatewayConfigInterface
-            && in_array(
-                $country,
-                $method->getGatewayConfig()->getConfig()[PledgGatewayFactory::RESTRICTED_COUNTRIES],
-                true
-            );
+        if (!$method->getGatewayConfig() instanceof GatewayConfigInterface) {
+            return false;
+        }
+
+        $restricted = $method->getGatewayConfig()->getConfig()[PledgGatewayFactory::RESTRICTED_COUNTRIES] ?? [];
+        if (!\is_array($restricted) || $restricted === []) {
+            return false;
+        }
+
+        return in_array($country, $restricted, true);
     }
 
     private function amountIsInPledgPriceRange(PaymentMethodInterface $method, int $amount): bool
@@ -111,12 +111,12 @@ class PaymentMethodsResolver implements PaymentMethodsResolverInterface
         $payment = $subject;
         /** @var OrderInterface $order */
         $order = $payment->getOrder();
-        /** @var AddressInterface $billingAddress */
         $billingAddress = $order->getBillingAddress();
-        /** @var string $country */
-        $country = $billingAddress->getCountryCode();
+        if (null === $billingAddress) {
+            return '';
+        }
 
-        return $country;
+        return (string) $billingAddress->getCountryCode();
     }
 
     public function supports(PaymentInterface $subject): bool

@@ -1,0 +1,7 @@
+pledg_sylius_payment_plugin_admin_transfer_refund:
+    path: /orders/{orderId}/payments/{id}/pledg-transfer-refund
+    methods: [POST]
+    defaults:
+        _controller: Pledg\SyliusPaymentPlugin\Controller\Admin\PledgRefundAction
+        _sylius:
+            permission: true

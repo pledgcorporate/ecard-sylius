@@ -1,0 +1,39 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_shop.base#javascripts':
+            pledg_widget_js:
+                template: '@PledgSyliusPaymentPlugin/shop/widget/catalog_banner.html.twig'
+                priority: -100
+
+        'sylius_admin.payment_method.create.content.form.sections.gateway_configuration.pledgbysofinco':
+            pledg_config:
+                template: '@PledgSyliusPaymentPlugin/Admin/payment_method/form/sections/gateway_configuration/pledg_config.html.twig'
+                priority: 0
+        'sylius_admin.payment_method.update.content.form.sections.gateway_configuration.pledgbysofinco':
+            pledg_config:
+                template: '@PledgSyliusPaymentPlugin/Admin/payment_method/form/sections/gateway_configuration/pledg_config.html.twig'
+                priority: 0
+
+        'sylius_admin.order.show.content.sections.payments.item.actions':
+            pledg_transfer_refund:
+                template: '@PledgSyliusPaymentPlugin/Admin/Order/payment/pledg_transfer_refund.html.twig'
+                priority: 50
+
+        'sylius_shop.shared.form.select_payment.payment.choice.details':
+            pledg_checkout_schedule:
+                template: '@PledgSyliusPaymentPlugin/shop/checkout/payment_schedule.html.twig'
+                priority: -10
+
+        'sylius_shop.product.show.content.info.summary.prices':
+            pledg_schedule_link:
+                template: '@PledgSyliusPaymentPlugin/shop/widget/product_schedule.html.twig'
+                priority: 0
+        'sylius_shop.cart.index.content.form.sections.general#right':
+            pledg_widget_cart:
+                template: '@PledgSyliusPaymentPlugin/shop/widget/cart_schedule.html.twig'
+                priority: 50
+
+        'sylius_shop.shared.product.card.prices':
+            pledg_catalog_widget:
+                template: '@PledgSyliusPaymentPlugin/shop/widget/catalog_card_widget.html.twig'
+                priority: -10

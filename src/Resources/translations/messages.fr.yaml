@@ -1,6 +1,15 @@
 pledg_sylius_payment_plugin:
-  identifier: Identifiant du marchant
+  identifier: Identifiant du marchand
   secret: Secret
+  api_key: Clé API (OAuth back-office)
+  api_key_help: Utilisée pour le remboursement par virement si renseignée ; sinon identifiant marchand.
+  api_secret: Secret API (OAuth back-office)
+  api_secret_help: Associé à la clé API ; sinon secret marchand.
+  company_uid: UID entreprise (widgets / simulation)
+  company_uid_help: Ex. cmp_… — utilisé dans l'URL de simulation si renseigné ; sinon identifiant marchand.
+  widget_product: Afficher le lien d'échéancier sur la fiche produit
+  widget_checkout: Afficher le lien d'échéancier sur le panier
+  widget_catalog: Afficher le bandeau sur les pages liste produits (taxonomie)
   restricted_countries: Restrictions des pays
   price_range_min: Prix minimum
   price_range_max: Prix maximum
@@ -9,3 +18,31 @@ pledg_sylius_payment_plugin:
   payment_fee: Frais de paiement
   included_in_price: inclus dans le prix
   fees: Frais
+  sandbox: Environnement Sandbox (staging)
+  sandbox_help: "Coché = staging (test) · Décoché = production"
+  refund_amount: Montant (€)
+  refund_title: Remboursement Sofinco
+  refund_total: Montant total
+  refund_already_refunded: Déjà remboursé
+  refund_remaining: Reste à rembourser
+  refund_mode_total: Remboursement total
+  refund_mode_custom: Montant libre
+  refund_mode_products: Sélection produits
+  refund_max: "Max : %amount% €"
+  refund_history: Historique
+  refund_fully_refunded: Intégralement remboursé
+  refund_confirm: Confirmer le remboursement Sofinco ?
+  refund_submit: Rembourser via Sofinco
+  refund_product: Produit
+  refund_qty_max: Qté max
+  refund_qty_refund: Qté remb.
+  refund_unit_price: P.U.
+  refund_subtotal: Sous-total
+  refund_products_total: Total produits
+  widget_schedule_link: Voir un exemple d'échéancier (Sofinco)
+  widget_cart_schedule_link: Simuler l'échéancier pour votre panier (Sofinco)
+  widget_catalog_intro: Le paiement en plusieurs fois est disponible sur votre panier.
+  widget_catalog_cta: Voir mon panier
+  widget_schedule_title: Échéancier de paiement (Sofinco)
+  widget_schedule_unavailable: L'échéancier n'est pas disponible pour ce montant.
+  widget_schedule_error: Impossible de charger l'échéancier. Veuillez réessayer.
