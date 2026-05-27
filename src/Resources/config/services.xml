@@ -93,7 +93,7 @@
         <service id="Pledg\SyliusPaymentPlugin\Processor\PaymentFeeProcessor" />
         <service id="Pledg\SyliusPaymentPlugin\Processor\PaymentFeeProcessorInterface" alias="Pledg\SyliusPaymentPlugin\Processor\PaymentFeeProcessor" public="true"/>
 
-        <service id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" decorates="sylius.payment_methods_resolver">
+        <service id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" decorates="sylius.resolver.payment_methods">
             <argument type="service" id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver.inner" />
         </service>
 
