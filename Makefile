@@ -43,7 +43,7 @@ certs:
 create-project: certs build up _wait-db _sylius-create-project
 
 ## install: First-time setup on a fresh skeleton (create-project → DB → assets)
-install: certs build up _wait-db _sylius-install display_info
+install: _sylius-install-db _sylius-install-fixtures _sylius-install-frontend display_info
 
 ## setup: Setup for subsequent developers — use this after cloning an existing project
 setup: certs build up _wait-db _sylius-setup display_info
@@ -119,14 +119,8 @@ _wait-db:
 	@echo ""
 	@echo ""
 
-_sylius-test-env:
-	@echo ">>> test env..."
-	@echo ""
-	$(COMPOSE) exec -u root php env | sort
-	$(COMPOSE) exec php bash -c 'echo "VERSION: $${SYLIUS_VERSION}"'
-	@echo ""
-
 _sylius-create-project:
+	@echo ""
 	@echo ">>> Installing Sylius via Composer (this takes several minutes)..."
 	@echo ""
 # 	the env var 'SYLIUS_VERSION' is defined in docker-compose.yml
@@ -134,24 +128,39 @@ _sylius-create-project:
 	@echo ""
 	$(PHP) bash -c 'cp -rn /tmp/sylius-install/. /var/www/html/ && rm -rf /tmp/sylius-install'
 	@echo ""
+	@echo ""
 
-_sylius-install:
+_sylius-install-db:
+	@echo ">>> Copying Sylius config files before install..."
+	@echo ""
+	$(COMPOSE) cp ./.docker/php/sylius_installation/config/parameters.yaml php:/var/www/html/config/parameters.yaml
+	$(COMPOSE) cp ./.docker/php/sylius_installation/config/packages/sylius_fixtures.yaml php:/var/www/html/config/packages/sylius_fixtures.yaml
+	@echo ""
+	@echo ""
 	@echo ">>> Running Sylius install (migrations + fixtures + assets)..."
 	@echo ""
 	$(PHP) php bin/console sylius:install --no-interaction
 	@echo ""
 	@echo ""
-	@echo ">>> Running Sylius fixtures install..."
-	@echo ""
-	$(PHP) php bin/console sylius:fixtures:load pledg_dev_fixtures_suite --no-interaction
-	@echo ""
-	@echo ""
+
+_sylius-install-frontend:
 	@echo ">>> Building frontend assets..."
 	@echo ""
 	$(PHP) npm install
 	$(PHP) npm run build
 	$(PHP) php bin/console cache:warmup
 	$(COMPOSE) exec -u root php chown -R www-data:www-data /var/www/html/var
+	@echo ""
+	@echo ""
+
+_sylius-install-fixtures:
+	@echo ">>> Running Sylius fixtures install..."
+	@echo ""
+	$(PHP) php bin/console cache:clear
+	$(PHP) php bin/console sylius:fixtures:load pledg_dev_fixtures_suite --no-interaction
+	$(PHP) php bin/console sylius:fixtures:load default --no-interaction
+	@echo ""
+	@echo ""
 
 _sylius-setup:
 	@echo ""
