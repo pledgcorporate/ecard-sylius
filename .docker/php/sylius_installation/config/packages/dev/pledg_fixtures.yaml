@@ -1,0 +1,8 @@
+---
+imports:
+  - resource: "fixtures/shop.yaml"
+  - resource: "fixtures/products_tshirt.yaml"
+  - resource: "fixtures/products_cap.yaml"
+  - resource: "fixtures/products_dress.yaml"
+  - resource: "fixtures/products_jeans.yaml"
+  - resource: "fixtures/custom.yaml"

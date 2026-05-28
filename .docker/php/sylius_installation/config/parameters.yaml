@@ -1,3 +1,4 @@
+---
 parameters:
-    locale: fr_FR
-    sylius_installer_currency: EUR
+    locale: "fr_FR"
+    sylius_installer_currency: "EUR"

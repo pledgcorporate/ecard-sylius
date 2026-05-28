@@ -1,0 +1,248 @@
+---
+sylius_fixtures:
+
+  suites:
+
+    pledg_dev_fixtures_suite:
+
+      listeners:
+
+        orm_purger: null
+        images_purger: null
+        logger: null
+
+      fixtures:
+
+        customer_group:
+
+          options:
+            custom:
+              retail:
+                code: retail
+                name: Retail
+              wholesale:
+                code: wholesale
+                name: Wholesale
+
+        shop_user:
+
+          name: shop_user
+          options:
+            random: 20
+            custom:
+              - email: sylius@example.com
+                first_name: John
+                last_name: Doe
+                password: sylius
+
+        admin_user:
+
+          name: admin_user
+          options:
+            custom:
+              - email: sylius@example.com
+                username: sylius
+                password: sylius
+                enabled: true
+                locale_code: fr_FR
+                first_name: John
+                last_name: Doe
+                avatar: "@SyliusCoreBundle/Resources/fixtures/adminAvatars/john.webp"
+              - email: api@example.com
+                username: api
+                password: sylius-api
+                enabled: true
+                locale_code: fr_FR
+                first_name: Luke
+                last_name: Brushwood
+                api: true
+                avatar: "@SyliusCoreBundle/Resources/fixtures/adminAvatars/luke.webp"
+
+        locale:
+
+          options:
+            locales:
+              - es_ES
+              - pt_PT
+              - it_IT
+              - de_DE
+              - en_US
+              - es_MX
+
+        currency:
+
+          options:
+            currencies:
+              - EUR
+              - GBP
+              - USD
+              - MXN
+
+        geographical:
+
+          options:
+            countries:
+              - FR
+              - GB
+              - ES
+              - PT
+              - IT
+              - DE
+              - US
+              - MX
+            zones:
+              EEA:
+                name: European Economic Area
+                countries:
+                  - FR
+                  - GB
+                  - ES
+                  - PT
+                  - IT
+                  - DE
+              AMERICA:
+                name: America
+                countries:
+                  - US
+                  - MX
+
+        menu_taxon:
+
+          name: taxon
+          options:
+            custom:
+              category:
+                code: MENU_CATEGORY
+                name: Category
+                translations:
+                  fr_FR:
+                    name: Catégorie
+                  en_US:
+                    name: Category
+
+        channel:
+
+          options:
+            custom:
+              pledg_europe_store:
+                code: WEB_PLEDG_EUROPE
+                name: Pledg Europe Store
+                enabled: true
+                hostname: sylius.docker
+                theme_name: "%env(resolve:SYLIUS_FIXTURES_THEME_NAME)%"
+                menu_taxon: MENU_CATEGORY
+                locales:
+                  - fr_FR
+                  - en_US
+                  - es_ES
+                  - pt_PT
+                  - it_IT
+                  - de_DE
+                default_locale: fr_FR
+                currencies:
+                  - EUR
+                  - GBP
+                base_currency: EUR
+                default_tax_zone: EEA
+                shop_billing_data:
+                  company: Pledg Europe Store
+                  country_code: FR
+                  street: 95, rue Saint-Lazare
+                  city: PARIS
+                  postcode: "75009"
+                contact_email: europe.store@pledg.co
+                contact_phone_number: +33 7 99 88 77 66
+              pledg_america_store:
+                code: WEB_PLEDG_AMERICA
+                name: Pledg America Store
+                enabled: true
+                hostname: sylius-us.docker
+                theme_name: "%env(resolve:SYLIUS_FIXTURES_THEME_NAME)%"
+                menu_taxon: MENU_CATEGORY
+                locales:
+                  - en_US
+                  - es_MX
+                default_locale: en_US
+                currencies:
+                  - USD
+                  - MXN
+                base_currency: USD
+                default_tax_zone: AMERICA
+                shop_billing_data:
+                  company: Pledg America Store
+                  country_code: US
+                  street: 1729, Michigan Avenue
+                  city: CHICAGO
+                  postcode: "60601"
+                contact_email: america.store@pledg.co
+                contact_phone_number: +33 7 99 88 77 66
+
+        payment_method:
+
+          options:
+            custom:
+              cash_on_delivery:
+                code: cash_on_delivery
+                name: Cash on delivery
+                channels:
+                  - WEB_PLEDG_EUROPE
+                  - WEB_PLEDG_AMERICA
+              bank_transfer:
+                code: bank_transfer
+                name: Bank transfer
+                channels:
+                  - WEB_PLEDG_EUROPE
+                  - WEB_PLEDG_AMERICA
+                enabled: true
+
+        shipping_method:
+
+          options:
+            custom:
+              ups:
+                code: ups
+                name: UPS
+                enabled: true
+                channels:
+                  - WEB_PLEDG_EUROPE
+                  - WEB_PLEDG_AMERICA
+              dhl_express:
+                code: dhl_express
+                name: DHL Express
+                channels:
+                  - WEB_PLEDG_EUROPE
+                  - WEB_PLEDG_AMERICA
+              fedex:
+                code: fedex
+                name: FedEx
+                channels:
+                  - WEB_PLEDG_EUROPE
+                  - WEB_PLEDG_AMERICA
+
+        tax_category:
+
+          options:
+            custom:
+              clothing:
+                code: clothing
+                name: Clothing
+              other:
+                code: other
+                name: Other
+
+        tax_rate:
+
+          options:
+            custom:
+              clothing_tax:
+                code: clothing_sales_tax_7
+                name: Clothing Sales Tax 7%
+                zone: EEA
+                category: clothing
+                amount: 0.07
+              default_sales_tax:
+                code: sales_tax_20
+                name: Sales Tax 20%
+                zone: AMERICA
+                category: other
+                amount: 0.2

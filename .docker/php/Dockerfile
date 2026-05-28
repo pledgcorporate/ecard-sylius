@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev zip \
     libgd-dev libpng-dev libjpeg-dev libwebp-dev \
     libsodium-dev \
-    iputils-ping vim \
+    iputils-ping vim yamllint \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP extensions required by Sylius

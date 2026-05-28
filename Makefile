@@ -21,7 +21,7 @@ TRAEFIK_NETWORK ?= traefik-net
 COMPOSE     	:= docker compose
 PHP         	:= $(COMPOSE) exec php
 
-.PHONY: env certs install setup up down build shell console cc logs ps help
+.PHONY: env certs create-project install setup up down build shell console cc logs ps help
 
 ## env: Ensure .env file exists
 env:
@@ -30,6 +30,7 @@ env:
 		echo ">>> Creating .env file..."; \
 		echo ""; \
 		cp .env.example .env; \
+		cp .env.example ./sylius_installation/.env; \
 		echo "- .env created from .env.example — review it before continuing."; \
 		echo ""; \
 		echo ""; \
@@ -40,13 +41,25 @@ certs:
 	@bash ./.docker/traefik/scripts/generate-certs.sh
 
 ## create-project: First-time setup on a fresh skeleton (create-project)
-create-project: certs build up _wait-db _sylius-create-project
+create-project: certs build up _wait-db _sylius-create-project _sylius-set-config
 
 ## install: First-time setup on a fresh skeleton (create-project → DB → assets)
-install: _sylius-install-db _sylius-install-fixtures _sylius-install-frontend display_info
+install: cc _sylius-install display_info
+
+fixtures:
+	$(PHP) php bin/console sylius:fixtures:load default --no-interaction
 
 ## setup: Setup for subsequent developers — use this after cloning an existing project
 setup: certs build up _wait-db _sylius-setup display_info
+
+## deploy_pledg_plugin: Install Pledg plugin in sylius container
+deploy_pledg_plugin:
+	@echo ">>> Running Pledg plugin install..."
+	@echo ""
+	$(PHP) composer require "pledg/sylius-payment-plugin":"dev-upgrade-sylius-2.x"
+	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
+	@echo ""
+	@echo ""
 
 ## up: Start all containers in detached mode
 display_info:
@@ -130,45 +143,22 @@ _sylius-create-project:
 	@echo ""
 	@echo ""
 
-_sylius-install-db:
+_sylius-set-config:
 	@echo ">>> Copying Sylius config files before install..."
 	@echo ""
+	$(PHP) rm -rf /var/www/html/.env*
+	$(COMPOSE) cp ./.env php:/var/www/html/.env
 	$(COMPOSE) cp ./.docker/php/sylius_installation/config/parameters.yaml php:/var/www/html/config/parameters.yaml
-	$(COMPOSE) cp ./.docker/php/sylius_installation/config/packages/sylius_fixtures.yaml php:/var/www/html/config/packages/sylius_fixtures.yaml
+	$(COMPOSE) cp ./.docker/php/sylius_installation/config/packages/dev php:/var/www/html/config/packages
+	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
 	@echo ""
 	@echo ""
+
+_sylius-install:
 	@echo ">>> Running Sylius install (migrations + fixtures + assets)..."
 	@echo ""
-	$(PHP) php bin/console sylius:install --no-interaction
-	@echo ""
-	@echo ""
-
-_sylius-install-frontend:
-	@echo ">>> Building frontend assets..."
-	@echo ""
-	$(PHP) npm install
-	$(PHP) npm run build
-	$(PHP) php bin/console cache:warmup
-	$(COMPOSE) exec -u root php chown -R www-data:www-data /var/www/html/var
-	@echo ""
-	@echo ""
-
-_sylius-install-fixtures:
-	@echo ">>> Running Sylius fixtures install..."
-	@echo ""
-	$(PHP) php bin/console cache:clear
-	$(PHP) php bin/console sylius:fixtures:load pledg_dev_fixtures_suite --no-interaction
-	$(PHP) php bin/console sylius:fixtures:load default --no-interaction
-	@echo ""
-	@echo ""
-
-_sylius-setup:
-	@echo ""
-	@echo ">>> Installing Composer dependencies..."
-	@echo ""
-	$(PHP) composer install --no-interaction
-	@echo ""
-	@echo ""
+#	you can disable the fixtures installation by removing the "--fixture-suite=pledg_dev_fixtures_suite" flag
+	$(PHP) php bin/console sylius:install --no-interaction --fixture-suite=pledg_dev_fixtures_suite
 	@echo ">>> Running database migrations..."
 	@echo ""
 	$(PHP) php bin/console doctrine:migrations:migrate --no-interaction
@@ -184,4 +174,4 @@ _sylius-setup:
 	$(PHP) npm install
 	$(PHP) npm run build
 	$(PHP) php bin/console cache:warmup
-	$(COMPOSE) exec -u root php chown -R www-data:www-data /var/www/html/var
+	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
