@@ -158,7 +158,7 @@ _sylius-install:
 	@echo ">>> Running Sylius install (migrations + fixtures + assets)..."
 	@echo ""
 #	you can disable the fixtures installation by removing the "--fixture-suite=pledg_dev_fixtures_suite" flag
-	$(PHP) php bin/console sylius:install --no-interaction --fixture-suite=pledg_dev_fixtures_suite
+	$(PHP) php bin/console sylius:install --no-interaction --fixture-suite=pledg_dev_fixtures_suite -vvv
 	@echo ">>> Running database migrations..."
 	@echo ""
 	$(PHP) php bin/console doctrine:migrations:migrate --no-interaction

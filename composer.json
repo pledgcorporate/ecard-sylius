@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.2",
         "sylius/sylius": "^2.0",
-        "dompdf/dompdf": "^2.0"
+        "winzou/state-machine-bundle": "^0.6.4"
     },
     "require-dev": {
         "behat/behat": "^3.14",
@@ -49,9 +49,10 @@
         "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": false,
+            "php-http/discovery": true,
             "phpstan/extension-installer": true,
             "symfony/flex": true,
-            "php-http/discovery": true,
+            "symfony/runtime": true,
             "symfony/thanks": true
         }
     },
