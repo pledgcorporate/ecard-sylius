@@ -56,8 +56,20 @@ setup: certs build up _wait-db _sylius-setup display_info
 deploy_pledg_plugin:
 	@echo ">>> Running Pledg plugin install..."
 	@echo ""
+	$(PHP) rm -rf /var/www/html/config/routes/pledg_sylius_payment.yaml
+	$(PHP) composer remove "pledg/sylius-payment-plugin"
+	$(COMPOSE) cp ./.docker/php/sylius_installation/config/routes/pledg_sylius_payment.yaml php:/var/www/html/config/routes/pledg_sylius_payment.yaml
 	$(PHP) composer require "pledg/sylius-payment-plugin":"dev-upgrade-sylius-2.x"
 	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
+	@echo ""
+	@echo ""
+
+## remove_pledg_plugin: removes Pledg plugin from sylius container
+remove_pledg_plugin:
+	@echo ">>> Running Pledg plugin install..."
+	@echo ""
+	$(PHP) rm -rf /var/www/html/config/routes/pledg_sylius_payment.yaml
+	$(PHP) composer remove "pledg/sylius-payment-plugin"
 	@echo ""
 	@echo ""
 
