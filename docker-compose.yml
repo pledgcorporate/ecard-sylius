@@ -30,6 +30,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-sylius}
     volumes:
       - db_data:/var/lib/mysql
+      - db_log:/var/log/mysql
     networks:
       - traefik-net
       - internal
@@ -101,6 +102,7 @@ services:
 
 volumes:
   db_data:
+  db_log:
 
 networks:
   traefik-net:

@@ -148,7 +148,10 @@ _sylius-set-config:
 	@echo ""
 	$(PHP) rm -rf /var/www/html/.env*
 	$(COMPOSE) cp ./.env php:/var/www/html/.env
+	$(PHP) rm -rf /var/www/html/config/parameters.yaml
 	$(COMPOSE) cp ./.docker/php/sylius_installation/config/parameters.yaml php:/var/www/html/config/parameters.yaml
+	$(PHP) rm -rf /var/www/html/config/packages/dev/pledg_fixtures.yaml
+	$(PHP) rm -rf /var/www/html/config/packages/dev/fixtures
 	$(COMPOSE) cp ./.docker/php/sylius_installation/config/packages/dev php:/var/www/html/config/packages
 	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
 	@echo ""
