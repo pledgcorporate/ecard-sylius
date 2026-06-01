@@ -30,7 +30,7 @@ sylius_fixtures:
           options:
             random: 20
             custom:
-              - email: sylius@example.com
+              - email: sylius@pledg.co
                 first_name: John
                 last_name: Doe
                 password: sylius
@@ -40,7 +40,7 @@ sylius_fixtures:
           name: admin_user
           options:
             custom:
-              - email: sylius@example.com
+              - email: sylius@pledg.co
                 username: sylius
                 password: sylius
                 enabled: true
