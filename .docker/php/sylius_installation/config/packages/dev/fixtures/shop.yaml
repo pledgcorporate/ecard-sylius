@@ -30,9 +30,9 @@ sylius_fixtures:
           options:
             random: 20
             custom:
-              - email: sylius@pledg.co
-                first_name: John
-                last_name: Doe
+              - email: jean.bonbeurre@pledg.co
+                first_name: Jean
+                last_name: BONBEURRE
                 password: sylius
 
         admin_user:
@@ -40,13 +40,13 @@ sylius_fixtures:
           name: admin_user
           options:
             custom:
-              - email: sylius@pledg.co
+              - email: jean.bonbeurre@pledg.co
                 username: sylius
                 password: sylius
                 enabled: true
                 locale_code: fr_FR
-                first_name: John
-                last_name: Doe
+                first_name: Jean
+                last_name: ADMIN-BONBEURRE
                 avatar: "@SyliusCoreBundle/Resources/fixtures/adminAvatars/john.webp"
               - email: api@example.com
                 username: api
