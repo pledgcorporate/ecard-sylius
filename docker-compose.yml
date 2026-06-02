@@ -21,6 +21,8 @@ services:
   mariadb:
     image: mariadb:11
     restart: unless-stopped
+    ports:
+      - "3306:3306"
     depends_on:
       - traefik
     environment:
