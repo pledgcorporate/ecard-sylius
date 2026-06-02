@@ -41,32 +41,29 @@ certs:
 	@bash ./.docker/traefik/scripts/generate-certs.sh
 
 ## create-project: First-time setup on a fresh skeleton (create-project)
-create-project: certs build up _wait-db _sylius-create-project _sylius-set-config
+create-project: certs build up _wait-db _sylius-create-project _sylius-set-config fix_permissions
 
 ## install: First-time setup on a fresh skeleton (create-project → DB → assets)
-install: cc _sylius-install display_info
-
-fixtures:
-	$(PHP) php bin/console sylius:fixtures:load default --no-interaction
+install: cc _sylius-install fix_permissions cc fix_permissions display_info
 
 ## setup: Setup for subsequent developers — use this after cloning an existing project
 setup: certs build up _wait-db _sylius-setup display_info
 
-## deploy_pledg_plugin: Install Pledg plugin in sylius container
-deploy_pledg_plugin:
+## deploy_pledg_plugin: Deploys Pledg plugin on sylius container
+deploy_pledg_plugin: remove_pledg_plugin install_pledg_plugin fix_permissions cc_manual
+
+## install_pledg_plugin: Copy Pledg plugin config file(s) and require Pledg plugin composer package
+install_pledg_plugin: remove_pledg_plugin
 	@echo ">>> Running Pledg plugin install..."
 	@echo ""
-	$(PHP) rm -rf /var/www/html/config/routes/pledg_sylius_payment.yaml
-	$(PHP) composer remove "pledg/sylius-payment-plugin"
 	$(COMPOSE) cp ./.docker/php/sylius_installation/config/routes/pledg_sylius_payment.yaml php:/var/www/html/config/routes/pledg_sylius_payment.yaml
 	$(PHP) composer require "pledg/sylius-payment-plugin":"dev-upgrade-sylius-2.x"
-	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
 	@echo ""
 	@echo ""
 
 ## remove_pledg_plugin: removes Pledg plugin from sylius container
 remove_pledg_plugin:
-	@echo ">>> Running Pledg plugin install..."
+	@echo ">>> Running Pledg plugin from container..."
 	@echo ""
 	$(PHP) rm -rf /var/www/html/config/routes/pledg_sylius_payment.yaml
 	$(PHP) composer remove "pledg/sylius-payment-plugin"
@@ -120,6 +117,17 @@ console:
 cc:
 	$(PHP) php bin/console cache:clear
 
+## cc_manual: deletes /var/www/html/var/cache/* (quicker than cache:clear)
+cc_manual:
+	@echo ">>> Copying Sylius config files before install..."
+	@echo ""
+	$(PHP) rm -rf /var/www/html/var/cache/*
+
+## fix_permissions:
+fix_permissions:
+	@echo ">>> Set /var/www/html ownership to www-data:www-data..."
+	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
+
 ## logs: Follow logs for all services (or SERVICES="php nginx" make logs)
 logs:
 	$(COMPOSE) logs -f $(SERVICES)
@@ -165,7 +173,6 @@ _sylius-set-config:
 	$(PHP) rm -rf /var/www/html/config/packages/dev/pledg_fixtures.yaml
 	$(PHP) rm -rf /var/www/html/config/packages/dev/fixtures
 	$(COMPOSE) cp ./.docker/php/sylius_installation/config/packages/dev php:/var/www/html/config/packages
-	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
 	@echo ""
 	@echo ""
 
@@ -173,7 +180,7 @@ _sylius-install:
 	@echo ">>> Running Sylius install (migrations + fixtures + assets)..."
 	@echo ""
 #	you can disable the fixtures installation by removing the "--fixture-suite=pledg_dev_fixtures_suite" flag
-	$(PHP) php bin/console sylius:install --no-interaction --fixture-suite=pledg_dev_fixtures_suite -vvv
+	$(PHP) php bin/console sylius:install --no-interaction --fixture-suite=pledg_dev_fixtures_suite
 	@echo ">>> Running database migrations..."
 	@echo ""
 	$(PHP) php bin/console doctrine:migrations:migrate --no-interaction
@@ -189,4 +196,3 @@ _sylius-install:
 	$(PHP) npm install
 	$(PHP) npm run build
 	$(PHP) php bin/console cache:warmup
-	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
