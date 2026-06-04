@@ -117,15 +117,16 @@ console:
 cc:
 	$(PHP) php bin/console cache:clear
 
-## cc_manual: deletes /var/www/html/var/cache/* (quicker than cache:clear)
+## cc_manual: deletes /var/www/html/var/cache/* (quicker than "make cc")
 cc_manual:
-	@echo ">>> Copying Sylius config files before install..."
+	@echo ">>> Deleting var/cache/* ..."
 	@echo ""
-	$(PHP) rm -rf /var/www/html/var/cache/*
+	$(PHP) bash -c 'rm -rf /var/www/html/var/cache/*'
 
 ## fix_permissions:
 fix_permissions:
-	@echo ">>> Set /var/www/html ownership to www-data:www-data..."
+	@echo ">>> Set /var/www/html ownership to www-data:www-data ..."
+	@echo ""
 	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
 
 ## logs: Follow logs for all services (or SERVICES="php nginx" make logs)
