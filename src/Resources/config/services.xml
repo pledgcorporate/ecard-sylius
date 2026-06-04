@@ -90,6 +90,8 @@
             <argument type="service" key="$merchantProvider" id="Pledg\SyliusPaymentPlugin\Provider\MerchantProviderInterface" />
             <argument type="service" key="$paymentMethodProvider" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" />
             <argument type="service" key="$pledgGatewayConfigReader" id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
+            <argument type="service" key="$paymentMethodsResolver" id="Pledg\SyliusPaymentPlugin\Resolver\PaymentMethodsResolver" />
+            <argument type="service" key="$channelContext" id="sylius.context.channel" />
             <argument type="service" key="$logger" id="logger" />
             <tag name="controller.service_arguments" />
         </service>

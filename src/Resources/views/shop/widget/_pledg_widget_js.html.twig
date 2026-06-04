@@ -199,7 +199,7 @@ function _getMensualite(item) {
 
 function _renderCatalog(el, items) {
     _injectStyles();
-    var di = Math.min(1, items.length - 1);
+    var di = Math.min(0, items.length - 1);
     var mens = _getMensualite(items[di]);
 
     var h = '<div class="sf-cat-wrap" style="'
@@ -304,7 +304,7 @@ function _renderCatalog(el, items) {
 /* ---- PRODUCT PAGE ---- */
 
 function _renderProduct(el, items) {
-    var di = Math.min(1, items.length - 1);
+    var di = Math.min(0, items.length - 1);
     var currentIdx = di;
 
     function _build(activeIdx) {
@@ -338,6 +338,7 @@ function _renderProduct(el, items) {
 
     function _render() {
         el.innerHTML = _build(currentIdx);
+
         el.querySelector(".sf-info-btn").addEventListener("click", function (ev) {
             ev.preventDefault(); ev.stopPropagation();
             _openModal(items, currentIdx);
@@ -356,7 +357,7 @@ function _renderProduct(el, items) {
 /* ---- CART ---- */
 
 function _renderCart(el, items) {
-    var di = Math.min(1, items.length - 1);
+    var di = Math.min(0, items.length - 1);
     var currentIdx = di;
 
     function _build(ai) {
@@ -411,13 +412,23 @@ function _init() {
             var el = widgets[i];
             if (el.getAttribute("data-sf") === "1") continue;
             el.setAttribute("data-sf", "1");
+
             var cents = String(el.getAttribute("data-amount-cents"));
             var items = _cache[cents];
-            if (!items || !items.length) { el.innerHTML = ""; continue; }
+            var methods = [];
+            var methodCode = null;
+
+            for (methodCode in items) {
+                var merchantItem = items[methodCode];
+                if (!merchantItem || !merchantItem.length) { el.innerHTML = ""; continue; }
+                methods.push(merchantItem[0]);
+            }
+
             var type = el.getAttribute("data-pledg-type") || "catalog";
-            if (type === "product") _renderProduct(el, items);
-            else if (type === "cart") _renderCart(el, items);
-            else _renderCatalog(el, items);
+            if (type === "product") _renderProduct(el, methods);
+            else if (type === "cart") _renderCart(el, methods);
+            else _renderCatalog(el, methods);
+
         }
     });
 }
