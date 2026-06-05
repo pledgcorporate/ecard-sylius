@@ -43,32 +43,6 @@ class PledgConfigurationType extends AbstractType
                 'required' => false,
                 'scale' => 0,
             ])
-            // for now, the 3 fields below are not used and are hidden with class="d-none"
-            ->add(PledgGatewayFactory::API_KEY, TextType::class, [
-                'label' => 'pledg_sylius_payment_plugin.api_key',
-                'required' => false,
-                'help' => 'pledg_sylius_payment_plugin.api_key_help',
-                "row_attr" => [
-                    "class" => "d-none"
-                ],
-            ])
-            ->add(PledgGatewayFactory::API_SECRET, TextType::class, [
-                'label' => 'pledg_sylius_payment_plugin.api_secret',
-                'required' => false,
-                'help' => 'pledg_sylius_payment_plugin.api_secret_help',
-                'attr' => ['autocomplete' => 'new-password'],
-                "row_attr" => [
-                    "class" => "d-none"
-                ],
-            ])
-            ->add(PledgGatewayFactory::COMPANY_UID, TextType::class, [
-                'label' => 'pledg_sylius_payment_plugin.company_uid',
-                'required' => false,
-                'help' => 'pledg_sylius_payment_plugin.company_uid_help',
-                "row_attr" => [
-                    "class" => "d-none"
-                ],
-            ])
             ->add(PledgGatewayFactory::WIDGET_PRODUCT_ENABLED, CheckboxType::class, [
                 'label' => 'pledg_sylius_payment_plugin.widget_product',
                 'required' => false,
