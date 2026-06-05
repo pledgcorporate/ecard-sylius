@@ -21,7 +21,7 @@ TRAEFIK_NETWORK ?= traefik-net
 COMPOSE     	:= docker compose
 PHP         	:= $(COMPOSE) exec php
 
-.PHONY: env certs create-project install setup up down build shell console cc logs ps help
+.PHONY: env certs create-project install setup up down build shell console cc cc_no_warmup cc_manual logs ps help
 
 ## env: Ensure .env file exists
 env:
@@ -30,7 +30,6 @@ env:
 		echo ">>> Creating .env file..."; \
 		echo ""; \
 		cp .env.example .env; \
-		cp .env.example ./sylius_installation/.env; \
 		echo "- .env created from .env.example — review it before continuing."; \
 		echo ""; \
 		echo ""; \
@@ -44,13 +43,13 @@ certs:
 create-project: certs build up _wait-db _sylius-create-project _sylius-set-config fix_permissions
 
 ## install: First-time setup on a fresh skeleton (create-project → DB → assets)
-install: cc _sylius-install fix_permissions cc fix_permissions display_info
+install: cc_no_warmup _sylius-install fix_permissions cc_no_warmup display_info
 
 ## setup: Setup for subsequent developers — use this after cloning an existing project
 setup: certs build up _wait-db _sylius-setup display_info
 
 ## deploy_pledg_plugin: Deploys Pledg plugin on sylius container
-deploy_pledg_plugin: remove_pledg_plugin install_pledg_plugin fix_permissions cc_manual
+deploy_pledg_plugin: remove_pledg_plugin install_pledg_plugin fix_permissions cc_no_warmup
 
 ## install_pledg_plugin: Copy Pledg plugin config file(s) and require Pledg plugin composer package
 install_pledg_plugin: remove_pledg_plugin
@@ -116,6 +115,10 @@ console:
 ## cc: Clear Symfony cache
 cc:
 	$(PHP) php bin/console cache:clear
+
+## cc_no_warmup: Clear Symfony cache with the '--no-warmup' flag
+cc_no_warmup:
+	$(PHP) php bin/console cache:clear --no-warmup
 
 ## cc_manual: deletes /var/www/html/var/cache/* (quicker than "make cc")
 cc_manual:
