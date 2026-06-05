@@ -14,11 +14,6 @@ sylius_twig_hooks:
                 template: '@PledgSyliusPaymentPlugin/Admin/payment_method/form/sections/gateway_configuration/pledg_config.html.twig'
                 priority: 0
 
-        # 'sylius_admin.order.show.content.sections.payments.item.actions':
-        #     pledg_transfer_refund:
-        #         template: '@PledgSyliusPaymentPlugin/Admin/Order/payment/pledg_transfer_refund.html.twig'
-        #         priority: 50
-
         'sylius_shop.shared.form.select_payment.payment.choice.details':
             pledg_checkout_schedule:
                 template: '@PledgSyliusPaymentPlugin/shop/checkout/payment_schedule.html.twig'
