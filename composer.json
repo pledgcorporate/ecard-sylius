@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "sylius/sylius": "^2.0",
+        "sylius/sylius": "^1.14 || ^2.0",
         "winzou/state-machine-bundle": "^0.6.4"
     },
     "require-dev": {
