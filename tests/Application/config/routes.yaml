@@ -1,4 +1,0 @@
-pledg_sylius_payment:
-    resource: "@PledgSyliusPaymentPlugin/Resources/config/routing.yml"
-    prefix: /pledg
-

@@ -30,4 +30,9 @@ class PaymentSchedule
 
         return $dto;
     }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->payments);
+    }
 }

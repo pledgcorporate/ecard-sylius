@@ -1,0 +1,51 @@
+# Traefik v3 — Static Configuration
+# This file is mounted read-only at /etc/traefik/traefik.yml inside the container.
+# Changes to this file require a container restart.
+
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+log:
+  level: INFO   # Overridden at runtime via TRAEFIK_LOG_LEVEL if set in env
+
+api:
+  dashboard: true
+  # Dashboard is NOT served on an insecure port.
+  # It is exposed via a router with TLS (see docker-compose.yml labels).
+  insecure: false
+
+entryPoints:
+  # HTTP entrypoint — redirects all traffic to HTTPS
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
+  # HTTPS entrypoint — default TLS certificate comes from dynamic/tls.yml
+  websecure:
+    address: ":443"
+    http:
+      tls: {}
+
+providers:
+  # Docker provider — discovers services via container labels
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    # Services must explicitly opt in with traefik.enable=true label
+    exposedByDefault: false
+    # Traefik uses only traefik-net for routing, even if containers are
+    # on multiple networks
+    network: traefik-net
+
+  # File provider — loads dynamic config from /etc/traefik/dynamic/
+  # watch: false because inotify is unreliable on WSL2 bind mounts and can cause
+  # Traefik to lose its dynamic config (middlewares, TLS) at runtime.
+  # Restart Traefik to pick up any changes: docker compose restart traefik
+  file:
+    directory: /etc/traefik/dynamic
+    watch: false

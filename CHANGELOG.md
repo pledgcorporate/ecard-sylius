@@ -1,4 +1,8 @@
 # CHANGELOG
+## V3.0.0
+* upgrade to sylius 2.x
+## V2.1.0
+* Feature upgrade sylius 1.14 (#39)
 ## V2.0.9
 * fix metadata
 ## V2.0.8

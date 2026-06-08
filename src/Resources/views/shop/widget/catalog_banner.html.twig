@@ -1,0 +1,4 @@
+{# JS loader for catalog pages — widgets are server-injected via card.prices hook #}
+{% if pledg_widget_catalog_enabled() and pledg_first_method_code() %}
+    {% include '@PledgSyliusPaymentPlugin/shop/widget/_pledg_widget_js.html.twig' %}
+{% endif %}

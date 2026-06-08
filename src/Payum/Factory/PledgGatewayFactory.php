@@ -22,6 +22,20 @@ class PledgGatewayFactory extends GatewayFactory
 
     public const PRICE_RANGE_MAX = 'price_range_max';
 
+    public const API_KEY = 'api_key';
+
+    public const API_SECRET = 'api_secret';
+
+    public const COMPANY_UID = 'company_uid';
+
+    public const WIDGET_PRODUCT_ENABLED = 'widget_product_enabled';
+
+    public const WIDGET_CHECKOUT_ENABLED = 'widget_checkout_enabled';
+
+    public const WIDGET_CATALOG_ENABLED = 'widget_catalog_enabled';
+
+    public const SANDBOX = 'sandbox';
+
     protected function populateConfig(ArrayObject $config): void
     {
         $config->defaults([
@@ -33,9 +47,7 @@ class PledgGatewayFactory extends GatewayFactory
                 /** @var string $secret */
                 $secret = $config[self::SECRET];
 
-                $merchant = new Merchant($identifier, $secret);
-
-                return $merchant;
+                return new Merchant($identifier, $secret);
             },
         ]);
     }

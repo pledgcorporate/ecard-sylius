@@ -1,4 +1,0 @@
-suites:
-    main:
-        namespace: Pledg\SyliusPaymentPlugin
-        psr4_prefix: Pledg\SyliusPaymentPlugin
