@@ -22,47 +22,17 @@
     bin/console c:c
 ```
 
-## Sandbox and production environment
-
-By default, plugin uses sandbox mode. You can configure it by specify the mode in your configuration files.
-For example if you only want to disable the sandbox mode for the production environment you just have to create a `config/packages/prod/pledg_sylius_payment_plugin.yaml` file with : 
-    
-```yaml
-    pledg_sylius_payment:
-        sandbox: false
-```
-
 ## Create your payment method
 
 Now you can use the plugin and create your first Pledg Payment method :
 
-1. Select the Pledg Type 
-
-![](docs/images/step1.png)
+1. Select the PledgBySofinco Type 
 
 2. Fill all required fields (specially with your merchant id, secret and restricted countries). Don't forget to activate the method on your channel.
 
-![](docs/images/step2.png)
-
-Pledg allow to use a payment method without a signature but the plugin does not allow it. 
+Pledg allows to use a payment method without a signature but the plugin does not allow it. 
 So even in sandbox mode, the secret is required and exchanges will be signed.
 
-## Add assets
-
-```bash
-mkdir -p templates/bundles/SyliusAdminBundle/
-mkdir -p templates/bundles/SyliusShopBundle/
-cp -R vendor/pledg/sylius-payment-plugin/tests/Application/templates/bundles/SyliusAdminBundle/* templates/bundles/SyliusAdminBundle/
-cp -R vendor/pledg/sylius-payment-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
-```
-
-## Add state machine configuration 
-
-Import the configuration in `_sylius.yaml` or your `pledg_sylius_payment_plugin.yaml` file :
-````yaml
-imports:
-  - { resource: "@PledgSyliusPaymentPlugin/Resources/config/state_machine.yaml" }
-````
 ## How the plugin works ?
 
 We use Payum and the Sylius payment workflow in order to redirect on the Pledg payment page.
@@ -83,9 +53,9 @@ All the details (parameters, redirection url, pledg result, pledg errors, pledg 
 
 You just have to : 
 1. Retrieve the package
-2. Launch `make install` to install the database
-3. Launch `make up-d` in order to install the plugin in a dockerized environment with a test application
-4. Launch `make ci` if you want to check if everything works fine
+2. Launch `make env && make create-project` to create a new Sylius project
+3. Launch `make install` to install the database
+4. Launch `make deploy_pledg_plugin` to install the plugin in the container
 5. Make a PR and check if the CI is green. Do not forget to upgrade the version number in the CHANGELOG.md and 
 in the Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilder.php file.
 
