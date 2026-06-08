@@ -56,7 +56,7 @@ install_pledg_plugin: remove_pledg_plugin
 	@echo ">>> Running Pledg plugin install..."
 	@echo ""
 	$(COMPOSE) cp ./.docker/php/sylius_installation/config/routes/pledg_sylius_payment.yaml php:/var/www/html/config/routes/pledg_sylius_payment.yaml
-	$(PHP) composer require "pledg/sylius-payment-plugin":"dev-upgrade-sylius-2.x"
+	$(PHP) composer require "pledg/sylius-payment-plugin"
 	@echo ""
 	@echo ""
 
@@ -164,6 +164,9 @@ _sylius-create-project:
 	$(PHP) bash -c 'composer create-project sylius/sylius-standard /tmp/sylius-install $${SYLIUS_VERSION} --prefer-dist'
 	@echo ""
 	$(PHP) bash -c 'cp -rn /tmp/sylius-install/. /var/www/html/ && rm -rf /tmp/sylius-install'
+	@echo ""
+	@echo ">>> Installing Composer dependencies..."
+	$(PHP) composer install --no-interaction
 	@echo ""
 	@echo ""
 
