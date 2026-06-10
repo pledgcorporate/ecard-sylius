@@ -10,12 +10,14 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
 final class PledgGatewayConfigReader
 {
     public function __construct(
         private ChannelContextInterface $channelContext,
         private PaymentMethodRepositoryInterface $paymentMethodRepository,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -113,7 +115,12 @@ final class PledgGatewayConfigReader
      */
     public function getFrontUrl(array $config): string
     {
-        return PledgUrl::frontUrl($this->isSandbox($config));
+        $url = PledgUrl::frontUrl($this->isSandbox($config));
+
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('config'));
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('url'));
+
+        return $url;
     }
 
     /**
@@ -121,7 +128,12 @@ final class PledgGatewayConfigReader
      */
     public function getBackUrl(array $config): string
     {
-        return PledgUrl::backUrl($this->isSandbox($config));
+        $url = PledgUrl::backUrl($this->isSandbox($config));
+
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('config'));
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('url'));
+
+        return $url;
     }
 
     private function widgetFlag(string $key, bool $defaultIfMissing): bool

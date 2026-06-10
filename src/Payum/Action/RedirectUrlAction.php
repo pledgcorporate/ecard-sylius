@@ -10,6 +10,7 @@ use Payum\Core\Reply\HttpRedirect;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class RedirectUrlAction implements ActionInterface
 {
@@ -25,7 +26,8 @@ class RedirectUrlAction implements ActionInterface
     public function __construct(
         ParamBuilderFactoryInterface $paramBuilderFactory,
         EncoderInterface $encoder,
-        string $pledgUrl
+        string $pledgUrl,
+        private LoggerInterface $logger,
     ) {
         $this->paramBuilderFactory = $paramBuilderFactory;
         $this->encoder = $encoder;
@@ -45,14 +47,24 @@ class RedirectUrlAction implements ActionInterface
 
         $this->setPaymentDetails($request, $parameters, $token);
 
-        throw new HttpRedirect($this->getPurchaseUrl() . '?signature=' . $token);
+        $redirectUrl = $this->getPurchaseUrl() . '?signature=' . $token;
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('redirectUrl'));
+
+        throw new HttpRedirect($redirectUrl);
     }
 
     private function setPaymentDetails(RedirectUrlInterface $request, array $parameters, string $token): void
     {
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('request'));
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('parameters'));
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('token'));
+
+        $redirectUrl = $this->getPurchaseUrl() . '?signature=' . $token;
+        $this->logger->debug('PLEDG ' . __METHOD__, compact('redirectUrl'));
+
         $request->getPayment()->setDetails([
             'redirect_parameters' => $parameters,
-            'redirect_url' => $this->getPurchaseUrl() . '?signature=' . $token,
+            'redirect_url' => $redirectUrl,
         ]);
     }
 
