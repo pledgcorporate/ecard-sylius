@@ -49,7 +49,7 @@ install: cc_no_warmup _sylius-install fix_permissions cc_no_warmup display_info
 setup: certs build up _wait-db _sylius-setup display_info
 
 ## deploy_pledg_plugin: Deploys Pledg plugin on sylius container
-deploy_pledg_plugin: remove_pledg_plugin install_pledg_plugin fix_permissions cc_no_warmup
+deploy_pledg_plugin: remove_pledg_plugin install_pledg_plugin fix_plugin_permissions cc_no_warmup
 
 ## install_pledg_plugin: Copy Pledg plugin config file(s) and require Pledg plugin composer package
 install_pledg_plugin: remove_pledg_plugin
@@ -68,6 +68,16 @@ remove_pledg_plugin:
 	$(PHP) composer remove "pledg/sylius-payment-plugin"
 	@echo ""
 	@echo ""
+
+## deploy current code to container
+deploy_current: push_code_to_container fix_plugin_permissions
+
+## push current code to container
+push_code_to_container:
+	$(PHP) bash -c 'rm -rf /var/www/html/vendor/pledg/sylius-payment-plugin/src'
+	@echo ">>> Pushing current code to container..."
+	@echo ""
+	$(COMPOSE) cp ./src php:/var/www/html/vendor/pledg/sylius-payment-plugin/
 
 ## up: Start all containers in detached mode
 display_info:
@@ -131,6 +141,12 @@ fix_permissions:
 	@echo ">>> Set /var/www/html ownership to www-data:www-data ..."
 	@echo ""
 	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html
+
+## fix_plugin_permissions:
+fix_plugin_permissions:
+	@echo ">>> Set /var/www/html/vendor/pledg ownership to www-data:www-data ..."
+	@echo ""
+	$(COMPOSE) exec php chown -R www-data:www-data /var/www/html/vendor/pledg
 
 ## logs: Follow logs for all services (or SERVICES="php nginx" make logs)
 logs:
