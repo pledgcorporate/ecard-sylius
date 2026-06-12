@@ -50,12 +50,7 @@ class RedirectUrlAction implements ActionInterface
         $parameters = $this->paramBuilderFactory->fromRedirectUrlRequest($request)->build();
         $token = $this->encoder->encode($parameters, $request->getMerchant()->getSecret());
 
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('request'));
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('parameters'));
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('token'));
-
         $redirectUrl = $this->router->generate('sylius_shop_account_order_index');
-        $this->logger->debug('PLEDG ' . __METHOD__ . ' default redirectUrl', compact('redirectUrl'));
 
         $pledgMethods = $this->paymentMethodProvider->getPledgMethods();
 
@@ -64,7 +59,6 @@ class RedirectUrlAction implements ActionInterface
             $methodGatewayConfig = $this->pledgGatewayConfigReader->getConfigForPaymentMethodCode($code);
 
             $configUid = $parameters['merchantUid'];
-            $this->logger->debug('PLEDG ' . __METHOD__ . ' ' . $methodGatewayConfig[PledgGatewayFactory::IDENTIFIER], compact('configUid', 'methodGatewayConfig'));
             if ($methodGatewayConfig[PledgGatewayFactory::IDENTIFIER] === $configUid) {
                 $redirectUrl = $this->getPurchaseUrl($methodGatewayConfig) . '?signature=' . $token;
 
@@ -74,8 +68,6 @@ class RedirectUrlAction implements ActionInterface
                 ];
 
                 $request->getPayment()->setDetails($details);
-
-                $this->logger->debug('PLEDG ' . __METHOD__, compact('redirectUrl'));
             }
         }
 

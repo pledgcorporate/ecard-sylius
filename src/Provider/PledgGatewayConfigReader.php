@@ -116,10 +116,6 @@ final class PledgGatewayConfigReader
     public function getFrontUrl(array $config): string
     {
         $url = PledgUrl::frontUrl($this->isSandbox($config));
-
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('config'));
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('url'));
-
         return $url;
     }
 
@@ -129,10 +125,6 @@ final class PledgGatewayConfigReader
     public function getBackUrl(array $config): string
     {
         $url = PledgUrl::backUrl($this->isSandbox($config));
-
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('config'));
-        $this->logger->debug('PLEDG ' . __METHOD__, compact('url'));
-
         return $url;
     }
 
