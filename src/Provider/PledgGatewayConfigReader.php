@@ -10,14 +10,12 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
-use Psr\Log\LoggerInterface;
 
 final class PledgGatewayConfigReader
 {
     public function __construct(
         private ChannelContextInterface $channelContext,
         private PaymentMethodRepositoryInterface $paymentMethodRepository,
-        private LoggerInterface $logger,
     ) {
     }
 

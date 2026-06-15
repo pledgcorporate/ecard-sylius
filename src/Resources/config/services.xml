@@ -23,9 +23,7 @@
         </service>
         <service id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" alias="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProvider"/>
 
-        <service id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader">
-            <argument type="service" key="$logger" id="logger" />
-        </service>
+        <service id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
 
         <service id="Pledg\SyliusPaymentPlugin\Notification\Collector\StandardValidator" />
 
@@ -121,7 +119,6 @@
             <argument type="service" key="$paymentMethodProvider" id="Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface" />
             <argument type="service" key="$pledgGatewayConfigReader" id="Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader" />
             <argument type="service" key="$router"  id="router" />
-            <argument type="service" key="$logger" id="logger" />
             <tag name="payum.action" factory="pledgbysofinco" alias="payum.action.redirect_url" />
         </service>
 

@@ -10,8 +10,6 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Reply\HttpRedirect;
 
-use Psr\Log\LoggerInterface;
-
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface;
@@ -33,7 +31,6 @@ class RedirectUrlAction implements ActionInterface
         private PaymentMethodProviderInterface $paymentMethodProvider,
         private PledgGatewayConfigReader $pledgGatewayConfigReader,
         private RouterInterface $router,
-        private LoggerInterface $logger,
     ) {
         $this->paramBuilderFactory = $paramBuilderFactory;
         $this->encoder = $encoder;
