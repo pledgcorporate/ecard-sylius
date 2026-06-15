@@ -16,7 +16,36 @@
         prefix: /pledg
 ```
 
-3. Clear your cache in order to see translations
+3. If your Sylius version is <1.14.0:
+
+- Sandbox and production environment
+
+    By default, plugin uses sandbox mode. You can configure it by specify the mode in your configuration files.
+    For example if you only want to disable the sandbox mode for the production environment you just have to create a `config/packages/prod/pledg_sylius_payment_plugin.yaml` file with : 
+        
+    ```yaml
+        pledg_sylius_payment:
+            sandbox: false
+    ```
+
+- Add assets
+
+    ```bash
+    mkdir -p templates/bundles/SyliusAdminBundle/
+    mkdir -p templates/bundles/SyliusShopBundle/
+    cp -R vendor/pledg/sylius-payment-plugin/tests/Application/templates/bundles/SyliusAdminBundle/* templates/bundles/SyliusAdminBundle/
+    cp -R vendor/pledg/sylius-payment-plugin/tests/Application/templates/bundles/SyliusShopBundle/* templates/bundles/SyliusShopBundle/
+    ```
+
+- Add state machine configuration 
+
+    Import the configuration in `_sylius.yaml` or your `pledg_sylius_payment_plugin.yaml` file :
+    ````yaml
+    imports:
+    - { resource: "@PledgSyliusPaymentPlugin/Resources/config/state_machine.yaml" }
+    ````
+
+4. Clear your cache in order to see translations
 
 ```bash
     bin/console c:c
