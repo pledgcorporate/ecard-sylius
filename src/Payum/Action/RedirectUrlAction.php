@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Pledg\SyliusPaymentPlugin\Payum\Action;
 
+use Symfony\Component\Routing\RouterInterface;
+
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Reply\HttpRedirect;
+
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\EncoderInterface;
 use Pledg\SyliusPaymentPlugin\RedirectUrl\ParamBuilderFactoryInterface;
+use Pledg\SyliusPaymentPlugin\Provider\PaymentMethodProviderInterface;
+use Pledg\SyliusPaymentPlugin\Payum\Factory\PledgGatewayFactory;
+use Pledg\SyliusPaymentPlugin\Provider\PledgGatewayConfigReader;
 
 class RedirectUrlAction implements ActionInterface
 {
@@ -19,17 +25,15 @@ class RedirectUrlAction implements ActionInterface
     /** @var EncoderInterface */
     protected $encoder;
 
-    /** @var string */
-    protected $pledgUrl;
-
     public function __construct(
         ParamBuilderFactoryInterface $paramBuilderFactory,
         EncoderInterface $encoder,
-        string $pledgUrl
+        private PaymentMethodProviderInterface $paymentMethodProvider,
+        private PledgGatewayConfigReader $pledgGatewayConfigReader,
+        private RouterInterface $router,
     ) {
         $this->paramBuilderFactory = $paramBuilderFactory;
         $this->encoder = $encoder;
-        $this->pledgUrl = $pledgUrl;
     }
 
     /**
@@ -43,17 +47,28 @@ class RedirectUrlAction implements ActionInterface
         $parameters = $this->paramBuilderFactory->fromRedirectUrlRequest($request)->build();
         $token = $this->encoder->encode($parameters, $request->getMerchant()->getSecret());
 
-        $this->setPaymentDetails($request, $parameters, $token);
+        $redirectUrl = $this->router->generate('sylius_shop_account_order_index');
 
-        throw new HttpRedirect($this->getPurchaseUrl() . '?signature=' . $token);
-    }
+        $pledgMethods = $this->paymentMethodProvider->getPledgMethods();
 
-    private function setPaymentDetails(RedirectUrlInterface $request, array $parameters, string $token): void
-    {
-        $request->getPayment()->setDetails([
-            'redirect_parameters' => $parameters,
-            'redirect_url' => $this->getPurchaseUrl() . '?signature=' . $token,
-        ]);
+        foreach ($pledgMethods as $method) {
+            $code = $method->getCode();
+            $methodGatewayConfig = $this->pledgGatewayConfigReader->getConfigForPaymentMethodCode($code);
+
+            $configUid = $parameters['merchantUid'];
+            if ($methodGatewayConfig[PledgGatewayFactory::IDENTIFIER] === $configUid) {
+                $redirectUrl = $this->getPurchaseUrl($methodGatewayConfig) . '?signature=' . $token;
+
+                $details = [
+                    'redirect_parameters' => $parameters,
+                    'redirect_url' => $redirectUrl,
+                ];
+
+                $request->getPayment()->setDetails($details);
+            }
+        }
+
+        throw new HttpRedirect($redirectUrl);
     }
 
     public function supports($request)
@@ -61,8 +76,9 @@ class RedirectUrlAction implements ActionInterface
         return $request instanceof RedirectUrlInterface;
     }
 
-    protected function getPurchaseUrl(): string
+    protected function getPurchaseUrl(array $config): string
     {
-        return sprintf('%s/purchase', $this->pledgUrl);
+        $url = $this->pledgGatewayConfigReader->getFrontUrl($config);
+        return sprintf('%s/purchase', $url);
     }
 }

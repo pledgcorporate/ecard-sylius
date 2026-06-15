@@ -1,4 +1,6 @@
 # CHANGELOG
+## V3.0.1
+* fix front url for redirection
 ## V3.0.0
 * upgrade to sylius 2.x
 ## V2.1.0
