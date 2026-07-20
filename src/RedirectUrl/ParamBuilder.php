@@ -144,24 +144,6 @@ class ParamBuilder implements ParamBuilderInterface
         ];
     }
 
-    /**
-     * @param Collection|OrderItemInterface[] $orderItems
-     */
-    private function buildTitle(Collection $orderItems): string
-    {
-        $names = [];
-        /** @var OrderItemInterface $item */
-        foreach ($orderItems as $item) {
-            if (null !== $item->getProductName()) {
-                $names[] = $item->getProductName();
-            } elseif (null !== $item->getVariantName()) {
-                $names[] = $item->getVariantName();
-            }
-        }
-
-        return implode(', ', $names);
-    }
-
     private function buildMetadata(): array
     {
         return array_merge(
