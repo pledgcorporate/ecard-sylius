@@ -6,6 +6,7 @@ namespace Pledg\SyliusPaymentPlugin\RedirectUrl;
 
 use Composer\InstalledVersions;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Payum\Core\Security\TokenInterface;
 use Pledg\SyliusPaymentPlugin\Calculator\TotalWithoutFeesInterface;
 use Pledg\SyliusPaymentPlugin\Payum\Request\RedirectUrlInterface;
@@ -28,6 +29,8 @@ use Webmozart\Assert\Assert;
 class ParamBuilder implements ParamBuilderInterface
 {
     public const PLEDG_PLUGIN_VERSION = '3.0.1';
+
+    public const MAX_NUMBER_OF_ITEMS = 5;
 
     /** @var MerchantInterface */
     protected $merchant;
@@ -103,12 +106,15 @@ class ParamBuilder implements ParamBuilderInterface
             $orderNumber = '';
         }
 
+        $metadata = $this->buildMetadata();
+        $reference = (string) new Reference($orderNumber, $this->payment->getId());
+
         return [
             'merchantUid' => $this->merchant->getIdentifier(),
-            'title' => $this->buildTitle($this->order->getItems()),
+            'title' => 'Order ' . $reference,
             'lang' => $this->order->getLocaleCode(),
-            'reference' => (string) new Reference($orderNumber, $this->payment->getId()),
-            'amountCents' => $this->totalWithoutFees->calculate($this->order),
+            'reference' => $reference,
+            'amountCents' => $this->order->getTotal(),
             'currency' => $this->payment->getCurrencyCode(),
             'firstName' => $this->billingAddress->getFirstName(),
             'lastName' => $this->billingAddress->getLastName(),
@@ -117,7 +123,7 @@ class ParamBuilder implements ParamBuilderInterface
             'address' => $this->buildAddress($this->billingAddress),
             'shippingAddress' => $this->buildAddress($this->shippingAddress),
             'countryCode' => $this->billingAddress->getCountryCode(),
-            'metadata' => $this->buildMetadata(),
+            'metadata' => $metadata,
             'redirectUrl' => $this->token->getAfterUrl(),
             'cancelUrl' => $this->token->getAfterUrl(),
             'paymentNotificationUrl' => $this->router->generate(
@@ -161,7 +167,8 @@ class ParamBuilder implements ParamBuilderInterface
         return array_merge(
             $this->buildProductsMetadata($this->order->getItems()),
             $this->buildCustomerMetadata($this->order->getCustomer()),
-            $this->buildPluginMetadata()
+            $this->buildPluginMetadata(),
+            $this->buildShipmentMetadata()
         );
     }
 
@@ -186,12 +193,25 @@ class ParamBuilder implements ParamBuilderInterface
             $names[] = $method;
         }
 
-        $namesList = implode(', ', $names);
-
         return [
-            'delivery_mode' => $namesList,
-            'delivery_mode_reference' => $namesList,
+            'delivery_modes' => $names,
         ];
+    }
+
+    private function compareItemsPrice($itemA, $itemB)
+    {
+        $totalA = $itemA->getTotal();
+        $totalB = $itemB->getTotal();
+
+        if ($totalA < $totalB) {
+            return 1;
+        }
+
+        if ($totalA > $totalB) {
+            return -1;
+        }
+
+        return 0;
     }
 
     /**
@@ -201,15 +221,19 @@ class ParamBuilder implements ParamBuilderInterface
     {
         $products = [];
 
-        $shipmentMetadata = $this->buildShipmentMetadata();
+        if ($orderItems->isEmpty()) {
+            return $products;
+        }
+
+        $iterator = $orderItems->getIterator();
+        $iterator->uasort( [ $this, 'compareItemsPrice' ] );
+        $sortedItems = new ArrayCollection(iterator_to_array($iterator));
+        $selectedItems = $sortedItems->slice(0, self::MAX_NUMBER_OF_ITEMS);
 
         /** @var OrderItemInterface $item */
-        foreach ($orderItems as $item) {
+        foreach ($selectedItems as $item) {
             $itemVariant = $item->getVariant();
             Assert::isInstanceOf($itemVariant, ProductVariantInterface::class);
-
-            $availabilityChecker = new AvailabilityChecker(false);
-            $isStockAvailable = $availabilityChecker->isStockAvailable($itemVariant);
 
             $itemProduct = $item->getProduct();
             $arrTaxons = $itemProduct->getTaxons();
@@ -222,40 +246,25 @@ class ParamBuilder implements ParamBuilderInterface
                 $arrSubcategory[] = $taxonName;
             }
             $category = $arrSubcategory[0] ?? '';
-            if ($arrSubcategory !== []) {
-                array_shift($arrSubcategory);
-            }
 
             $productMetadata = [
-                'reference' => $itemVariant->getCode(),
-                'name' => $item->getProductName(),
-                'category' => $category,
-                'sub_categories' => $arrSubcategory,
-                'quantity' => $item->getQuantity(),
+                'reference'         => $itemVariant->getCode(),
+                'name'              => $item->getProductName(),
+                'category'          => $category,
+                'quantity'          => $item->getQuantity(),
                 'unit_amount_cents' => $item->getUnitPrice(),
-                'type' => $itemVariant->isShippingRequired()
+                'type'              => $itemVariant->isShippingRequired()
                     ? 'physical'
                     : 'virtual',
-                'stock' => $isStockAvailable,
             ];
 
             // delivery data must be in each product details:
-            $products[] = array_merge(
-                $productMetadata,
-                $shipmentMetadata
-            );
+            $products[] = $productMetadata;
         }
 
-        return ['products' => $products];
-    }
-
-    private function forceHttps(string $url): string
-    {
-        if (str_starts_with($url, 'http://')) {
-            return 'https://' . substr($url, 7);
-        }
-
-        return $url;
+        return [
+            'products' => $products
+        ];
     }
 
     private function buildCustomerMetadata(?CustomerInterface $customer = null): array
