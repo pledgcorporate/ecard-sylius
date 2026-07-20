@@ -1,4 +1,6 @@
 # CHANGELOG
+## V3.0.2
+* update JWT signature: metadata can contain a max of 5 products
 ## V3.0.1
 * fix front url for redirection
 ## V3.0.0
