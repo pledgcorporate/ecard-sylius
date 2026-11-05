@@ -14,7 +14,7 @@ services:
       DATABASE_URL: mysql://${DB_USER:-sylius}:${DB_PASSWORD:-sylius}@mariadb:3306/${DB_NAME:-sylius}?serverVersion=mariadb-11.0.0&charset=utf8mb4
       MAILER_DSN: smtp://mailer:1025
       DEFAULT_URI: https://${APP_DOMAIN:-sylius.docker}
-      SYLIUS_VERSION: 2.2.0
+      SYLIUS_VERSION: 2.3.0
     networks:
       - internal
 
