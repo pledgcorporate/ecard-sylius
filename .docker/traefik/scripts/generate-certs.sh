@@ -53,6 +53,10 @@ echo ""
 mkcert \
   -cert-file "${CERTS_DIR}/local.crt" \
   -key-file  "${CERTS_DIR}/local.key" \
+  "sylius.docker" \
+  "mail.sylius.docker" \
+  "traefik.docker" \
+  "*.sylius.docker" \
   "*.docker" \
   "localhost" \
   "127.0.0.1" \
