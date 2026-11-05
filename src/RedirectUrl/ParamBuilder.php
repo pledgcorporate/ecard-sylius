@@ -28,7 +28,7 @@ use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    public const PLEDG_PLUGIN_VERSION = '3.0.2';
+    public const PLEDG_PLUGIN_VERSION = '3.0.3';
 
     public const MAX_NUMBER_OF_ITEMS = 5;
 
