@@ -131,6 +131,11 @@ class ParamBuilder implements ParamBuilderInterface
                 [],
                 RouterInterface::ABSOLUTE_URL
             ),
+            'errorNotificationUrl' => $this->router->generate(
+                'pledg_sylius_payment_plugin_webhook_error_notification',
+                [],
+                RouterInterface::ABSOLUTE_URL
+            ),
         ];
     }
 
