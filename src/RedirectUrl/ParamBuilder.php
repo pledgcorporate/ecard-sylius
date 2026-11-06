@@ -28,7 +28,7 @@ use Webmozart\Assert\Assert;
 
 class ParamBuilder implements ParamBuilderInterface
 {
-    public const PLEDG_PLUGIN_VERSION = '3.0.2';
+    public const PLEDG_PLUGIN_VERSION = '3.0.3';
 
     public const MAX_NUMBER_OF_ITEMS = 5;
 
@@ -128,6 +128,11 @@ class ParamBuilder implements ParamBuilderInterface
             'cancelUrl' => $this->token->getAfterUrl(),
             'paymentNotificationUrl' => $this->router->generate(
                 'pledg_sylius_payment_plugin_webhook_notification',
+                [],
+                RouterInterface::ABSOLUTE_URL
+            ),
+            'errorNotificationUrl' => $this->router->generate(
+                'pledg_sylius_payment_plugin_webhook_error_notification',
                 [],
                 RouterInterface::ABSOLUTE_URL
             ),

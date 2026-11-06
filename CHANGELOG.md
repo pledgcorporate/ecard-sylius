@@ -1,4 +1,10 @@
 # CHANGELOG
+## V3.0.3
+* fix missing errorNotificationUrl in jwt payload
+* fix webpack version required by sylius
+* fix cert creation
+* upgrade docker sylius version
+* fix aikido alert about integrity verification
 ## V3.0.2
 * update JWT signature: metadata can contain a max of 5 products
 ## V3.0.1

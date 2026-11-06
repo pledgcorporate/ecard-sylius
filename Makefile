@@ -216,6 +216,9 @@ _sylius-install:
 	@echo ""
 	@echo ">>> Building frontend assets..."
 	@echo ""
+# sylius install is broken since it requires webpack latest version.
+# we have to fix webpack version requirementreadto webpack v5.111.1
+	$(PHP) npm pkg set overrides.webpack=~5.111.1
 	$(PHP) npm install
 	$(PHP) npm run build
 	$(PHP) php bin/console cache:warmup
